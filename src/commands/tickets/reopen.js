@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder, Colors } = require('discord.js');
 const Command = require('../../structures/Command');
 const db = require('../../database/connection');
-const { sendLog } = require('../../handlers/ticketHandler');
+const { sendLog, isStaff } = require('../../handlers/ticketHandler');
 
 module.exports = class ReopenCommand extends Command {
   constructor(bot) {
@@ -16,9 +16,7 @@ module.exports = class ReopenCommand extends Command {
 
   async execute(bot, message, args) {
     const guildData = await db.getGuild(message.guild.id);
-    const supportRoles = guildData.ticket_support_roles ? JSON.parse(guildData.ticket_support_roles) : [];
-    const isStaff = message.member.permissions.has('Administrator') || message.member.roles.cache.some(r => supportRoles.includes(r.id));
-    if (!isStaff) return message.reply('Only staff can reopen tickets.');
+    if (!isStaff(message.member, guildData)) return message.reply('Only staff can reopen tickets.');
 
     const ticket = await db.query('SELECT * FROM tickets WHERE channel_id = ? AND guild_id = ?', [message.channel.id, message.guild.id]);
     if (ticket.length === 0) return message.reply('This is not a ticket channel.');
@@ -51,9 +49,7 @@ module.exports = class ReopenCommand extends Command {
     await interaction.deferReply();
 
     const guildData = await db.getGuild(interaction.guild.id);
-    const supportRoles = guildData.ticket_support_roles ? JSON.parse(guildData.ticket_support_roles) : [];
-    const isStaff = interaction.member.permissions.has('Administrator') || interaction.member.roles.cache.some(r => supportRoles.includes(r.id));
-    if (!isStaff) return interaction.editReply('Only staff can reopen tickets.');
+    if (!isStaff(interaction.member, guildData)) return interaction.editReply('Only staff can reopen tickets.');
 
     const ticket = await db.query('SELECT * FROM tickets WHERE channel_id = ? AND guild_id = ?', [interaction.channel.id, interaction.guild.id]);
     if (ticket.length === 0) return interaction.editReply('This is not a ticket channel.');

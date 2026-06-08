@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder, Colors, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const Command = require('../../structures/Command');
 const db = require('../../database/connection');
-const { sendLog, generateTranscript } = require('../../handlers/ticketHandler');
+const { sendLog, generateTranscript, isStaff } = require('../../handlers/ticketHandler');
 
 module.exports = class DeleteCommand extends Command {
   constructor(bot) {
@@ -16,9 +16,7 @@ module.exports = class DeleteCommand extends Command {
 
   async execute(bot, message, args) {
     const guildData = await db.getGuild(message.guild.id);
-    const supportRoles = guildData.ticket_support_roles ? JSON.parse(guildData.ticket_support_roles) : [];
-    const isStaff = message.member.permissions.has('Administrator') || message.member.roles.cache.some(r => supportRoles.includes(r.id));
-    if (!isStaff) return message.reply('Only staff can delete tickets.');
+    if (!isStaff(message.member, guildData)) return message.reply('Only staff can delete tickets.');
 
     const ticket = await db.query('SELECT * FROM tickets WHERE channel_id = ? AND guild_id = ?', [message.channel.id, message.guild.id]);
     if (ticket.length === 0) return message.reply('This is not a ticket channel.');
@@ -55,9 +53,7 @@ module.exports = class DeleteCommand extends Command {
 
   async executeSlash(bot, interaction) {
     const guildData = await db.getGuild(interaction.guild.id);
-    const supportRoles = guildData.ticket_support_roles ? JSON.parse(guildData.ticket_support_roles) : [];
-    const isStaff = interaction.member.permissions.has('Administrator') || interaction.member.roles.cache.some(r => supportRoles.includes(r.id));
-    if (!isStaff) return interaction.reply({ content: 'Only staff can delete tickets.', ephemeral: true });
+    if (!isStaff(interaction.member, guildData)) return interaction.reply({ content: 'Only staff can delete tickets.', ephemeral: true });
 
     const ticket = await db.query('SELECT * FROM tickets WHERE channel_id = ? AND guild_id = ?', [interaction.channel.id, interaction.guild.id]);
     if (ticket.length === 0) return interaction.reply({ content: 'This is not a ticket channel.', ephemeral: true });

@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionsBitField } = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
 const Command = require('../../structures/Command');
 
 module.exports = class PurgeCommand extends Command {

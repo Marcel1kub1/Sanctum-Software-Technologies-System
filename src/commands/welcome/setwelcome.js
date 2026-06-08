@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionsBitField } = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
 const Command = require('../../structures/Command');
 const Guild = require('../../structures/models/Guild');
 

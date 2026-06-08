@@ -2,6 +2,7 @@ const { ActivityType } = require('discord.js');
 const { registerSlashCommands } = require('../handlers/commandHandler');
 const setupMusicHandler = require('../handlers/musicHandler');
 const { startMusicServices } = require('../music');
+const { checkGiveaways } = require('../handlers/giveawayHandler');
 
 module.exports = {
   name: 'ready',
@@ -29,5 +30,7 @@ module.exports = {
     }
 
     await registerSlashCommands(bot);
+
+    setInterval(() => checkGiveaways(bot), 30000);
   }
 };

@@ -1,4 +1,5 @@
 const config = require('../../config');
+const { executeCommand } = require('../handlers/executeHandler');
 
 const processedMessages = new Set();
 setInterval(() => processedMessages.clear(), 10000);
@@ -19,11 +20,6 @@ module.exports = {
     const command = bot.commands.get(commandName);
     if (!command) return;
 
-    try {
-      await command.execute(bot, message, args);
-    } catch (err) {
-      console.error(`[Error] Command ${commandName}:`, err.message);
-      message.reply('An error occurred while executing that command.').catch(() => {});
-    }
+    await executeCommand(bot, command, 'prefix', { message, args });
   }
 };

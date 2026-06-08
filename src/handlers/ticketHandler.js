@@ -173,7 +173,7 @@ async function handleTicketClaim(bot, interaction, guildData) {
 
   const t = ticket[0];
   if (t.claimed_by) {
-    const claimer = await interaction.client.users.fetch(t.claimed_by).catch(() => null);
+    const claimer = await bot.users.fetch(t.claimed_by).catch(() => null);
     return interaction.reply({ content: `This ticket is already claimed by ${claimer ? claimer.tag : t.claimed_by}.`, ephemeral: true });
   }
 
@@ -230,7 +230,7 @@ async function handleTicketClose(bot, interaction, guildData) {
 
   await interaction.channel.permissionOverwrites.edit(t.creator_id, { ViewChannel: false }).catch(() => {});
 
-  const creator = await interaction.client.users.fetch(t.creator_id).catch(() => null);
+  const creator = await bot.users.fetch(t.creator_id).catch(() => null);
   const logEmbed = new EmbedBuilder()
     .setColor(Colors.Orange)
     .setTitle('Ticket Closed')
@@ -323,8 +323,8 @@ async function handleTicketConfirmDelete(bot, interaction, guildData) {
   const t = ticket[0];
 
   const transcript = await generateTranscript(interaction.channel);
-  const creator = await interaction.client.users.fetch(t.creator_id).catch(() => null);
-  const claimedBy = t.claimed_by ? await interaction.client.users.fetch(t.claimed_by).catch(() => null) : null;
+  const creator = await bot.users.fetch(t.creator_id).catch(() => null);
+  const claimedBy = t.claimed_by ? await bot.users.fetch(t.claimed_by).catch(() => null) : null;
 
   const logEmbed = new EmbedBuilder()
     .setColor(Colors.Red)
