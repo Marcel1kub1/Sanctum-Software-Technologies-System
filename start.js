@@ -13,7 +13,7 @@ console.log('==========================================');
 if (!fs.existsSync(path.join(TARGET, 'src'))) {
   console.log('[Setup] Cloning repository...');
   execSync(`git clone ${REPO_URL} "${TEMP_CLONE}"`, { stdio: 'inherit' });
-  const entries = fs.readdirSync(TEMP_CLONE).filter(e => e !== '.git');
+  const entries = fs.readdirSync(TEMP_CLONE);
   for (const entry of entries) {
     const src = path.join(TEMP_CLONE, entry);
     const dest = path.join(TARGET, entry);
