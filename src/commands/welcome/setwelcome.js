@@ -17,14 +17,18 @@ module.exports = class SetWelcomeCommand extends Command {
 
   async execute(bot, message, args) {
     const channel = message.mentions.channels.first();
-    if (!channel) return message.reply('Please mention a channel.');
+    if (!channel) {
+      await message.reply('Please mention a channel.');
+      return;
+    }
     await Guild.setWelcomeChannel(message.guild.id, channel.id);
-    message.reply(`Welcome messages will be sent to ${channel}.`);
+    await message.reply(`Welcome messages will be sent to ${channel}.`);
   }
 
   async executeSlash(bot, interaction) {
     const channel = interaction.options.getChannel('channel');
+    await interaction.deferReply();
     await Guild.setWelcomeChannel(interaction.guild.id, channel.id);
-    interaction.reply(`Welcome messages will be sent to ${channel}.`);
+    await interaction.editReply(`Welcome messages will be sent to ${channel}.`);
   }
 };

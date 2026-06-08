@@ -17,18 +17,25 @@ module.exports = class KickCommand extends Command {
 
   async execute(bot, message, args) {
     const member = message.mentions.members.first();
-    if (!member) return message.reply('Please mention a user to kick.');
+    if (!member) {
+      await message.reply('Please mention a user to kick.');
+      return;
+    }
     const reason = args.slice(1).join(' ') || 'No reason provided';
     await member.kick(reason);
-    message.reply(`Kicked ${member.user.tag} | Reason: ${reason}`);
+    await message.reply(`Kicked ${member.user.tag} | Reason: ${reason}`);
   }
 
   async executeSlash(bot, interaction) {
     const user = interaction.options.getUser('user');
     const reason = interaction.options.getString('reason') || 'No reason provided';
     const member = interaction.guild.members.cache.get(user.id);
-    if (!member) return interaction.reply({ content: 'User not found.', ephemeral: true });
+    if (!member) {
+      await interaction.reply({ content: 'User not found.', ephemeral: true });
+      return;
+    }
+    await interaction.deferReply();
     await member.kick(reason);
-    interaction.reply(`Kicked ${user.tag} | Reason: ${reason}`);
+    await interaction.editReply(`Kicked ${user.tag} | Reason: ${reason}`);
   }
 };

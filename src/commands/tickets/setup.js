@@ -16,7 +16,7 @@ module.exports = class TicketSetupCommand extends Command {
   }
 
   async execute(bot, message, args) {
-    message.reply('Ticket setup (placeholder)');
+    await message.reply('Ticket setup (placeholder)');
   }
 
   async executeSlash(bot, interaction) {
@@ -29,7 +29,8 @@ module.exports = class TicketSetupCommand extends Command {
     const row = new ActionRowBuilder().addComponents(
       new ButtonBuilder().setCustomId('create_ticket').setLabel('Create Ticket').setStyle(ButtonStyle.Primary).setEmoji('🎫')
     );
+    await interaction.deferReply({ ephemeral: true });
     await interaction.channel.send({ embeds: [embed], components: [row] });
-    interaction.reply({ content: `Ticket system set up in ${category.name} category.`, ephemeral: true });
+    await interaction.editReply({ content: `Ticket system set up in ${category.name} category.` });
   }
 };

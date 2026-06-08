@@ -16,7 +16,10 @@ module.exports = class PurgeCommand extends Command {
 
   async execute(bot, message, args) {
     const amount = parseInt(args[0]) || 50;
-    if (amount < 1 || amount > 100) return message.reply('Amount must be between 1 and 100.');
+    if (amount < 1 || amount > 100) {
+      await message.reply('Amount must be between 1 and 100.');
+      return;
+    }
     await message.channel.bulkDelete(amount, true);
     const msg = await message.channel.send(`Deleted ${amount} messages.`);
     setTimeout(() => msg.delete().catch(() => {}), 3000);

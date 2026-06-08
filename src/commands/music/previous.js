@@ -13,30 +13,37 @@ module.exports = class PreviousCommand extends Command {
   }
 
   async execute(bot, message) {
-    if (!message.member.voice.channel) return message.reply('You need to be in a voice channel.');
+    if (!message.member.voice.channel) {
+      await message.reply('You need to be in a voice channel.');
+      return;
+    }
     try {
       const prev = await bot.lavalink.previous(message.guild.id);
       if (prev) {
-        message.reply(`Now playing previous track: **${prev.info.title}**`);
+        await message.reply(`Now playing previous track: **${prev.info.title}**`);
       } else {
-        message.reply('No previous track available.');
+        await message.reply('No previous track available.');
       }
     } catch (err) {
-      message.reply(`Error: ${err.message}`);
+      await message.reply(`Error: ${err.message}`);
     }
   }
 
   async executeSlash(bot, interaction) {
-    if (!interaction.member.voice.channel) return interaction.reply({ content: 'You need to be in a voice channel.', ephemeral: true });
+    if (!interaction.member.voice.channel) {
+      await interaction.reply({ content: 'You need to be in a voice channel.', ephemeral: true });
+      return;
+    }
+    await interaction.deferReply();
     try {
       const prev = await bot.lavalink.previous(interaction.guild.id);
       if (prev) {
-        interaction.reply(`Now playing previous track: **${prev.info.title}**`);
+        await interaction.editReply(`Now playing previous track: **${prev.info.title}**`);
       } else {
-        interaction.reply('No previous track available.');
+        await interaction.editReply('No previous track available.');
       }
     } catch (err) {
-      interaction.reply(`Error: ${err.message}`);
+      await interaction.editReply(`Error: ${err.message}`);
     }
   }
 };

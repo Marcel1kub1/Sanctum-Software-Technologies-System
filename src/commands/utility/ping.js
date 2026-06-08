@@ -15,12 +15,12 @@ module.exports = class PingCommand extends Command {
   async execute(bot, message, args) {
     const msg = await message.channel.send('Pinging...');
     const latency = msg.createdTimestamp - message.createdTimestamp;
-    msg.edit(`Pong! Latency: ${latency}ms | API: ${Math.round(bot.ws.ping)}ms`);
+    await msg.edit(`Pong! Latency: ${latency}ms | API: ${Math.round(bot.ws.ping)}ms`);
   }
 
   async executeSlash(bot, interaction) {
     await interaction.deferReply();
     const latency = Date.now() - interaction.createdTimestamp;
-    interaction.editReply(`Pong! Latency: ${latency}ms | API: ${Math.round(bot.ws.ping)}ms`);
+    await interaction.editReply(`Pong! Latency: ${latency}ms | API: ${Math.round(bot.ws.ping)}ms`);
   }
 };

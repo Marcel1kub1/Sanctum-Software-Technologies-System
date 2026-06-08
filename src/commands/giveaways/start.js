@@ -19,7 +19,7 @@ module.exports = class GiveawayStartCommand extends Command {
   }
 
   async execute(bot, message, args) {
-    message.reply('Giveaway system (use slash command)');
+    await message.reply('Giveaway system (use slash command)');
   }
 
   async executeSlash(bot, interaction) {
@@ -27,7 +27,10 @@ module.exports = class GiveawayStartCommand extends Command {
     const duration = interaction.options.getString('duration');
     const winners = interaction.options.getInteger('winners') || 1;
     const durationMs = parseTime(duration);
-    if (!durationMs || durationMs < 10000) return interaction.reply({ content: 'Invalid duration. Min 10 seconds.', ephemeral: true });
+    if (!durationMs || durationMs < 10000) {
+      await interaction.reply({ content: 'Invalid duration. Min 10 seconds.', ephemeral: true });
+      return;
+    }
 
     const endTime = Date.now() + durationMs;
     const embed = new EmbedBuilder()

@@ -12,15 +12,21 @@ module.exports = class ClearCommand extends Command {
       .setDescription(this.description);
   }
 
-  execute(bot, message) {
-    if (!message.member.voice.channel) return message.reply('You need to be in a voice channel.');
+  async execute(bot, message) {
+    if (!message.member.voice.channel) {
+      await message.reply('You need to be in a voice channel.');
+      return;
+    }
     bot.lavalink.clearQueue(message.guild.id);
-    message.reply('Queue cleared.');
+    await message.reply('Queue cleared.');
   }
 
-  executeSlash(bot, interaction) {
-    if (!interaction.member.voice.channel) return interaction.reply({ content: 'You need to be in a voice channel.', ephemeral: true });
+  async executeSlash(bot, interaction) {
+    if (!interaction.member.voice.channel) {
+      await interaction.reply({ content: 'You need to be in a voice channel.', ephemeral: true });
+      return;
+    }
     bot.lavalink.clearQueue(interaction.guild.id);
-    interaction.reply('Queue cleared.');
+    await interaction.reply('Queue cleared.');
   }
 };

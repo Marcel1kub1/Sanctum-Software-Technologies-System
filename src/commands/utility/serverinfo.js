@@ -26,7 +26,7 @@ module.exports = class ServerInfoCommand extends Command {
         { name: 'Roles', value: `${g.roles.cache.size}`, inline: true },
         { name: 'Boost Level', value: `Level ${g.premiumTier}`, inline: true }
       );
-    message.reply({ embeds: [embed] });
+    await message.reply({ embeds: [embed] });
   }
 
   async executeSlash(bot, interaction) {
@@ -43,6 +43,6 @@ module.exports = class ServerInfoCommand extends Command {
         { name: 'Roles', value: `${g.roles.cache.size}`, inline: true },
         { name: 'Boost Level', value: `Level ${g.premiumTier}`, inline: true }
       );
-    interaction.reply({ embeds: [embed] });
+    await interaction.reply({ embeds: [embed] });
   }
 };

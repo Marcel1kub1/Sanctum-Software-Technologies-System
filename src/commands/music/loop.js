@@ -19,10 +19,16 @@ module.exports = class LoopCommand extends Command {
         ));
   }
 
-  execute(bot, message, args) {
-    if (!message.member.voice.channel) return message.reply('You need to be in a voice channel.');
+  async execute(bot, message, args) {
+    if (!message.member.voice.channel) {
+      await message.reply('You need to be in a voice channel.');
+      return;
+    }
     const mode = args[0] || 'off';
-    if (!['off', 'track', 'queue', 'autoplay'].includes(mode)) return message.reply('Mode must be: off, track, queue, or autoplay');
+    if (!['off', 'track', 'queue', 'autoplay'].includes(mode)) {
+      await message.reply('Mode must be: off, track, queue, or autoplay');
+      return;
+    }
 
     if (mode === 'autoplay') {
       bot.lavalink.setAutoplay(message.guild.id, true);
@@ -31,11 +37,14 @@ module.exports = class LoopCommand extends Command {
       bot.lavalink.setAutoplay(message.guild.id, false);
       bot.lavalink.setLoop(message.guild.id, mode);
     }
-    message.reply(`Loop mode set to: ${mode}`);
+    await message.reply(`Loop mode set to: ${mode}`);
   }
 
-  executeSlash(bot, interaction) {
-    if (!interaction.member.voice.channel) return interaction.reply({ content: 'You need to be in a voice channel.', ephemeral: true });
+  async executeSlash(bot, interaction) {
+    if (!interaction.member.voice.channel) {
+      await interaction.reply({ content: 'You need to be in a voice channel.', ephemeral: true });
+      return;
+    }
     const mode = interaction.options.getString('mode');
 
     if (mode === 'autoplay') {
@@ -45,6 +54,6 @@ module.exports = class LoopCommand extends Command {
       bot.lavalink.setAutoplay(interaction.guild.id, false);
       bot.lavalink.setLoop(interaction.guild.id, mode);
     }
-    interaction.reply(`Loop mode set to: ${mode}`);
+    await interaction.reply(`Loop mode set to: ${mode}`);
   }
 };

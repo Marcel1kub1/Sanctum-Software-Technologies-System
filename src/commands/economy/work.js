@@ -18,12 +18,13 @@ module.exports = class WorkCommand extends Command {
   async execute(bot, message, args) {
     const earned = randomRange(bot.config.economy.workMin, bot.config.economy.workMax);
     await db.query('UPDATE users SET balance = balance + ? WHERE user_id = ?', [earned, message.author.id]);
-    message.reply(`You worked and earned ${bot.config.economy.currency}${earned}!`);
+    await message.reply(`You worked and earned ${bot.config.economy.currency}${earned}!`);
   }
 
   async executeSlash(bot, interaction) {
+    await interaction.deferReply();
     const earned = randomRange(bot.config.economy.workMin, bot.config.economy.workMax);
     await db.query('UPDATE users SET balance = balance + ? WHERE user_id = ?', [earned, interaction.user.id]);
-    interaction.reply(`You worked and earned ${bot.config.economy.currency}${earned}!`);
+    await interaction.editReply(`You worked and earned ${bot.config.economy.currency}${earned}!`);
   }
 };

@@ -15,17 +15,24 @@ module.exports = class CloseCommand extends Command {
 
   async execute(bot, message, args) {
     const ticket = await db.query('SELECT * FROM tickets WHERE channel_id = ?', [message.channel.id]);
-    if (ticket.length === 0) return message.reply('This is not a ticket channel.');
+    if (ticket.length === 0) {
+      await message.reply('This is not a ticket channel.');
+      return;
+    }
     await db.query('UPDATE tickets SET status = ?, closed_at = NOW() WHERE channel_id = ?', ['closed', message.channel.id]);
-    message.channel.send('Closing ticket in 5 seconds...');
+    await message.channel.send('Closing ticket in 5 seconds...');
     setTimeout(() => message.channel.delete().catch(() => {}), 5000);
   }
 
   async executeSlash(bot, interaction) {
     const ticket = await db.query('SELECT * FROM tickets WHERE channel_id = ?', [interaction.channel.id]);
-    if (ticket.length === 0) return interaction.reply({ content: 'This is not a ticket channel.', ephemeral: true });
+    if (ticket.length === 0) {
+      await interaction.reply({ content: 'This is not a ticket channel.', ephemeral: true });
+      return;
+    }
+    await interaction.deferReply();
     await db.query('UPDATE tickets SET status = ?, closed_at = NOW() WHERE channel_id = ?', ['closed', interaction.channel.id]);
-    interaction.reply('Closing ticket in 5 seconds...');
+    await interaction.editReply('Closing ticket in 5 seconds...');
     setTimeout(() => interaction.channel.delete().catch(() => {}), 5000);
   }
 };

@@ -18,22 +18,28 @@ module.exports = class LyricsCommand extends Command {
     let query = args.join(' ');
     if (!query) {
       const status = bot.lavalink.getStatus(message.guild.id);
-      if (!status.current) return message.reply('Nothing is playing. Provide a song name.');
+      if (!status.current) {
+        await message.reply('Nothing is playing. Provide a song name.');
+        return;
+      }
       query = `${status.current.info.title} ${status.current.info.author}`;
     }
 
     try {
       const lyrics = await this.fetchLyrics(query, bot.config.music.lyrics);
-      if (!lyrics) return message.reply('No lyrics found for that song.');
+      if (!lyrics) {
+        await message.reply('No lyrics found for that song.');
+        return;
+      }
 
       const embed = new EmbedBuilder()
         .setColor('#5865f2')
         .setTitle(`Lyrics - ${query}`)
         .setDescription(lyrics.length > 4096 ? lyrics.substring(0, 4093) + '...' : lyrics);
 
-      message.reply({ embeds: [embed] });
+      await message.reply({ embeds: [embed] });
     } catch (err) {
-      message.reply(`Error fetching lyrics: ${err.message}`);
+      await message.reply(`Error fetching lyrics: ${err.message}`);
     }
   }
 
@@ -41,23 +47,29 @@ module.exports = class LyricsCommand extends Command {
     let query = interaction.options.getString('song');
     if (!query) {
       const status = bot.lavalink.getStatus(interaction.guild.id);
-      if (!status.current) return interaction.reply({ content: 'Nothing is playing. Provide a song name.', ephemeral: true });
+      if (!status.current) {
+        await interaction.reply({ content: 'Nothing is playing. Provide a song name.', ephemeral: true });
+        return;
+      }
       query = `${status.current.info.title} ${status.current.info.author}`;
     }
 
     await interaction.deferReply();
     try {
       const lyrics = await this.fetchLyrics(query, bot.config.music.lyrics);
-      if (!lyrics) return interaction.editReply('No lyrics found for that song.');
+      if (!lyrics) {
+        await interaction.editReply('No lyrics found for that song.');
+        return;
+      }
 
       const embed = new EmbedBuilder()
         .setColor('#5865f2')
         .setTitle(`Lyrics - ${query}`)
         .setDescription(lyrics.length > 4096 ? lyrics.substring(0, 4093) + '...' : lyrics);
 
-      interaction.editReply({ embeds: [embed] });
+      await interaction.editReply({ embeds: [embed] });
     } catch (err) {
-      interaction.editReply(`Error fetching lyrics: ${err.message}`);
+      await interaction.editReply(`Error fetching lyrics: ${err.message}`);
     }
   }
 

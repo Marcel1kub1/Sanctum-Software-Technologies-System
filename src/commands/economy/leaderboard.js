@@ -19,15 +19,16 @@ module.exports = class LeaderboardCommand extends Command {
       .setTitle('Economy Leaderboard')
       .setColor(0xFFD700)
       .setDescription(top.map((u, i) => `**${i + 1}.** <@${u.user_id}> - ${bot.config.economy.currency}${u.balance}`).join('\n') || 'No data');
-    message.reply({ embeds: [embed] });
+    await message.reply({ embeds: [embed] });
   }
 
   async executeSlash(bot, interaction) {
+    await interaction.deferReply();
     const top = await User.getLeaderboard(10);
     const embed = new EmbedBuilder()
       .setTitle('Economy Leaderboard')
       .setColor(0xFFD700)
       .setDescription(top.map((u, i) => `**${i + 1}.** <@${u.user_id}> - ${bot.config.economy.currency}${u.balance}`).join('\n') || 'No data');
-    interaction.reply({ embeds: [embed] });
+    await interaction.editReply({ embeds: [embed] });
   }
 };

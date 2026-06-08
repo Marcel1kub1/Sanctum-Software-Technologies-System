@@ -29,7 +29,7 @@ module.exports = class HelpCommand extends Command {
       embed.addFields({ name: cat.charAt(0).toUpperCase() + cat.slice(1), value: cmds.join(', '), inline: false });
     }
 
-    message.reply({ embeds: [embed] });
+    await message.reply({ embeds: [embed] });
   }
 
   async executeSlash(bot, interaction) {
@@ -47,6 +47,6 @@ module.exports = class HelpCommand extends Command {
       embed.addFields({ name: cat.charAt(0).toUpperCase() + cat.slice(1), value: cmds.join(', '), inline: false });
     }
 
-    interaction.reply({ embeds: [embed] });
+    await interaction.reply({ embeds: [embed] });
   }
 };

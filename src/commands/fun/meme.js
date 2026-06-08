@@ -22,9 +22,9 @@ module.exports = class MemeCommand extends Command {
         .setImage(data.url)
         .setColor(0x5865F2)
         .setFooter({ text: `👍 ${data.ups}` });
-      message.reply({ embeds: [embed] });
+      await message.reply({ embeds: [embed] });
     } catch {
-      message.reply('Could not fetch a meme right now.');
+      await message.reply('Could not fetch a meme right now.');
     }
   }
 
@@ -38,9 +38,9 @@ module.exports = class MemeCommand extends Command {
         .setImage(data.url)
         .setColor(0x5865F2)
         .setFooter({ text: `👍 ${data.ups}` });
-      interaction.editReply({ embeds: [embed] });
+      await interaction.editReply({ embeds: [embed] });
     } catch {
-      interaction.editReply('Could not fetch a meme right now.');
+      await interaction.editReply('Could not fetch a meme right now.');
     }
   }
 };

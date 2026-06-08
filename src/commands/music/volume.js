@@ -14,25 +14,35 @@ module.exports = class VolumeCommand extends Command {
   }
 
   async execute(bot, message, args) {
-    if (!message.member.voice.channel) return message.reply('You need to be in a voice channel.');
+    if (!message.member.voice.channel) {
+      await message.reply('You need to be in a voice channel.');
+      return;
+    }
     const volume = parseInt(args[0]);
-    if (isNaN(volume) || volume < 10 || volume > 150) return message.reply('Volume must be between 10 and 150.');
+    if (isNaN(volume) || volume < 10 || volume > 150) {
+      await message.reply('Volume must be between 10 and 150.');
+      return;
+    }
     try {
       await bot.lavalink.setVolume(message.guild.id, volume);
-      message.reply(`Volume set to ${volume}%.`);
+      await message.reply(`Volume set to ${volume}%.`);
     } catch (err) {
-      message.reply(`Error: ${err.message}`);
+      await message.reply(`Error: ${err.message}`);
     }
   }
 
   async executeSlash(bot, interaction) {
-    if (!interaction.member.voice.channel) return interaction.reply({ content: 'You need to be in a voice channel.', ephemeral: true });
+    if (!interaction.member.voice.channel) {
+      await interaction.reply({ content: 'You need to be in a voice channel.', ephemeral: true });
+      return;
+    }
     const volume = interaction.options.getInteger('level');
+    await interaction.deferReply();
     try {
       await bot.lavalink.setVolume(interaction.guild.id, volume);
-      interaction.reply(`Volume set to ${volume}%.`);
+      await interaction.editReply(`Volume set to ${volume}%.`);
     } catch (err) {
-      interaction.reply(`Error: ${err.message}`);
+      await interaction.editReply(`Error: ${err.message}`);
     }
   }
 };

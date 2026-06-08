@@ -13,22 +13,29 @@ module.exports = class PauseCommand extends Command {
   }
 
   async execute(bot, message) {
-    if (!message.member.voice.channel) return message.reply('You need to be in a voice channel.');
+    if (!message.member.voice.channel) {
+      await message.reply('You need to be in a voice channel.');
+      return;
+    }
     try {
       await bot.lavalink.pause(message.guild.id);
-      message.reply('Playback paused.');
+      await message.reply('Playback paused.');
     } catch (err) {
-      message.reply(`Error: ${err.message}`);
+      await message.reply(`Error: ${err.message}`);
     }
   }
 
   async executeSlash(bot, interaction) {
-    if (!interaction.member.voice.channel) return interaction.reply({ content: 'You need to be in a voice channel.', ephemeral: true });
+    if (!interaction.member.voice.channel) {
+      await interaction.reply({ content: 'You need to be in a voice channel.', ephemeral: true });
+      return;
+    }
+    await interaction.deferReply();
     try {
       await bot.lavalink.pause(interaction.guild.id);
-      interaction.reply('Playback paused.');
+      await interaction.editReply('Playback paused.');
     } catch (err) {
-      interaction.reply(`Error: ${err.message}`);
+      await interaction.editReply(`Error: ${err.message}`);
     }
   }
 };

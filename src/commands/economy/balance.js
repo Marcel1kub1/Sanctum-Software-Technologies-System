@@ -17,12 +17,13 @@ module.exports = class BalanceCommand extends Command {
   async execute(bot, message, args) {
     const target = message.mentions.users.first() || message.author;
     const userData = await User.get(target.id);
-    message.reply(`${target.username}'s balance: ${bot.config.economy.currency}${userData.balance}`);
+    await message.reply(`${target.username}'s balance: ${bot.config.economy.currency}${userData.balance}`);
   }
 
   async executeSlash(bot, interaction) {
+    await interaction.deferReply();
     const target = interaction.options.getUser('user') || interaction.user;
     const userData = await User.get(target.id);
-    interaction.reply(`${target.username}'s balance: ${bot.config.economy.currency}${userData.balance}`);
+    await interaction.editReply(`${target.username}'s balance: ${bot.config.economy.currency}${userData.balance}`);
   }
 };

@@ -18,14 +18,17 @@ module.exports = class EightBallCommand extends Command {
 
   async execute(bot, message, args) {
     const question = args.join(' ');
-    if (!question) return message.reply('Ask a question.');
+    if (!question) {
+      await message.reply('Ask a question.');
+      return;
+    }
     const answer = responses[Math.floor(Math.random() * responses.length)];
-    message.reply(`🎱 Question: ${question}\nAnswer: ${answer}`);
+    await message.reply(`🎱 Question: ${question}\nAnswer: ${answer}`);
   }
 
   async executeSlash(bot, interaction) {
     const question = interaction.options.getString('question');
     const answer = responses[Math.floor(Math.random() * responses.length)];
-    interaction.reply(`🎱 Question: ${question}\nAnswer: ${answer}`);
+    await interaction.reply(`🎱 Question: ${question}\nAnswer: ${answer}`);
   }
 };

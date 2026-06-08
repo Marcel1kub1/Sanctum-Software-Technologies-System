@@ -12,9 +12,12 @@ module.exports = class NowPlayingCommand extends Command {
       .setDescription(this.description);
   }
 
-  execute(bot, message) {
+  async execute(bot, message) {
     const status = bot.lavalink.getStatus(message.guild.id);
-    if (!status.current) return message.reply('Nothing is playing right now.');
+    if (!status.current) {
+      await message.reply('Nothing is playing right now.');
+      return;
+    }
 
     const track = status.current;
     const embed = new EmbedBuilder()
@@ -30,11 +33,31 @@ module.exports = class NowPlayingCommand extends Command {
     if (track.info.uri) embed.setURL(track.info.uri);
     if (track.info.artworkUrl) embed.setThumbnail(track.info.artworkUrl);
 
-    message.reply({ embeds: [embed] });
+    await message.reply({ embeds: [embed] });
   }
 
-  executeSlash(bot, interaction) {
-    this.execute(bot, interaction);
+  async executeSlash(bot, interaction) {
+    const status = bot.lavalink.getStatus(interaction.guild.id);
+    if (!status.current) {
+      await interaction.reply({ content: 'Nothing is playing right now.', ephemeral: true });
+      return;
+    }
+
+    const track = status.current;
+    const embed = new EmbedBuilder()
+      .setColor('#5865f2')
+      .setTitle('Now Playing')
+      .setDescription(`**${track.info.title}**\n${track.info.author}`)
+      .addFields(
+        { name: 'Duration', value: formatTime(track.info.length), inline: true },
+        { name: 'Volume', value: `${status.volume}%`, inline: true },
+        { name: 'Loop', value: status.loop, inline: true }
+      );
+
+    if (track.info.uri) embed.setURL(track.info.uri);
+    if (track.info.artworkUrl) embed.setThumbnail(track.info.artworkUrl);
+
+    await interaction.reply({ embeds: [embed] });
   }
 };
 

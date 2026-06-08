@@ -12,17 +12,23 @@ module.exports = class ShuffleCommand extends Command {
       .setDescription(this.description);
   }
 
-  execute(bot, message) {
-    if (!message.member.voice.channel) return message.reply('You need to be in a voice channel.');
+  async execute(bot, message) {
+    if (!message.member.voice.channel) {
+      await message.reply('You need to be in a voice channel.');
+      return;
+    }
     const status = bot.lavalink.getStatus(message.guild.id);
     bot.lavalink.setShuffle(message.guild.id, !status.shuffled);
-    message.reply(`Shuffle ${status.shuffled ? 'disabled' : 'enabled'}.`);
+    await message.reply(`Shuffle ${status.shuffled ? 'disabled' : 'enabled'}.`);
   }
 
-  executeSlash(bot, interaction) {
-    if (!interaction.member.voice.channel) return interaction.reply({ content: 'You need to be in a voice channel.', ephemeral: true });
+  async executeSlash(bot, interaction) {
+    if (!interaction.member.voice.channel) {
+      await interaction.reply({ content: 'You need to be in a voice channel.', ephemeral: true });
+      return;
+    }
     const status = bot.lavalink.getStatus(interaction.guild.id);
     bot.lavalink.setShuffle(interaction.guild.id, !status.shuffled);
-    interaction.reply(`Shuffle ${status.shuffled ? 'disabled' : 'enabled'}.`);
+    await interaction.reply(`Shuffle ${status.shuffled ? 'disabled' : 'enabled'}.`);
   }
 };

@@ -17,14 +17,18 @@ module.exports = class AntiSpamCommand extends Command {
 
   async execute(bot, message, args) {
     const mode = args[0]?.toLowerCase();
-    if (!['on', 'off'].includes(mode)) return message.reply('Usage: !antispam <on|off>');
+    if (!['on', 'off'].includes(mode)) {
+      await message.reply('Usage: !antispam <on|off>');
+      return;
+    }
     await db.query('UPDATE guilds SET auto_mod_level = ? WHERE guild_id = ?', [mode === 'on' ? 'strict' : 'off', message.guild.id]);
-    message.reply(`Anti-spam has been turned ${mode}.`);
+    await message.reply(`Anti-spam has been turned ${mode}.`);
   }
 
   async executeSlash(bot, interaction) {
     const mode = interaction.options.getString('mode');
+    await interaction.deferReply();
     await db.query('UPDATE guilds SET auto_mod_level = ? WHERE guild_id = ?', [mode === 'on' ? 'strict' : 'off', interaction.guild.id]);
-    interaction.reply(`Anti-spam has been turned ${mode}.`);
+    await interaction.editReply(`Anti-spam has been turned ${mode}.`);
   }
 };

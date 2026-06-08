@@ -17,18 +17,25 @@ module.exports = class BanCommand extends Command {
 
   async execute(bot, message, args) {
     const member = message.mentions.members.first();
-    if (!member) return message.reply('Please mention a user to ban.');
+    if (!member) {
+      await message.reply('Please mention a user to ban.');
+      return;
+    }
     const reason = args.slice(1).join(' ') || 'No reason provided';
     await member.ban({ reason });
-    message.reply(`Banned ${member.user.tag} | Reason: ${reason}`);
+    await message.reply(`Banned ${member.user.tag} | Reason: ${reason}`);
   }
 
   async executeSlash(bot, interaction) {
     const user = interaction.options.getUser('user');
     const reason = interaction.options.getString('reason') || 'No reason provided';
     const member = interaction.guild.members.cache.get(user.id);
-    if (!member) return interaction.reply({ content: 'User not found in this server.', ephemeral: true });
+    if (!member) {
+      await interaction.reply({ content: 'User not found in this server.', ephemeral: true });
+      return;
+    }
+    await interaction.deferReply();
     await member.ban({ reason });
-    interaction.reply(`Banned ${user.tag} | Reason: ${reason}`);
+    await interaction.editReply(`Banned ${user.tag} | Reason: ${reason}`);
   }
 };

@@ -14,9 +14,15 @@ module.exports = class PlayCommand extends Command {
   }
 
   async execute(bot, message, args) {
-    if (!message.member.voice.channel) return message.reply('You need to be in a voice channel.');
+    if (!message.member.voice.channel) {
+      await message.reply('You need to be in a voice channel.');
+      return;
+    }
     const query = args.join(' ');
-    if (!query) return message.reply('Please provide a song name or URL.');
+    if (!query) {
+      await message.reply('Please provide a song name or URL.');
+      return;
+    }
 
     try {
       const channelId = message.member.voice.channel.id;
@@ -24,22 +30,26 @@ module.exports = class PlayCommand extends Command {
       if (!player) {
         await bot.lavalink.joinVoiceChannel(message.guild.id, channelId);
       } else if (channelId !== player.voiceChannelId) {
-        return message.reply('You need to be in my voice channel.');
+        await message.reply('You need to be in my voice channel.');
+        return;
       }
 
       const result = await bot.lavalink.play(message.guild.id, query, message.author.id);
       if (result.queued) {
-        message.reply(`Added to queue: **${result.track.info.title}** (position #${result.position})`);
+        await message.reply(`Added to queue: **${result.track.info.title}** (position #${result.position})`);
       } else {
-        message.reply(`Now playing: **${result.track.info.title}**`);
+        await message.reply(`Now playing: **${result.track.info.title}**`);
       }
     } catch (err) {
-      message.reply(`Error: ${err.message}`);
+      await message.reply(`Error: ${err.message}`);
     }
   }
 
   async executeSlash(bot, interaction) {
-    if (!interaction.member.voice.channel) return interaction.reply({ content: 'You need to be in a voice channel.', ephemeral: true });
+    if (!interaction.member.voice.channel) {
+      await interaction.reply({ content: 'You need to be in a voice channel.', ephemeral: true });
+      return;
+    }
     const query = interaction.options.getString('query');
 
     await interaction.deferReply();
@@ -49,17 +59,18 @@ module.exports = class PlayCommand extends Command {
       if (!player) {
         await bot.lavalink.joinVoiceChannel(interaction.guild.id, channelId);
       } else if (channelId !== player.voiceChannelId) {
-        return interaction.editReply('You need to be in my voice channel.');
+        await interaction.editReply('You need to be in my voice channel.');
+        return;
       }
 
       const result = await bot.lavalink.play(interaction.guild.id, query, interaction.user.id);
       if (result.queued) {
-        interaction.editReply(`Added to queue: **${result.track.info.title}** (position #${result.position})`);
+        await interaction.editReply(`Added to queue: **${result.track.info.title}** (position #${result.position})`);
       } else {
-        interaction.editReply(`Now playing: **${result.track.info.title}**`);
+        await interaction.editReply(`Now playing: **${result.track.info.title}**`);
       }
     } catch (err) {
-      interaction.editReply(`Error: ${err.message}`);
+      await interaction.editReply(`Error: ${err.message}`);
     }
   }
 };

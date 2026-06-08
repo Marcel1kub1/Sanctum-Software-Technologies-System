@@ -26,10 +26,11 @@ module.exports = class RankCommand extends Command {
         { name: 'Level', value: `${data.level}`, inline: true },
         { name: 'XP', value: `${data.xp} / ${nextXP}`, inline: true }
       );
-    message.reply({ embeds: [embed] });
+    await message.reply({ embeds: [embed] });
   }
 
   async executeSlash(bot, interaction) {
+    await interaction.deferReply();
     const target = interaction.options.getUser('user') || interaction.user;
     const rows = await db.query('SELECT * FROM levels WHERE user_id = ? AND guild_id = ?', [target.id, interaction.guild.id]);
     const data = rows[0] || { xp: 0, level: 0 };
@@ -41,6 +42,6 @@ module.exports = class RankCommand extends Command {
         { name: 'Level', value: `${data.level}`, inline: true },
         { name: 'XP', value: `${data.xp} / ${nextXP}`, inline: true }
       );
-    interaction.reply({ embeds: [embed] });
+    await interaction.editReply({ embeds: [embed] });
   }
 };

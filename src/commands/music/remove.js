@@ -13,28 +13,37 @@ module.exports = class RemoveCommand extends Command {
       .addIntegerOption(opt => opt.setName('position').setDescription('Track position in the queue').setRequired(true).setMinValue(1));
   }
 
-  execute(bot, message, args) {
-    if (!message.member.voice.channel) return message.reply('You need to be in a voice channel.');
+  async execute(bot, message, args) {
+    if (!message.member.voice.channel) {
+      await message.reply('You need to be in a voice channel.');
+      return;
+    }
     const index = parseInt(args[0]) - 1;
-    if (isNaN(index) || index < 0) return message.reply('Please provide a valid track number.');
+    if (isNaN(index) || index < 0) {
+      await message.reply('Please provide a valid track number.');
+      return;
+    }
 
     const removed = bot.lavalink.removeTrack(message.guild.id, index);
     if (removed) {
-      message.reply(`Removed track #${index + 1} from the queue.`);
+      await message.reply(`Removed track #${index + 1} from the queue.`);
     } else {
-      message.reply('Invalid track position.');
+      await message.reply('Invalid track position.');
     }
   }
 
-  executeSlash(bot, interaction) {
-    if (!interaction.member.voice.channel) return interaction.reply({ content: 'You need to be in a voice channel.', ephemeral: true });
+  async executeSlash(bot, interaction) {
+    if (!interaction.member.voice.channel) {
+      await interaction.reply({ content: 'You need to be in a voice channel.', ephemeral: true });
+      return;
+    }
     const position = interaction.options.getInteger('position') - 1;
 
     const removed = bot.lavalink.removeTrack(interaction.guild.id, position);
     if (removed) {
-      interaction.reply(`Removed track #${position + 1} from the queue.`);
+      await interaction.reply(`Removed track #${position + 1} from the queue.`);
     } else {
-      interaction.reply('Invalid track position.');
+      await interaction.reply('Invalid track position.');
     }
   }
 };

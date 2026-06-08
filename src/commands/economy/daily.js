@@ -20,23 +20,26 @@ module.exports = class DailyCommand extends Command {
     const lastDaily = userData.daily_last ? new Date(userData.daily_last).getTime() : 0;
     if (now - lastDaily < 86400000) {
       const remaining = 86400000 - (now - lastDaily);
-      return message.reply(`You can claim your daily in ${Math.ceil(remaining / 3600000)} hours.`);
+      await message.reply(`You can claim your daily in ${Math.ceil(remaining / 3600000)} hours.`);
+      return;
     }
     await db.query('UPDATE users SET balance = balance + ?, daily_last = NOW() WHERE user_id = ?',
       [bot.config.economy.dailyAmount, message.author.id]);
-    message.reply(`You claimed ${bot.config.economy.currency}${bot.config.economy.dailyAmount} as your daily reward!`);
+    await message.reply(`You claimed ${bot.config.economy.currency}${bot.config.economy.dailyAmount} as your daily reward!`);
   }
 
   async executeSlash(bot, interaction) {
+    await interaction.deferReply();
     const userData = await db.getUser(interaction.user.id);
     const now = Date.now();
     const lastDaily = userData.daily_last ? new Date(userData.daily_last).getTime() : 0;
     if (now - lastDaily < 86400000) {
       const remaining = 86400000 - (now - lastDaily);
-      return interaction.reply(`You can claim your daily in ${Math.ceil(remaining / 3600000)} hours.`);
+      await interaction.editReply(`You can claim your daily in ${Math.ceil(remaining / 3600000)} hours.`);
+      return;
     }
     await db.query('UPDATE users SET balance = balance + ?, daily_last = NOW() WHERE user_id = ?',
       [bot.config.economy.dailyAmount, interaction.user.id]);
-    interaction.reply(`You claimed ${bot.config.economy.currency}${bot.config.economy.dailyAmount} as your daily reward!`);
+    await interaction.editReply(`You claimed ${bot.config.economy.currency}${bot.config.economy.dailyAmount} as your daily reward!`);
   }
 };
