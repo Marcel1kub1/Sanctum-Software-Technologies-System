@@ -10,8 +10,9 @@ console.log('==========================================');
 console.log('  Sanctum Technologies - Setup & Launch');
 console.log('==========================================');
 
-if (!fs.existsSync(path.join(TARGET, 'src'))) {
+if (!fs.existsSync(path.join(TARGET, '.git'))) {
   console.log('[Setup] Cloning repository...');
+  if (fs.existsSync(TEMP_CLONE)) fs.rmSync(TEMP_CLONE, { recursive: true, force: true });
   execSync(`git clone ${REPO_URL} "${TEMP_CLONE}"`, { stdio: 'inherit' });
   const entries = fs.readdirSync(TEMP_CLONE);
   for (const entry of entries) {
