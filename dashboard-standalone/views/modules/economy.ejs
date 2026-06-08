@@ -1,0 +1,142 @@
+<div class="page-header">
+  <h1 class="page-title">Economy</h1>
+  <p class="page-desc">Virtual economy, currency, and rewards system</p>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <div class="card-title">Economy Module</div>
+      <div class="card-desc">Enable or disable the economy system</div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox" checked>
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Currency Settings</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Currency Name</label>
+      <div class="form-row">
+        <input class="form-input" style="flex:1;" value="Sanctum Coins">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Currency Symbol</label>
+      <input class="form-input" value="<:coin:>" placeholder=":moneybag: or $">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Starting Balance</label>
+      <input class="form-input" type="number" value="500" min="0">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Max Balance</label>
+      <input class="form-input" type="number" value="999999" min="1">
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Daily & Work Rewards</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Daily Amount</label>
+      <input class="form-input" type="number" value="100" min="1">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Work Min Amount</label>
+      <input class="form-input" type="number" value="10" min="1">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Work Max Amount</label>
+      <input class="form-input" type="number" value="100" min="1">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Work Cooldown (seconds)</label>
+      <input class="form-input" type="number" value="3600" min="1">
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Interest on Savings</div><div class="setting-desc">Enable interest for bank savings</div></div>
+      <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Interest Rate (%)</label>
+      <input class="form-input" type="number" value="5" min="1" max="100">
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <span class="card-title">Shop Items</span>
+      <div class="card-desc">Items members can purchase from the shop</div>
+    </div>
+    <button class="btn btn-primary btn-sm">+ Add Item</button>
+  </div>
+  <div class="empty-state" style="padding:16px;">
+    <div class="empty-state-text" style="font-size:13px;">No shop items configured</div>
+  </div>
+  <div style="margin-top:12px;">
+    <div class="level-row">
+      <div class="level-badge" style="background:var(--bg-hover);">🎫</div>
+      <div class="level-info">
+        <div class="level-name">VIP Ticket</div>
+        <div class="level-role">500 coins · Gives VIP role for 24h</div>
+      </div>
+      <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+    </div>
+    <div class="level-row">
+      <div class="level-badge" style="background:var(--bg-hover);">🎨</div>
+      <div class="level-info">
+        <div class="level-name">Custom Color Role</div>
+        <div class="level-role">1000 coins · Custom role color</div>
+      </div>
+      <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <span class="card-title">Economy Leaderboard</span>
+    </div>
+  </div>
+  <div style="padding:4px 0;">
+    <div class="level-row">
+      <div style="width:32px;text-align:center;font-weight:800;color:var(--yellow);">1</div>
+      <div style="width:32px;height:32px;border-radius:50%;background:var(--accent-subtle);display:flex;align-items:center;justify-content:center;">T</div>
+      <div class="level-info">
+        <div class="level-name">TestUser</div>
+        <div class="level-role">12,450 coins</div>
+      </div>
+    </div>
+    <div class="level-row">
+      <div style="width:32px;text-align:center;font-weight:800;color:var(--text-muted);">2</div>
+      <div style="width:32px;height:32px;border-radius:50%;background:var(--bg-hover);display:flex;align-items:center;justify-content:center;">M</div>
+      <div class="level-info">
+        <div class="level-name">Member2</div>
+        <div class="level-role">8,300 coins</div>
+      </div>
+    </div>
+    <div class="level-row">
+      <div style="width:32px;text-align:center;font-weight:800;color:var(--text-muted);">3</div>
+      <div style="width:32px;height:32px;border-radius:50%;background:var(--bg-hover);display:flex;align-items:center;justify-content:center;">J</div>
+      <div class="level-info">
+        <div class="level-name">Member3</div>
+        <div class="level-role">5,100 coins</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="flex gap-2">
+  <button class="btn btn-primary">Save Changes</button>
+  <button class="btn btn-outline">Reset to Default</button>
+</div>

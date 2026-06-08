@@ -1,0 +1,100 @@
+<div class="page-header">
+  <h1 class="page-title">Giveaways</h1>
+  <p class="page-desc">Automated giveaways with timer and winner selection</p>
+</div>
+
+<form method="POST" action="/dashboard/config?guild=<%= selectedGuild ? selectedGuild.id : '' %>">
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <div class="card-title">Giveaways Module</div>
+      <div class="card-desc">Enable or disable the giveaways system</div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox" <%= gc('giveaways_enabled', true) ? 'checked' : '' %> name="giveaways_enabled">
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Default Settings</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Giveaway Channel</label>
+      <select class="form-select" name="giveaways_channel">
+        <option value="" <%= gc('giveaways_channel', '') === '' ? 'selected' : '' %>>Select a channel...</option>
+        <% (selectedGuild.textChannels || []).forEach(ch => { %>
+          <option value="<%= ch.id %>" <%= gc('giveaways_channel', '') === ch.id ? 'selected' : '' %>><%= ch.name %></option>
+        <% }) %>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Default Duration (hours)</label>
+      <input class="form-input" type="number" value="<%= gc('giveaways_default_duration', '24') %>" min="1" max="720" name="giveaways_default_duration">
+      <div class="form-hint">Default length for new giveaways</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Max Winners</label>
+      <input class="form-input" type="number" value="<%= gc('giveaways_max_winners', '1') %>" min="1" max="50" name="giveaways_max_winners">
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Require Role to Host</div><div class="setting-desc">Restrict giveaway creation to certain roles</div></div>
+      <label class="toggle"><input type="checkbox" <%= gc('giveaways_require_role_host', true) ? 'checked' : '' %> name="giveaways_require_role_host"><span class="toggle-slider"></span></label>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <span class="card-title">Active Giveaways</span>
+        <div class="card-desc">Currently running giveaways</div>
+      </div>
+      <button class="btn btn-primary btn-sm">+ New Giveaway</button>
+    </div>
+    <div class="empty-state" style="padding:20px;">
+      <div class="empty-state-icon">🎉</div>
+      <div class="empty-state-text">No active giveaways</div>
+      <p style="font-size:12px;color:var(--text-muted);margin-top:4px;">Start a giveaway to engage your community.</p>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <span class="card-title">Giveaway Configuration</span>
+  </div>
+  <div class="form-group">
+    <label class="form-label">Entries Emoji</label>
+    <div class="form-row">
+      <input class="form-input" style="width:60px;" value="<%= gc('giveaways_entries_emoji', '🎉') %>" name="giveaways_entries_emoji">
+      <span style="font-size:12px;color:var(--text-muted);">Emoji used to enter giveaways</span>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="form-label">Ending Message</label>
+    <input class="form-input" value="<%= gc('giveaways_ending_message', 'Giveaway ended! Drawing winner...') %>" name="giveaways_ending_message">
+  </div>
+  <div class="form-group">
+    <label class="form-label">Winner Announcement</label>
+    <textarea class="form-textarea" rows="2" name="giveaways_winner_announcement"><%= gc('giveaways_winner_announcement', 'Congratulations {winner}! You won **{prize}**!') %></textarea>
+    <div class="form-hint">Variables: {winner}, {prize}, {host}</div>
+  </div>
+  <div class="setting-row">
+    <div><div class="setting-label">Ping Winners</div><div class="setting-desc">@mention winner(s) in the announcement</div></div>
+    <label class="toggle"><input type="checkbox" <%= gc('giveaways_ping_winners', true) ? 'checked' : '' %> name="giveaways_ping_winners"><span class="toggle-slider"></span></label>
+  </div>
+  <div class="setting-row">
+    <div><div class="setting-label">Re-Roll on No Winner</div><div class="setting-desc">Automatically re-roll if no valid winners</div></div>
+    <label class="toggle"><input type="checkbox" <%= gc('giveaways_reroll_no_winner', true) ? 'checked' : '' %> name="giveaways_reroll_no_winner"><span class="toggle-slider"></span></label>
+  </div>
+</div>
+
+<div class="flex gap-2">
+  <button class="btn btn-primary">Save Changes</button>
+  <button class="btn btn-outline">Reset to Default</button>
+</div>
+
+</form>

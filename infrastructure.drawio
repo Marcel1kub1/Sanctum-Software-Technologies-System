@@ -1,0 +1,313 @@
+<mxfile host="65bd71144e">
+    <diagram id="infrastructure" name="Full Infrastructure">
+        <mxGraphModel dx="2023" dy="999" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="title" value="Sanctum Technologies — Full System Infrastructure" style="text;html=1;whiteSpace=wrap;fillColor=none;fontColor=#F1F1F7;fontSize=20;fontWeight=bold;strokeColor=none;align=center;" parent="1" vertex="1">
+                    <mxGeometry x="400" y="10" width="600" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="layer1_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0B0E14;fontColor=#9D9DB5;strokeColor=#262A3A;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="20" y="60" width="1560" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="layer1_label" value="EXTERNAL SERVICES &amp; APIs" style="text;html=1;whiteSpace=wrap;fillColor=none;fontColor=#6B6B80;fontSize=10;fontWeight=bold;strokeColor=none;align=left;letterSpacing=2;" parent="1" vertex="1">
+                    <mxGeometry x="30" y="68" width="200" height="16" as="geometry"/>
+                </mxCell>
+                <mxCell id="discord_api" value="Discord API&#xa;gateway.discord.gg" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#5865F2;fontColor=#FFFFFF;strokeColor=#4752C4;fontSize=12;fontWeight=bold;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="90" width="150" height="48" as="geometry"/>
+                </mxCell>
+                <mxCell id="lavalink_srv" value="Lavalink&#xa;localhost:2333" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#7C3AED;fontColor=#FFFFFF;strokeColor=#6D28D9;fontSize=12;fontWeight=bold;" parent="1" vertex="1">
+                    <mxGeometry x="230" y="90" width="150" height="48" as="geometry"/>
+                </mxCell>
+                <mxCell id="yt_api" value="YouTube / Spotify&#xa;Streaming APIs" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E1E2E;fontColor=#FFFFFF;strokeColor=#313244;fontSize=12;fontWeight=bold;dashed=1;" parent="1" vertex="1">
+                    <mxGeometry x="420" y="90" width="150" height="48" as="geometry"/>
+                </mxCell>
+                <mxCell id="mysql_srv" value="MySQL 8.0&#xa;sanctum:3306" style="cylinder;whiteSpace=wrap;html=1;fillColor=#00758F;fontColor=#FFFFFF;strokeColor=#005E76;fontSize=12;fontWeight=bold;" parent="1" vertex="1">
+                    <mxGeometry x="610" y="90" width="120" height="48" as="geometry"/>
+                </mxCell>
+                <mxCell id="redis_srv" value="Redis (future)&#xa;Cache / Queues" style="cylinder;whiteSpace=wrap;html=1;fillColor=#1E1E2E;fontColor=#6B6B80;strokeColor=#262A3A;fontSize=12;fontWeight=bold;dashed=1;" parent="1" vertex="1">
+                    <mxGeometry x="770" y="90" width="120" height="48" as="geometry"/>
+                </mxCell>
+                <mxCell id="discord_oauth" value="Discord OAuth2&#xa;identify + guilds" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#5865F2;fontColor=#FFFFFF;strokeColor=#4752C4;fontSize=12;fontWeight=bold;" parent="1" vertex="1">
+                    <mxGeometry x="930" y="90" width="150" height="48" as="geometry"/>
+                </mxCell>
+                <mxCell id="user_browser" value="Admin Browser&#xa;Chrome / Firefox" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#161922;fontColor=#FFFFFF;strokeColor=#262A3A;fontSize=12;fontWeight=bold;" parent="1" vertex="1">
+                    <mxGeometry x="1120" y="90" width="130" height="48" as="geometry"/>
+                </mxCell>
+                <mxCell id="pm2_srv" value="PM2 Process&#xa;Manager" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#B45309;fontColor=#FFFFFF;strokeColor=#92400E;fontSize=12;fontWeight=bold;" parent="1" vertex="1">
+                    <mxGeometry x="1290" y="90" width="130" height="48" as="geometry"/>
+                </mxCell>
+                <mxCell id="nginx_srv" value="Nginx Reverse&#xa;Proxy (SSL)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#22C55E;fontColor=#FFFFFF;strokeColor=#16A34A;fontSize=12;fontWeight=bold;" parent="1" vertex="1">
+                    <mxGeometry x="1450" y="90" width="120" height="48" as="geometry"/>
+                </mxCell>
+                <mxCell id="layer2_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#11141C;fontColor=#9D9DB5;strokeColor=#262A3A;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="20" y="200" width="1560" height="170" as="geometry"/>
+                </mxCell>
+                <mxCell id="layer2_label" value="APPLICATION CORE" style="text;html=1;whiteSpace=wrap;fillColor=none;fontColor=#6B6B80;fontSize=10;fontWeight=bold;strokeColor=none;align=left;letterSpacing=2;" parent="1" vertex="1">
+                    <mxGeometry x="30" y="208" width="200" height="16" as="geometry"/>
+                </mxCell>
+                <mxCell id="bot_client" value="Sanctum Bot Client&#xa;discord.js v14 / Node 20" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#161922;fontColor=#FFFFFF;strokeColor=#313244;fontSize=12;fontWeight=bold;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="230" width="240" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="bot_intents" value="Gateway Intents:&#xa;Guilds, Members, Messages, Voice,&#xa;Presences, Reactions, AutoMod" style="text;whiteSpace=wrap;html=1;fillColor=none;fontColor=#9D9DB5;fontSize=10;strokeColor=none;align=left;" parent="1" vertex="1">
+                    <mxGeometry x="50" y="280" width="220" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="event_system" value="Event System&#xa;ready.js / messageCreate.js&#xa;/ interactionCreate.js" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E1E2E;fontColor=#FFFFFF;strokeColor=#313244;fontSize=11;fontWeight=bold;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="230" width="180" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="cmd_handler" value="Command Handler&#xa;prefix + slash dispatcher&#xa;cooldowns + permissions" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E1E2E;fontColor=#FFFFFF;strokeColor=#313244;fontSize=11;fontWeight=bold;" parent="1" vertex="1">
+                    <mxGeometry x="540" y="230" width="180" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="db_layer" value="Database Layer&#xa;mysql2/promise pool&#xa;getGuild / getUser / query" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E1E2E;fontColor=#FFFFFF;strokeColor=#313244;fontSize=11;fontWeight=bold;" parent="1" vertex="1">
+                    <mxGeometry x="760" y="230" width="180" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="models" value="Data Models&#xa;Guild.js / User.js&#xa;Command.js structure" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E1E2E;fontColor=#FFFFFF;strokeColor=#313244;fontSize=11;fontWeight=bold;" parent="1" vertex="1">
+                    <mxGeometry x="980" y="230" width="180" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="utils" value="Utilities&#xa;embed.js / functions.js&#xa;logger.js / permissions.js" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E1E2E;fontColor=#FFFFFF;strokeColor=#313244;fontSize=11;fontWeight=bold;" parent="1" vertex="1">
+                    <mxGeometry x="1200" y="230" width="180" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="config_cell" value="Config&#xa;config.js + .env&#xa;(all module toggles)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E1E2E;fontColor=#FFFFFF;strokeColor=#313244;fontSize=11;fontWeight=bold;" parent="1" vertex="1">
+                    <mxGeometry x="1420" y="230" width="150" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="layer3_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0B0E14;fontColor=#9D9DB5;strokeColor=#262A3A;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="20" y="390" width="1560" height="260" as="geometry"/>
+                </mxCell>
+                <mxCell id="layer3_label" value="BOT MODULES (src/commands/*)" style="text;html=1;whiteSpace=wrap;fillColor=none;fontColor=#6B6B80;fontSize=10;fontWeight=bold;strokeColor=none;align=left;letterSpacing=2;" parent="1" vertex="1">
+                    <mxGeometry x="30" y="398" width="200" height="16" as="geometry"/>
+                </mxCell>
+                <mxCell id="mod_core" value="Core / Utility" style="swimlane;whiteSpace=wrap;html=1;fillColor=#161922;fontColor=#FFFFFF;strokeColor=#262A3A;fontSize=12;fontWeight=bold;startSize=26;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="420" width="200" height="210" as="geometry"/>
+                </mxCell>
+                <mxCell id="mod_core_items" value="• help.js&#xa;• ping.js&#xa;• serverinfo.js&#xa;• errorHandler.js&#xa;• eventHandler.js&#xa;• commandHandler.js" style="text;whiteSpace=wrap;html=1;fillColor=none;fontColor=#9D9DB5;fontSize=11;align=left;verticalAlign=top;strokeColor=none;" parent="1" vertex="1">
+                    <mxGeometry x="50" y="456" width="180" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="mod_mod" value="Moderation" style="swimlane;whiteSpace=wrap;html=1;fillColor=#161922;fontColor=#FFFFFF;strokeColor=#262A3A;fontSize=12;fontWeight=bold;startSize=26;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="280" y="420" width="200" height="210" as="geometry"/>
+                </mxCell>
+                <mxCell id="mod_mod_items" value="• ban.js / kick.js&#xa;• purge.js / warn.js&#xa;• mute (planned)&#xa;• Anti-spam filter&#xa;• Auto-mod rules&#xa;• Raid detection" style="text;whiteSpace=wrap;html=1;fillColor=none;fontColor=#9D9DB5;fontSize=11;align=left;verticalAlign=top;strokeColor=none;" parent="1" vertex="1">
+                    <mxGeometry x="290" y="456" width="180" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="mod_econ" value="Economy" style="swimlane;whiteSpace=wrap;html=1;fillColor=#161922;fontColor=#FFFFFF;strokeColor=#262A3A;fontSize=12;fontWeight=bold;startSize=26;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="520" y="420" width="200" height="210" as="geometry"/>
+                </mxCell>
+                <mxCell id="mod_econ_items" value="• balance.js&#xa;• daily.js / work.js&#xa;• give.js&#xa;• leaderboard.js&#xa;• Shop (planned)&#xa;• Bank (planned)" style="text;whiteSpace=wrap;html=1;fillColor=none;fontColor=#9D9DB5;fontSize=11;align=left;verticalAlign=top;strokeColor=none;" parent="1" vertex="1">
+                    <mxGeometry x="530" y="456" width="180" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="mod_music" value="Music" style="swimlane;whiteSpace=wrap;html=1;fillColor=#161922;fontColor=#FFFFFF;strokeColor=#262A3A;fontSize=12;fontWeight=bold;startSize=26;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="760" y="420" width="200" height="210" as="geometry"/>
+                </mxCell>
+                <mxCell id="mod_music_items" value="• play.js&#xa;• queue.js / skip.js&#xa;• stop.js&#xa;• Now-playing panel&#xa;• Loop / Autoplay&#xa;• Lyrics + Volume" style="text;whiteSpace=wrap;html=1;fillColor=none;fontColor=#9D9DB5;fontSize=11;align=left;verticalAlign=top;strokeColor=none;" parent="1" vertex="1">
+                    <mxGeometry x="770" y="456" width="180" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="mod_tickets" value="Tickets" style="swimlane;whiteSpace=wrap;html=1;fillColor=#161922;fontColor=#FFFFFF;strokeColor=#262A3A;fontSize=12;fontWeight=bold;startSize=26;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="1000" y="420" width="200" height="210" as="geometry"/>
+                </mxCell>
+                <mxCell id="mod_ticket_items" value="• setup.js&#xa;• close.js&#xa;• claim (planned)&#xa;• transcripts&#xa;• ticket panels&#xa;• categories" style="text;whiteSpace=wrap;html=1;fillColor=none;fontColor=#9D9DB5;fontSize=11;align=left;verticalAlign=top;strokeColor=none;" parent="1" vertex="1">
+                    <mxGeometry x="1010" y="456" width="180" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="mod_level" value="Leveling" style="swimlane;whiteSpace=wrap;html=1;fillColor=#161922;fontColor=#FFFFFF;strokeColor=#262A3A;fontSize=12;fontWeight=bold;startSize=26;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="1240" y="420" width="160" height="210" as="geometry"/>
+                </mxCell>
+                <mxCell id="mod_level_items" value="• rank.js&#xa;• XP tracking&#xa;• Level rewards&#xa;• Leaderboard&#xa;• Voice XP" style="text;whiteSpace=wrap;html=1;fillColor=none;fontColor=#9D9DB5;fontSize=11;align=left;verticalAlign=top;strokeColor=none;" parent="1" vertex="1">
+                    <mxGeometry x="1250" y="456" width="140" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="mod_give" value="Giveaways" style="swimlane;whiteSpace=wrap;html=1;fillColor=#161922;fontColor=#FFFFFF;strokeColor=#262A3A;fontSize=12;fontWeight=bold;startSize=26;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="1430" y="420" width="140" height="210" as="geometry"/>
+                </mxCell>
+                <mxCell id="mod_give_items" value="• start.js&#xa;• reroll.js&#xa;• end (planned)&#xa;• list (planned)" style="text;whiteSpace=wrap;html=1;fillColor=none;fontColor=#9D9DB5;fontSize=11;align=left;verticalAlign=top;strokeColor=none;" parent="1" vertex="1">
+                    <mxGeometry x="1438" y="456" width="125" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="layer4_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#11141C;fontColor=#9D9DB5;strokeColor=#262A3A;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="20" y="670" width="1560" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="layer4_label" value="DATABASE SCHEMA (sanctum DB — 11 Tables)" style="text;html=1;whiteSpace=wrap;fillColor=none;fontColor=#6B6B80;fontSize=10;fontWeight=bold;strokeColor=none;align=left;letterSpacing=2;" parent="1" vertex="1">
+                    <mxGeometry x="30" y="678" width="300" height="16" as="geometry"/>
+                </mxCell>
+                <mxCell id="db_guilds" value="guilds&#xa;guild_id, prefix, channels,&#xa;auto_mod_level, mute_role" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#00758F;fontColor=#FFFFFF;strokeColor=#005E76;fontSize=9;fontWeight=bold;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="700" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="db_users" value="users&#xa;user_id, balance, xp,&#xa;level, daily_last" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#00758F;fontColor=#FFFFFF;strokeColor=#005E76;fontSize=9;fontWeight=bold;" parent="1" vertex="1">
+                    <mxGeometry x="180" y="700" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="db_levels" value="levels&#xa;user_id, guild_id, xp,&#xa;level, last_message" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#00758F;fontColor=#FFFFFF;strokeColor=#005E76;fontSize=9;fontWeight=bold;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="700" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="db_economy" value="economy&#xa;user_id, guild_id,&#xa;balance, bank, daily_last" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#00758F;fontColor=#FFFFFF;strokeColor=#005E76;fontSize=9;fontWeight=bold;" parent="1" vertex="1">
+                    <mxGeometry x="460" y="700" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="db_warnings" value="warnings&#xa;user_id, guild_id,&#xa;moderator_id, reason&#xa;warnings_count (agg)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#00758F;fontColor=#FFFFFF;strokeColor=#005E76;fontSize=9;fontWeight=bold;" parent="1" vertex="1">
+                    <mxGeometry x="600" y="700" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="db_tickets" value="tickets&#xa;ticket_id, channel_id,&#xa;creator_id, status,&#xa;claimed_by, closed_at" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#00758F;fontColor=#FFFFFF;strokeColor=#005E76;fontSize=9;fontWeight=bold;" parent="1" vertex="1">
+                    <mxGeometry x="740" y="700" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="db_giveaways" value="giveaways&#xa;message_id, prize,&#xa;winners, end_time,&#xa;entrants (JSON)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#00758F;fontColor=#FFFFFF;strokeColor=#005E76;fontSize=9;fontWeight=bold;" parent="1" vertex="1">
+                    <mxGeometry x="880" y="700" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="db_music" value="music_queue&#xa;guild_id, song_url,&#xa;song_title, requester,&#xa;position, duration" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#00758F;fontColor=#FFFFFF;strokeColor=#005E76;fontSize=9;fontWeight=bold;" parent="1" vertex="1">
+                    <mxGeometry x="1020" y="700" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="db_muted" value="muted_users&#xa;user_id, guild_id,&#xa;role_id, unmix_at,&#xa;reason" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#00758F;fontColor=#FFFFFF;strokeColor=#005E76;fontSize=9;fontWeight=bold;" parent="1" vertex="1">
+                    <mxGeometry x="1160" y="700" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="db_logs" value="audit_logs&#xa;(planned)&#xa;events, timestamps,&#xa;actors, targets" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E1E2E;fontColor=#6B6B80;strokeColor=#262A3A;fontSize=9;fontWeight=bold;dashed=1;" parent="1" vertex="1">
+                    <mxGeometry x="1300" y="700" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="db_shop" value="shop_items&#xa;(planned)&#xa;name, price, role_id,&#xa;description" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E1E2E;fontColor=#6B6B80;strokeColor=#262A3A;fontSize=9;fontWeight=bold;dashed=1;" parent="1" vertex="1">
+                    <mxGeometry x="1440" y="700" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="layer5_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0B0E14;fontColor=#9D9DB5;strokeColor=#262A3A;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="20" y="830" width="1560" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="layer5_label" value="WEB DASHBOARD (Express + EJS)" style="text;html=1;whiteSpace=wrap;fillColor=none;fontColor=#6B6B80;fontSize=10;fontWeight=bold;strokeColor=none;align=left;letterSpacing=2;" parent="1" vertex="1">
+                    <mxGeometry x="30" y="838" width="300" height="16" as="geometry"/>
+                </mxCell>
+                <mxCell id="dash_server" value="Express Server&#xa;port 10057&#xa;dashboard/server.js" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#161922;fontColor=#FFFFFF;strokeColor=#313244;fontSize=11;fontWeight=bold;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="860" width="140" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="dash_auth" value="Passport.js Auth&#xa;Discord Strategy&#xa;session + serialize" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E1E2E;fontColor=#FFFFFF;strokeColor=#313244;fontSize=10;fontWeight=bold;" parent="1" vertex="1">
+                    <mxGeometry x="210" y="860" width="130" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="dash_routes" value="Routes&#xa;/ -&gt; index&#xa;/auth -&gt; Discord&#xa;/dashboard -&gt; panel&#xa;/api/stats&#xa;/logout" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E1E2E;fontColor=#FFFFFF;strokeColor=#313244;fontSize=10;fontWeight=bold;" parent="1" vertex="1">
+                    <mxGeometry x="370" y="860" width="140" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="dash_views" value="EJS Views&#xa;dashboard.ejs (layout)&#xa;partials/ header + sidebar&#xa;modules/ 24 pages" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E1E2E;fontColor=#FFFFFF;strokeColor=#313244;fontSize=10;fontWeight=bold;" parent="1" vertex="1">
+                    <mxGeometry x="540" y="860" width="160" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="dash_sidebar" value="Sidebar Categories&#xa;General, Logs &amp; Cases&#xa;Moderation, Community&#xa;Economy &amp; Games, Music&#xa;Features" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E1E2E;fontColor=#FFFFFF;strokeColor=#313244;fontSize=10;fontWeight=bold;" parent="1" vertex="1">
+                    <mxGeometry x="730" y="860" width="150" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="dash_pages" value="24 Module Pages&#xa;overview, settings, logging,&#xa;infractions, reports, appeals,&#xa;moderation, automod, raid,&#xa;verification, rcv, dehoist,&#xa;welcome, leveling, suggestions,&#xa;auto-roles, auto-responder,&#xa;economy, games, music,&#xa;commands, tickets, giveaways, voice" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E1E2E;fontColor=#FFFFFF;strokeColor=#313244;fontSize=9;fontWeight=bold;" parent="1" vertex="1">
+                    <mxGeometry x="910" y="860" width="200" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="dash_standalone" value="Standalone Mode&#xa;dashboard-standalone/&#xa;(mock data, no bot)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E1E2E;fontColor=#9D9DB5;strokeColor=#262A3A;fontSize=10;fontWeight=bold;dashed=1;" parent="1" vertex="1">
+                    <mxGeometry x="1140" y="860" width="140" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="dash_assets" value="Static Assets&#xa;public/ folder&#xa;CSS, JS, images" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E1E2E;fontColor=#FFFFFF;strokeColor=#313244;fontSize=10;fontWeight=bold;" parent="1" vertex="1">
+                    <mxGeometry x="1310" y="860" width="130" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="dash_theme" value="Dark Theme&#xa;#0b0e14 palette&#xa;Accent: #5865f2&#xa;Responsive layout" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E1E2E;fontColor=#FFFFFF;strokeColor=#313244;fontSize=10;fontWeight=bold;" parent="1" vertex="1">
+                    <mxGeometry x="1470" y="860" width="100" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="dash_desc" value="Each module page has: Enable/Disable toggle + rich configuration fields form (channel selectors, number inputs, color pickers, text areas, permission toggles) + Save Changes / Reset buttons" style="text;whiteSpace=wrap;html=1;fillColor=none;fontColor=#9D9DB5;fontSize=10;strokeColor=none;align=left;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="930" width="1530" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="layer6_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#11141C;fontColor=#9D9DB5;strokeColor=#262A3A;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="20" y="1050" width="1560" height="260" as="geometry"/>
+                </mxCell>
+                <mxCell id="layer6_label" value="PROJECT FILE STRUCTURE (Developer Reference)" style="text;html=1;whiteSpace=wrap;fillColor=none;fontColor=#6B6B80;fontSize=10;fontWeight=bold;strokeColor=none;align=left;letterSpacing=2;" parent="1" vertex="1">
+                    <mxGeometry x="30" y="1058" width="400" height="16" as="geometry"/>
+                </mxCell>
+                <mxCell id="fs_tree" value="sanctum-bot/&#xa;├── config.js              # All config + env vars&#xa;├── start.js               # Entry: migration + boot&#xa;├── ecosystem.config.js    # PM2 processes&#xa;├── src/&#xa;│   ├── index.js           # Startup orchestration&#xa;│   ├── bot.js              # Discord client class&#xa;│   ├── commands/           # 10 categories, ~20 files&#xa;│   ├── database/           # connection.js + schema.js&#xa;│   ├── events/             # ready, messageCreate, interactionCreate&#xa;│   ├── handlers/           # command, event, error handlers&#xa;│   ├── structures/         # Command base + models&#xa;│   └── utils/              # embed, functions, logger, permissions&#xa;├── dashboard/              # Production dashboard&#xa;│   ├── server.js&#xa;│   ├── views/ (24 modules)&#xa;│   └── public/&#xa;├── dashboard-standalone/   # Dev dashboard (no bot)&#xa;├── assets/&#xa;└── .env" style="text;whiteSpace=wrap;html=1;fillColor=none;fontColor=#9D9DB5;fontSize=9;align=left;strokeColor=none;fontFamily=monospace;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="1078" width="760" height="92" as="geometry"/>
+                </mxCell>
+                <mxCell id="arch_notes" value="ARCHITECTURE NOTES&#xa;‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾&#xa;• bot.js extends Client with 17 Gateway Intents + 6 Partials&#xa;• Commands extend base Command class with prefix + slash dual dispatch&#xa;• Dashboard shares in-memory bot instance via require()&#xa;• All module toggles read from config.js at startup&#xa;• DB pool created once, shared across bot + dashboard via mysql2/promise&#xa;• Lavalink connects via WebSocket for audio (planned replacement for ytdl)&#xa;• PM2 manages two processes: bot + dashboard&#xa;• Standalone dashboard mocks data for frontend-only development&#xa;• Every dashboard module page has real config form fields (not just display)" style="text;whiteSpace=wrap;html=1;fillColor=none;fontColor=#9D9DB5;fontSize=10;align=left;strokeColor=none;" parent="1" vertex="1">
+                    <mxGeometry x="860" y="1078" width="700" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="conn_discord_bot" value="WebSocket" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=2;strokeColor=#5865F2;dashed=1;" parent="1" source="discord_api" target="bot_client" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="conn_lavalink_bot" value="WebSocket:2333" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.3;entryY=0;entryDx=0;entryDy=0;strokeWidth=2;strokeColor=#7C3AED;dashed=1;" parent="1" source="lavalink_srv" target="bot_client" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="conn_yt_bot" value="REST" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.45;entryY=0;entryDx=0;entryDy=0;strokeWidth=1;strokeColor=#22C55E;" parent="1" source="yt_api" target="bot_client" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="conn_mysql_bot" value="MySQL:3306" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.6;entryY=0;entryDx=0;entryDy=0;strokeWidth=2;strokeColor=#F59E0B;" parent="1" source="mysql_srv" target="bot_client" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="conn_bot_core" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=1;strokeColor=#262A3A;" parent="1" source="bot_client" target="mod_core" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="conn_bot_mod" value="loadCommands()" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=1;strokeColor=#262A3A;" parent="1" source="bot_client" target="mod_mod" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="conn_bot_econ" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=1;strokeColor=#262A3A;" parent="1" source="bot_client" target="mod_econ" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="conn_bot_music" value="play.js" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=1;strokeColor=#262A3A;" parent="1" source="bot_client" target="mod_music" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="conn_bot_ticket" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=1;strokeColor=#262A3A;" parent="1" source="bot_client" target="mod_tickets" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="conn_bot_level" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=1;strokeColor=#262A3A;" parent="1" source="bot_client" target="mod_level" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="conn_bot_give" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=1;strokeColor=#262A3A;" parent="1" source="bot_client" target="mod_give" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="conn_bot_dash" value="require()&#xa;in-memory" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.35;entryY=0;entryDx=0;entryDy=0;strokeWidth=2;strokeColor=#22C55E;" parent="1" source="bot_client" target="dash_server" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="conn_oauth_dash" value="OAuth Callback" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.2;entryY=0;entryDx=0;entryDy=0;strokeWidth=1;strokeColor=#5865F2;dashed=1;" parent="1" source="discord_oauth" target="dash_auth" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="conn_browser_dash" value="HTTPS" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.65;entryY=0;entryDx=0;entryDy=0;strokeWidth=2;strokeColor=#22C55E;dashed=1;" parent="1" source="user_browser" target="dash_server" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="db_conn_users" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=1;strokeColor=#262A3A;" parent="1" source="db_users" target="db_economy" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="db_conn_levels" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=1;strokeColor=#262A3A;" parent="1" source="db_levels" target="db_warnings" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="db_conn_tickets" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=1;strokeColor=#262A3A;" parent="1" source="db_tickets" target="db_giveaways" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="db_conn_music" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=1;strokeColor=#262A3A;" parent="1" source="db_music" target="db_muted" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="dash_internal1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=1;strokeColor=#262A3A;" parent="1" source="dash_auth" target="dash_routes" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="dash_internal2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=1;strokeColor=#262A3A;" parent="1" source="dash_routes" target="dash_views" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="dash_internal3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=1;strokeColor=#262A3A;" parent="1" source="dash_views" target="dash_sidebar" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="dash_internal4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=1;strokeColor=#262A3A;" parent="1" source="dash_sidebar" target="dash_pages" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="dash_internal5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=1;strokeColor=#262A3A;dashed=1;" parent="1" source="dash_pages" target="dash_standalone" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="dash_internal6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=1;strokeColor=#262A3A;" parent="1" source="dash_standalone" target="dash_assets" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="dash_internal7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=1;strokeColor=#262A3A;" parent="1" source="dash_assets" target="dash_theme" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="conn_pm2_bot" value="manages" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.3;entryDx=0;entryDy=0;strokeWidth=1;strokeColor=#B45309;dashed=1;" parent="1" source="pm2_srv" target="bot_client" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="conn_pm2_dash" value="manages" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=1;strokeColor=#B45309;dashed=1;" parent="1" source="pm2_srv" target="dash_server" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="conn_nginx_dash" value="reverse proxy" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=1;strokeColor=#22C55E;dashed=1;" parent="1" source="nginx_srv" target="dash_server" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="conn_bot_events" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=1;strokeColor=#262A3A;" parent="1" source="event_system" target="bot_client" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="conn_bot_cmd" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=1;strokeColor=#262A3A;" parent="1" source="cmd_handler" target="bot_client" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="conn_bot_db" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=1;strokeColor=#262A3A;" parent="1" source="db_layer" target="bot_client" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="conn_bot_models" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=1;strokeColor=#262A3A;" parent="1" source="models" target="bot_client" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="conn_bot_utils" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=1;strokeColor=#262A3A;" parent="1" source="utils" target="bot_client" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="conn_bot_config" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=1;strokeColor=#262A3A;" parent="1" source="config_cell" target="bot_client" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

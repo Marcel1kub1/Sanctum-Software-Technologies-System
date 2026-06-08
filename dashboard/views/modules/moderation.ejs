@@ -1,0 +1,147 @@
+<div class="page-header">
+  <h1 class="page-title">Moderation</h1>
+  <p class="page-desc">Server moderation and rule enforcement tools</p>
+</div>
+
+<form method="POST" action="/dashboard/config?guild=<%= selectedGuild ? selectedGuild.id : '' %>">
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <div class="card-title">Moderation Module</div>
+      <div class="card-desc">Enable or disable the moderation system</div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox" name="moderation_enabled" <%= gc('moderation_enabled', true) ? 'checked' : '' %>>
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Log Channel</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Moderation Log Channel</label>
+      <select class="form-select" name="moderation_modlogchannel">
+        <option value="">Select a channel...</option>
+        <% if (selectedGuild && selectedGuild.textChannels) selectedGuild.textChannels.forEach(c => { %>
+          <option value="<%= c.id %>" <%= gc('moderation_modlogchannel', '') === c.id ? 'selected' : '' %>>#<%= c.name %></option>
+        <% }); %>
+      </select>
+      <div class="form-hint">All moderation actions will be logged here</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Public Log Channel</label>
+      <select class="form-select" name="moderation_publiclogchannel">
+        <option value="">Select a channel...</option>
+        <% if (selectedGuild && selectedGuild.textChannels) selectedGuild.textChannels.forEach(c => { %>
+          <option value="<%= c.id %>" <%= gc('moderation_publiclogchannel', '') === c.id ? 'selected' : '' %>>#<%= c.name %></option>
+        <% }); %>
+      </select>
+      <div class="form-hint">Public-facing moderation updates (optional)</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Muted Role</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Muted Role</label>
+      <select class="form-select" name="moderation_mutedrole">
+        <option value="">Select a role...</option>
+        <% if (selectedGuild && selectedGuild.roles) selectedGuild.roles.forEach(r => { %>
+          <option value="<%= r.id %>" <%= gc('moderation_mutedrole', '') === r.id ? 'selected' : '' %>>@<%= r.name %></option>
+        <% }); %>
+      </select>
+      <div class="form-hint">Role assigned to muted members</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Default Mute Duration</label>
+      <div class="form-row">
+        <input class="form-input" type="number" name="moderation_defaultmuteduration" value="<%= gc('moderation_defaultmuteduration', '60') %>" min="1" style="width:100px;">
+        <select class="form-select" name="moderation_defaultmuteunit" style="width:120px;">
+          <option value="minutes" <%= gc('moderation_defaultmuteunit', 'minutes') === 'minutes' ? 'selected' : '' %>>Minutes</option>
+          <option value="hours" <%= gc('moderation_defaultmuteunit', 'minutes') === 'hours' ? 'selected' : '' %>>Hours</option>
+          <option value="days" <%= gc('moderation_defaultmuteunit', 'minutes') === 'days' ? 'selected' : '' %>>Days</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <span class="card-title">Moderation Commands</span>
+    </div>
+  </div>
+  <div class="grid-2">
+    <div class="setting-row">
+      <div><div class="setting-label">/ban</div><div class="setting-desc">Permanently ban a member</div></div>
+      <label class="toggle"><input type="checkbox" name="moderation_cmd_ban" <%= gc('moderation_cmd_ban', true) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">/kick</div><div class="setting-desc">Kick a member from the server</div></div>
+      <label class="toggle"><input type="checkbox" name="moderation_cmd_kick" <%= gc('moderation_cmd_kick', true) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">/mute</div><div class="setting-desc">Temporarily mute a member</div></div>
+      <label class="toggle"><input type="checkbox" name="moderation_cmd_mute" <%= gc('moderation_cmd_mute', true) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">/warn</div><div class="setting-desc">Issue a warning to a member</div></div>
+      <label class="toggle"><input type="checkbox" name="moderation_cmd_warn" <%= gc('moderation_cmd_warn', true) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">/purge</div><div class="setting-desc">Bulk delete messages</div></div>
+      <label class="toggle"><input type="checkbox" name="moderation_cmd_purge" <%= gc('moderation_cmd_purge', true) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">/slowmode</div><div class="setting-desc">Set channel slow mode</div></div>
+      <label class="toggle"><input type="checkbox" name="moderation_cmd_slowmode" <%= gc('moderation_cmd_slowmode', true) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">/lock</div><div class="setting-desc">Lock a channel</div></div>
+      <label class="toggle"><input type="checkbox" name="moderation_cmd_lock" <%= gc('moderation_cmd_lock', true) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">/unban</div><div class="setting-desc">Unban a previously banned member</div></div>
+      <label class="toggle"><input type="checkbox" name="moderation_cmd_unban" <%= gc('moderation_cmd_unban', true) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <span class="card-title">DM Notifications</span>
+      <div class="card-desc">Configure automatic DMs sent on moderation actions</div>
+    </div>
+  </div>
+  <div class="setting-row">
+    <div><div class="setting-label">Warn DM</div><div class="setting-desc">Send DM when a member is warned</div></div>
+      <label class="toggle"><input type="checkbox" name="moderation_dm_warn" <%= gc('moderation_dm_warn', true) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+  </div>
+  <div class="setting-row">
+    <div><div class="setting-label">Kick DM</div><div class="setting-desc">Send DM when a member is kicked</div></div>
+      <label class="toggle"><input type="checkbox" name="moderation_dm_kick" <%= gc('moderation_dm_kick', true) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+  </div>
+  <div class="setting-row">
+    <div><div class="setting-label">Ban DM</div><div class="setting-desc">Send DM when a member is banned</div></div>
+      <label class="toggle"><input type="checkbox" name="moderation_dm_ban" <%= gc('moderation_dm_ban', true) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+  </div>
+  <div class="form-group">
+    <label class="form-label">Custom DM Message</label>
+    <textarea class="form-textarea" name="moderation_customdmmessage" rows="2"><%= gc('moderation_customdmmessage', 'You have been {action} in {server}. Reason: {reason}') %></textarea>
+    <div class="form-hint">Variables: {action}, {server}, {reason}, {moderator}</div>
+  </div>
+</div>
+
+<div class="flex gap-2">
+  <button class="btn btn-primary">Save Changes</button>
+  <button class="btn btn-outline">Reset to Default</button>
+</div>
+</form>

@@ -1,0 +1,107 @@
+<div class="page-header">
+  <h1 class="page-title">Temp Voice</h1>
+  <p class="page-desc">Dynamic temporary voice channels for members</p>
+</div>
+
+<form method="POST" action="/dashboard/config?guild=<%= selectedGuild ? selectedGuild.id : '' %>">
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <div class="card-title">Temp Voice Module</div>
+      <div class="card-desc">Enable or disable temporary voice channels</div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox" <%= gc('tempvoice_enabled', true) ? 'checked' : '' %> name="tempvoice_enabled">
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Channel Settings</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Interface Channel</label>
+      <select class="form-select" name="tempvoice_interface_channel">
+        <option value="" <%= gc('tempvoice_interface_channel', '') === '' ? 'selected' : '' %>>Select a voice channel...</option>
+        <% (selectedGuild.voiceChannels || []).forEach(vc => { %>
+          <option value="<%= vc.id %>" <%= gc('tempvoice_interface_channel', '') === vc.id ? 'selected' : '' %>><%= vc.name %></option>
+        <% }) %>
+      </select>
+      <div class="form-hint">Users join this channel to create their own temporary channel</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Category</label>
+      <select class="form-select" name="tempvoice_category">
+        <option value="" <%= gc('tempvoice_category', '') === '' ? 'selected' : '' %>>Select a category...</option>
+        <% (selectedGuild.categories || []).forEach(c => { %>
+          <option value="<%= c.id %>" <%= gc('tempvoice_category', '') === c.id ? 'selected' : '' %>><%= c.name %></option>
+        <% }) %>
+      </select>
+      <div class="form-hint">Temporary channels will be created in this category</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Channel Name Format</label>
+      <input class="form-input" value="<%= gc('tempvoice_channel_name_format', "{user}'s Channel") %>" name="tempvoice_channel_name_format">
+      <div class="form-hint">Variables: {user}, {count}</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">User Limit</label>
+      <input class="form-input" type="number" value="<%= gc('tempvoice_user_limit', '0') %>" min="0" name="tempvoice_user_limit">
+      <div class="form-hint">0 for unlimited</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Channel Controls</span>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Allow Rename</div><div class="setting-desc">Let users rename their temporary channel</div></div>
+      <label class="toggle"><input type="checkbox" <%= gc('tempvoice_allow_rename', true) ? 'checked' : '' %> name="tempvoice_allow_rename"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Allow User Limit Change</div><div class="setting-desc">Let users change the user limit</div></div>
+      <label class="toggle"><input type="checkbox" <%= gc('tempvoice_allow_user_limit', true) ? 'checked' : '' %> name="tempvoice_allow_user_limit"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Allow Bitrate Change</div><div class="setting-desc">Let users change the channel bitrate</div></div>
+      <label class="toggle"><input type="checkbox" <%= gc('tempvoice_allow_bitrate', false) ? 'checked' : '' %> name="tempvoice_allow_bitrate"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Allow Kick from Channel</div><div class="setting-desc">Let users kick others from their channel</div></div>
+      <label class="toggle"><input type="checkbox" <%= gc('tempvoice_allow_kick', true) ? 'checked' : '' %> name="tempvoice_allow_kick"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Auto-Delete on Empty</div><div class="setting-desc">Delete channel when everyone leaves</div></div>
+      <label class="toggle"><input type="checkbox" <%= gc('tempvoice_auto_delete_empty', true) ? 'checked' : '' %> name="tempvoice_auto_delete_empty"><span class="toggle-slider"></span></label>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <span class="card-title">Active Temporary Channels</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Channel</th><th>Owner</th><th>Users</th><th>Created</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="5" class="text-center" style="color:var(--text-muted);padding:20px;">No active temporary channels</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="flex gap-2">
+  <button class="btn btn-primary">Save Changes</button>
+  <button class="btn btn-outline">Reset to Default</button>
+</div>
+
+</form>

@@ -1,0 +1,92 @@
+<div class="page-header">
+  <h1 class="page-title">Verification</h1>
+  <p class="page-desc">Gate server access with verification checks</p>
+</div>
+
+<form method="POST" action="/dashboard/config?guild=<%= selectedGuild ? selectedGuild.id : '' %>">
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <div class="card-title">Verification Module</div>
+      <div class="card-desc">Enable or disable the verification system</div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox" name="verification_enabled" <%= gc('verification_enabled', false) ? 'checked' : '' %>>
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Verification Method</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Type</label>
+      <select class="form-select" name="verification_type">
+        <option value="captcha" <%= gc('verification_type', 'captcha') === 'captcha' ? 'selected' : '' %>>CAPTCHA Verification</option>
+        <option value="button" <%= gc('verification_type', 'captcha') === 'button' ? 'selected' : '' %>>Button Role Verification</option>
+        <option value="reaction" <%= gc('verification_type', 'captcha') === 'reaction' ? 'selected' : '' %>>Reaction Role Verification</option>
+        <option value="question" <%= gc('verification_type', 'captcha') === 'question' ? 'selected' : '' %>>Question-Based Verification</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Verified Role</label>
+      <select class="form-select" name="verification_verified_role">
+        <option value="">Select a role...</option>
+        <% if (selectedGuild && selectedGuild.roles) selectedGuild.roles.forEach(r => { %>
+          <option value="<%= r.id %>" <%= gc('verification_verified_role', '') === r.id ? 'selected' : '' %>>@<%= r.name %></option>
+        <% }); %>
+      </select>
+      <div class="form-hint">Role assigned after successful verification</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Unverified Role</label>
+      <select class="form-select" name="verification_unverified_role">
+        <option value="">Select a role...</option>
+        <% if (selectedGuild && selectedGuild.roles) selectedGuild.roles.forEach(r => { %>
+          <option value="<%= r.id %>" <%= gc('verification_unverified_role', '') === r.id ? 'selected' : '' %>>@<%= r.name %></option>
+        <% }); %>
+      </select>
+      <div class="form-hint">Temporary role before verification</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Verification Channel</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Channel</label>
+      <select class="form-select" name="verification_channel">
+        <option value="">Select a channel...</option>
+        <% if (selectedGuild && selectedGuild.textChannels) selectedGuild.textChannels.forEach(c => { %>
+          <option value="<%= c.id %>" <%= gc('verification_channel', '') === c.id ? 'selected' : '' %>>#<%= c.name %></option>
+        <% }); %>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Verification Message</label>
+      <textarea class="form-textarea" name="verification_message" rows="3"><%= gc('verification_message', 'Click the button below to verify your access to this server.') %></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Button Label</label>
+      <input class="form-input" name="verification_button_label" value="<%= gc('verification_button_label', 'Verify') %>">
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Kick on Failure</div><div class="setting-desc">Kick users who fail verification after timeout</div></div>
+      <label class="toggle"><input type="checkbox" name="verification_kick_on_failure" <%= gc('verification_kick_on_failure', true) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Timeout (minutes)</label>
+      <input class="form-input" name="verification_timeout" type="number" value="<%= gc('verification_timeout', '10') %>" min="1">
+    </div>
+  </div>
+</div>
+
+<div class="flex gap-2">
+  <button class="btn btn-primary">Save Changes</button>
+  <button class="btn btn-outline">Reset to Default</button>
+</div>
+</form>

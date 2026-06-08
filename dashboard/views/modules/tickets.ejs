@@ -1,0 +1,151 @@
+<div class="page-header">
+  <h1 class="page-title">Tickets</h1>
+  <p class="page-desc">Professional ticket management system with transcripts</p>
+</div>
+
+<form method="POST" action="/dashboard/config?guild=<%= selectedGuild ? selectedGuild.id : '' %>">
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <div class="card-title">Ticket Module</div>
+      <div class="card-desc">Enable or disable the ticket system</div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox" <%= gc('tickets_enabled', true) ? 'checked' : '' %> name="tickets_enabled">
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Ticket Settings</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Category</label>
+      <select class="form-select" name="tickets_category">
+        <option value="" <%= gc('tickets_category', '') === '' ? 'selected' : '' %>>Select a category...</option>
+        <% (selectedGuild.categories || []).forEach(c => { %>
+          <option value="<%= c.id %>" <%= gc('tickets_category', '') === c.id ? 'selected' : '' %>><%= c.name %></option>
+        <% }) %>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Ticket Limit per User</label>
+      <input class="form-input" type="number" value="<%= gc('tickets_limit', '5') %>" min="1" name="tickets_limit">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Support Roles</label>
+      <input class="form-input" value="<%= gc('tickets_support_roles', '') %>" placeholder="@Support @Staff" name="tickets_support_roles">
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Transcripts</div><div class="setting-desc">Save transcripts when tickets close</div></div>
+      <label class="toggle"><input type="checkbox" <%= gc('tickets_transcripts', true) ? 'checked' : '' %> name="tickets_transcripts"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Transcript Channel</label>
+      <select class="form-select" name="tickets_transcript_channel">
+        <option value="" <%= gc('tickets_transcript_channel', '') === '' ? 'selected' : '' %>>Select a channel...</option>
+        <% (selectedGuild.textChannels || []).forEach(ch => { %>
+          <option value="<%= ch.id %>" <%= gc('tickets_transcript_channel', '') === ch.id ? 'selected' : '' %>><%= ch.name %></option>
+        <% }) %>
+      </select>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <span class="card-title">Active Tickets</span>
+        <div class="card-desc">Currently open support tickets</div>
+      </div>
+    </div>
+    <div class="level-row">
+      <span class="badge badge-green" style="font-size:10px;">OPEN</span>
+      <div class="level-info">
+        <div class="level-name">#ticket-001</div>
+        <div class="level-role">General support request</div>
+      </div>
+      <span style="font-size:11px;color:var(--text-muted);">2m ago</span>
+    </div>
+    <div class="level-row">
+      <span class="badge badge-yellow" style="font-size:10px;">PENDING</span>
+      <div class="level-info">
+        <div class="level-name">#ticket-002</div>
+        <div class="level-role">Role request</div>
+      </div>
+      <span style="font-size:11px;color:var(--text-muted);">1h ago</span>
+    </div>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Ticket Creation</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Panel Channel</label>
+      <select class="form-select" name="tickets_panel_channel">
+        <option value="" <%= gc('tickets_panel_channel', '') === '' ? 'selected' : '' %>>Select a channel...</option>
+        <% (selectedGuild.textChannels || []).forEach(ch => { %>
+          <option value="<%= ch.id %>" <%= gc('tickets_panel_channel', '') === ch.id ? 'selected' : '' %>><%= ch.name %></option>
+        <% }) %>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Panel Title</label>
+      <input class="form-input" value="<%= gc('tickets_panel_title', 'Create a Ticket') %>" name="tickets_panel_title">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Panel Description</label>
+      <textarea class="form-textarea" rows="2" name="tickets_panel_description"><%= gc('tickets_panel_description', 'Click the button below to open a ticket and our team will assist you.') %></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Button Label</label>
+      <input class="form-input" value="<%= gc('tickets_button_label', 'Open Ticket') %>" name="tickets_button_label">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Ticket Name Format</label>
+      <input class="form-input" value="<%= gc('tickets_name_format', 'ticket-{number}') %>" name="tickets_name_format">
+      <div class="form-hint">Variables: {number}, {user}</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Ticket Closure</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Close Confirmation</label>
+      <select class="form-select" name="tickets_close_confirmation">
+        <option value="button" <%= gc('tickets_close_confirmation', 'button') === 'button' ? 'selected' : '' %>>Button Confirmation</option>
+        <option value="reason" <%= gc('tickets_close_confirmation', 'button') === 'reason' ? 'selected' : '' %>>Require Reason</option>
+        <option value="immediate" <%= gc('tickets_close_confirmation', 'button') === 'immediate' ? 'selected' : '' %>>Close Immediately</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Closing Message</label>
+      <textarea class="form-textarea" rows="2" name="tickets_closing_message"><%= gc('tickets_closing_message', 'This ticket has been closed. A transcript has been saved.') %></textarea>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">DM Transcript</div><div class="setting-desc">Send transcript via DM to ticket creator</div></div>
+      <label class="toggle"><input type="checkbox" <%= gc('tickets_dm_transcript', false) ? 'checked' : '' %> name="tickets_dm_transcript"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Auto-Close Inactive</div><div class="setting-desc">Close tickets after inactivity</div></div>
+      <label class="toggle"><input type="checkbox" <%= gc('tickets_auto_close_inactive', false) ? 'checked' : '' %> name="tickets_auto_close_inactive"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Inactivity Timeout (hours)</label>
+      <input class="form-input" type="number" value="<%= gc('tickets_inactivity_timeout', '48') %>" min="1" name="tickets_inactivity_timeout">
+    </div>
+  </div>
+</div>
+
+<div class="flex gap-2">
+  <button class="btn btn-primary">Save Changes</button>
+  <button class="btn btn-outline">Reset to Default</button>
+</div>
+
+</form>

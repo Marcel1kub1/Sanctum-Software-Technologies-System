@@ -1,0 +1,141 @@
+<div class="page-header">
+  <h1 class="page-title">Reports</h1>
+  <p class="page-desc">Manage member-submitted reports</p>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <div class="card-title">Reports Module</div>
+      <div class="card-desc">Enable or disable the reporting system</div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox" checked>
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Report Settings</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Report Channel</label>
+      <select class="form-select">
+        <option value="">Select a channel...</option>
+        <option value="reports">#reports</option>
+        <option value="mod-only">#mod-only</option>
+      </select>
+      <div class="form-hint">Reports will be sent to this channel</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Staff Ping Role</label>
+      <select class="form-select">
+        <option value="">Select a role...</option>
+        <option value="staff">@Staff</option>
+        <option value="mod">@Moderator</option>
+      </select>
+      <div class="form-hint">Role to ping when a new report is submitted</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Report Cooldown (seconds)</label>
+      <input class="form-input" type="number" value="300" min="10">
+      <div class="form-hint">Minimum time between reports per user</div>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Anonymous Reports</div><div class="setting-desc">Hide reporter identity from the report</div></div>
+      <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Allow Report Editing</div><div class="setting-desc">Allow users to edit their reports</div></div>
+      <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">DM on Report Status</div><div class="setting-desc">Notify user when report status changes</div></div>
+      <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <span class="card-title">Pending Reports</span>
+        <div class="card-desc">Reports awaiting review</div>
+      </div>
+      <span class="badge badge-yellow">0 Pending</span>
+    </div>
+    <div class="empty-state" style="padding:20px;">
+      <div class="empty-state-text" style="font-size:13px;">No pending reports</div>
+    </div>
+    <div style="border-top:1px solid var(--border);margin-top:8px;padding-top:12px;">
+      <div class="form-group">
+        <label class="form-label">Auto-Resolve Report After</label>
+        <div class="form-row">
+          <input class="form-input inline-input" type="number" value="7" min="1">
+          <select class="form-select" style="width:100px;">
+            <option value="days">Days</option>
+            <option value="weeks">Weeks</option>
+          </select>
+        </div>
+        <div class="form-hint">Automatically close unresolved reports after this period</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <span class="card-title">Report Reasons</span>
+      <div class="card-desc">Predefined report reasons members can select from</div>
+    </div>
+    <button class="btn btn-primary btn-sm">+ Add Reason</button>
+  </div>
+  <div class="flex flex-wrap gap-2" style="margin-top:8px;">
+    <span class="badge badge-blue" style="padding:6px 12px;font-size:12px;">Spam ✕</span>
+    <span class="badge badge-blue" style="padding:6px 12px;font-size:12px;">Harassment ✕</span>
+    <span class="badge badge-blue" style="padding:6px 12px;font-size:12px;">NSFW Content ✕</span>
+    <span class="badge badge-blue" style="padding:6px 12px;font-size:12px;">Scamming ✕</span>
+    <span class="badge badge-blue" style="padding:6px 12px;font-size:12px;">Other ✕</span>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Report Status Labels</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Pending Label</label>
+      <input class="form-input" value="⏳ Pending Review">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Resolved Label</label>
+      <input class="form-input" value="✅ Resolved">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Dismissed Label</label>
+      <input class="form-input" value="❌ Dismissed">
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Blocked Users</span>
+      <div class="card-desc">Users who cannot submit reports</div>
+    </div>
+    <div class="form-group">
+      <input class="form-input" placeholder="@User1 @User2">
+      <div class="form-hint">Mention or enter user IDs separated by spaces</div>
+    </div>
+    <button class="btn btn-outline btn-sm">+ Add Blocked User</button>
+    <div class="empty-state" style="padding:12px;margin-top:8px;">
+      <div class="empty-state-text" style="font-size:12px;">No blocked users</div>
+    </div>
+  </div>
+</div>
+
+<div class="flex gap-2">
+  <button class="btn btn-primary">Save Changes</button>
+  <button class="btn btn-outline">Reset to Default</button>
+</div>

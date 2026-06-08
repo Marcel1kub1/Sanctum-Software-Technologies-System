@@ -1,0 +1,94 @@
+<div class="page-header">
+  <h1 class="page-title">Welcome & Bye</h1>
+  <p class="page-desc">Customizable join/leave messages with embed layouts</p>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <div class="card-title">Welcome Messages</div>
+      <div class="card-desc">Send a message when a new member joins</div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox" checked>
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+  <div class="grid-2" style="margin-top:16px;">
+    <div class="form-group">
+      <label class="form-label">Welcome Channel</label>
+      <select class="form-select">
+        <option value="">Select a channel...</option>
+        <option value="welcome" selected>#welcome</option>
+        <option value="general">#general</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Embed Color</label>
+      <div class="flex items-center gap-2">
+        <input type="color" class="form-input" style="width:40px; height:40px; padding:2px;" value="#5865f2">
+        <input type="text" class="form-input" style="flex:1;" value="#5865f2">
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="form-label">Welcome Title</label>
+    <input class="form-input" value="Welcome to {server}!">
+  </div>
+  <div class="form-group">
+    <label class="form-label">Welcome Description</label>
+    <textarea class="form-textarea" rows="3">Welcome {user} to {server}! We hope you enjoy your stay. You are member #{membercount}.</textarea>
+    <div class="form-hint">Variables: {user}, {server}, {membercount}, {username}, {mention}</div>
+  </div>
+  <div class="form-group">
+    <label class="form-label">Welcome Image URL</label>
+    <input class="form-input" placeholder="https://example.com/welcome-banner.png">
+    <div class="form-hint">Optional banner image for the welcome embed</div>
+  </div>
+  <div class="setting-row">
+    <div><div class="setting-label">DM Welcome Message</div><div class="setting-desc">Also send a welcome DM to the new member</div></div>
+    <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+  </div>
+  <div class="embed-preview">
+    <div class="ep-title" style="color:#5865f2;">Welcome to The Sanctum!</div>
+    <div class="ep-desc">Welcome @User to The Sanctum! We hope you enjoy your stay. You are member #6.</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <div class="card-title">Goodbye Messages</div>
+      <div class="card-desc">Send a message when a member leaves</div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox" checked>
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+  <div class="form-group" style="margin-top:16px;">
+    <label class="form-label">Goodbye Channel</label>
+    <select class="form-select">
+      <option value="">Select a channel...</option>
+      <option value="goodbye" selected>#goodbye</option>
+      <option value="general">#general</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label class="form-label">Goodbye Message</label>
+    <textarea class="form-textarea" rows="3">Goodbye {user}, we'll miss you! We now have {membercount} members.</textarea>
+    <div class="form-hint">Variables: {user}, {server}, {membercount}</div>
+  </div>
+  <div class="form-group">
+    <label class="form-label">Embed Color</label>
+    <div class="flex items-center gap-2">
+      <input type="color" class="form-input" style="width:40px; height:40px; padding:2px;" value="#ef4444">
+      <input type="text" class="form-input" style="flex:1;" value="#ef4444">
+    </div>
+  </div>
+</div>
+
+<div class="flex gap-2">
+  <button class="btn btn-primary">Save Changes</button>
+  <button class="btn btn-outline">Reset to Default</button>
+</div>

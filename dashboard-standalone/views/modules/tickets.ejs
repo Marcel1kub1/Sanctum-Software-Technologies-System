@@ -1,0 +1,142 @@
+<div class="page-header">
+  <h1 class="page-title">Tickets</h1>
+  <p class="page-desc">Professional ticket management system with transcripts</p>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <div class="card-title">Ticket Module</div>
+      <div class="card-desc">Enable or disable the ticket system</div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox" checked>
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Ticket Settings</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Category</label>
+      <select class="form-select">
+        <option value="">Select a category...</option>
+        <option value="tickets" selected>Tickets</option>
+        <option value="support">Support</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Ticket Limit per User</label>
+      <input class="form-input" type="number" value="5" min="1">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Support Roles</label>
+      <input class="form-input" placeholder="@Support @Staff">
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Transcripts</div><div class="setting-desc">Save transcripts when tickets close</div></div>
+      <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Transcript Channel</label>
+      <select class="form-select">
+        <option value="">Select a channel...</option>
+        <option value="transcripts">#transcripts</option>
+      </select>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <span class="card-title">Active Tickets</span>
+        <div class="card-desc">Currently open support tickets</div>
+      </div>
+    </div>
+    <div class="level-row">
+      <span class="badge badge-green" style="font-size:10px;">OPEN</span>
+      <div class="level-info">
+        <div class="level-name">#ticket-001</div>
+        <div class="level-role">General support request</div>
+      </div>
+      <span style="font-size:11px;color:var(--text-muted);">2m ago</span>
+    </div>
+    <div class="level-row">
+      <span class="badge badge-yellow" style="font-size:10px;">PENDING</span>
+      <div class="level-info">
+        <div class="level-name">#ticket-002</div>
+        <div class="level-role">Role request</div>
+      </div>
+      <span style="font-size:11px;color:var(--text-muted);">1h ago</span>
+    </div>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Ticket Creation</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Panel Channel</label>
+      <select class="form-select">
+        <option value="">Select a channel...</option>
+        <option value="ticket-panel">#open-ticket</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Panel Title</label>
+      <input class="form-input" value="Create a Ticket">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Panel Description</label>
+      <textarea class="form-textarea" rows="2">Click the button below to open a ticket and our team will assist you.</textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Button Label</label>
+      <input class="form-input" value="Open Ticket">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Ticket Name Format</label>
+      <input class="form-input" value="ticket-{number}">
+      <div class="form-hint">Variables: {number}, {user}</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Ticket Closure</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Close Confirmation</label>
+      <select class="form-select">
+        <option value="button">Button Confirmation</option>
+        <option value="reason">Require Reason</option>
+        <option value="immediate">Close Immediately</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Closing Message</label>
+      <textarea class="form-textarea" rows="2">This ticket has been closed. A transcript has been saved.</textarea>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">DM Transcript</div><div class="setting-desc">Send transcript via DM to ticket creator</div></div>
+      <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Auto-Close Inactive</div><div class="setting-desc">Close tickets after inactivity</div></div>
+      <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Inactivity Timeout (hours)</label>
+      <input class="form-input" type="number" value="48" min="1">
+    </div>
+  </div>
+</div>
+
+<div class="flex gap-2">
+  <button class="btn btn-primary">Save Changes</button>
+  <button class="btn btn-outline">Reset to Default</button>
+</div>

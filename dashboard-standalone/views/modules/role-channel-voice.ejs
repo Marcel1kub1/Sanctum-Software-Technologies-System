@@ -1,0 +1,94 @@
+<div class="page-header">
+  <h1 class="page-title">Role / Channel / Voice Moderation</h1>
+  <p class="page-desc">Manage role assignments, channel lockdowns, and voice controls</p>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <div class="card-title">Role/Channel/Voice Module</div>
+      <div class="card-desc">Enable or disable advanced moderation controls</div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox">
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+</div>
+
+<div class="grid-3">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Role Moderation</span>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Unauthorized Role Prevention</div><div class="setting-desc">Block non-admin role assignments</div></div>
+      <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Auto-Role Removal</div><div class="setting-desc">Remove roles automatically on certain events</div></div>
+      <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Role Blacklist</label>
+      <input class="form-input" placeholder="@Admin @Owner">
+      <div class="form-hint">Roles that cannot be self-assigned</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Channel Moderation</span>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Channel Lockdown</div><div class="setting-desc">Quickly lock channels during incidents</div></div>
+      <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Slow Mode Control</div><div class="setting-desc">Enable slow mode override</div></div>
+      <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Nuke Channel</div><div class="setting-desc">Allow channel cloning and deletion</div></div>
+      <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Voice Moderation</span>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Voice Mute</div><div class="setting-desc">Server mute members in voice</div></div>
+      <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Voice Deafen</div><div class="setting-desc">Server deafen members in voice</div></div>
+      <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Voice Kick</div><div class="setting-desc">Disconnect members from voice</div></div>
+      <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Voice Move</div><div class="setting-desc">Move members between channels</div></div>
+      <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <span class="card-title">Permission Override Bypass</span>
+      <div class="card-desc">Roles that can bypass role/channel/voice restrictions</div>
+    </div>
+    <button class="btn btn-primary btn-sm">+ Add Role</button>
+  </div>
+  <div class="empty-state" style="padding:16px;">
+    <div class="empty-state-text" style="font-size:13px;">No bypass roles configured</div>
+  </div>
+</div>
+
+<div class="flex gap-2">
+  <button class="btn btn-primary">Save Changes</button>
+  <button class="btn btn-outline">Reset to Default</button>
+</div>

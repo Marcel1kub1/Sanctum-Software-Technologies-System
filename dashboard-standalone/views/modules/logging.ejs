@@ -1,0 +1,104 @@
+<div class="page-header">
+  <h1 class="page-title">Logging</h1>
+  <p class="page-desc">Server event logging and audit trails</p>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <div class="card-title">Logging Module</div>
+      <div class="card-desc">Enable or disable the logging system</div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox" checked>
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Log Channels</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Message Logs</label>
+      <select class="form-select">
+        <option value="">Select a channel...</option>
+        <option value="message-logs">#message-logs</option>
+      </select>
+      <div class="form-hint">Deleted/edited message logs</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Member Logs</label>
+      <select class="form-select">
+        <option value="">Select a channel...</option>
+        <option value="member-logs">#member-logs</option>
+      </select>
+      <div class="form-hint">Join/leave and member updates</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Mod Logs</label>
+      <select class="form-select">
+        <option value="">Select a channel...</option>
+        <option value="mod-logs">#mod-logs</option>
+      </select>
+      <div class="form-hint">Moderation action audit trail</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Events to Log</span>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Message Edit</div><div class="setting-desc">Log edited messages</div></div>
+      <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Message Delete</div><div class="setting-desc">Log deleted messages</div></div>
+      <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Member Join</div><div class="setting-desc">Log members joining</div></div>
+      <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Member Leave</div><div class="setting-desc">Log members leaving</div></div>
+      <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Channel Changes</div><div class="setting-desc">Log channel create/delete/update</div></div>
+      <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Role Changes</div><div class="setting-desc">Log role create/delete/update</div></div>
+      <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Voice Events</div><div class="setting-desc">Log voice channel joins/leaves</div></div>
+      <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <span class="card-title">Excluded Channels</span>
+  </div>
+  <div class="form-hint" style="margin-bottom:12px;">Select channels to exclude from logging</div>
+  <div class="grid-2">
+    <div class="setting-row">
+      <div class="setting-label">#general</div>
+      <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div class="setting-label">#spam</div>
+      <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+    </div>
+  </div>
+</div>
+
+<div class="flex gap-2">
+  <button class="btn btn-primary">Save Changes</button>
+  <button class="btn btn-outline">Reset to Default</button>
+</div>

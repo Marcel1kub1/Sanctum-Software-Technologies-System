@@ -1,0 +1,393 @@
+<div class="page-header">
+  <h1 class="page-title">Music</h1>
+  <p class="page-desc">High-quality music playback with Lavalink, queue management, and interactive controls</p>
+</div>
+
+<form method="POST" action="/dashboard/config?guild=<%= selectedGuild ? selectedGuild.id : '' %>">
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <div class="card-title">Music Module</div>
+      <div class="card-desc">Enable or disable the music system</div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox" <%= gc('music_enabled', true) ? 'checked' : '' %> name="music_enabled">
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Lavalink Configuration</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Engine</label>
+      <select class="form-select" name="music_engine">
+        <option value="lavalink" <%= gc('music_engine', 'lavalink') === 'lavalink' ? 'selected' : '' %>>Lavalink</option>
+        <option value="discord-player" <%= gc('music_engine', 'lavalink') === 'discord-player' ? 'selected' : '' %>>discord-player (built-in)</option>
+      </select>
+      <div class="form-hint">Lavalink provides superior audio quality and stability</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Lavalink Host</label>
+      <input class="form-input" value="<%= gc('music_lavalink_host', 'localhost') %>" placeholder="127.0.0.1" name="music_lavalink_host">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Port</label>
+      <input class="form-input" type="number" value="<%= gc('music_lavalink_port', '2333') %>" min="1" max="65535" name="music_lavalink_port">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input class="form-input" type="password" value="<%= gc('music_lavalink_password', 'youshallnotpass') %>" placeholder="Lavalink server password" name="music_lavalink_password">
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">SSL / Secure</div><div class="setting-desc">Connect using secure WebSocket (wss://)</div></div>
+      <label class="toggle"><input type="checkbox" <%= gc('music_lavalink_ssl', false) ? 'checked' : '' %> name="music_lavalink_ssl"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Auto-Resume</div><div class="setting-desc">Reconnect to Lavalink on disconnect</div></div>
+      <label class="toggle"><input type="checkbox" <%= gc('music_lavalink_autoresume', true) ? 'checked' : '' %> name="music_lavalink_autoresume"><span class="toggle-slider"></span></label>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <span class="card-title">Lavalink Status</span>
+        <div class="card-desc">Connected Lavalink node information</div>
+      </div>
+      <span class="badge badge-green">● Connected</span>
+    </div>
+    <div class="form-group">
+      <div class="form-label">Node</div>
+      <div style="font-size:13px;font-weight:600;">Main Node (localhost:2333)</div>
+    </div>
+    <div class="form-group">
+      <div class="form-label">Players</div>
+      <div style="font-size:13px;font-weight:600;">0 active</div>
+    </div>
+    <div class="form-group">
+      <div class="form-label">Uptime</div>
+      <div style="font-size:13px;font-weight:600;">12h 34m</div>
+    </div>
+    <div class="form-group">
+      <div class="form-label">CPU Load</div>
+      <div style="font-size:13px;font-weight:600;">2.4%</div>
+    </div>
+    <div class="form-group">
+      <div class="form-label">Memory</div>
+      <div style="font-size:13px;font-weight:600;">128MB / 512MB</div>
+    </div>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Playback Settings</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Default Volume</label>
+      <div class="form-row">
+        <input class="form-input" type="number" value="<%= gc('music_default_volume', '50') %>" min="10" max="150" style="width:100px;" name="music_default_volume">
+        <span style="font-size:12px;color:var(--text-muted);">Range: 10-150</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Max Queue Size</label>
+      <div class="form-row">
+        <input class="form-input" type="number" value="<%= gc('music_max_queue_size', '500') %>" min="1" max="1000" style="width:100px;" name="music_max_queue_size">
+        <span style="font-size:12px;color:var(--text-muted);">Tracks (max 500)</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Playback History Limit</label>
+      <div class="form-row">
+        <input class="form-input" type="number" value="<%= gc('music_playback_history_limit', '50') %>" min="1" max="100" style="width:100px;" name="music_playback_history_limit">
+        <span style="font-size:12px;color:var(--text-muted);">Tracks (max 50)</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Max Song Duration</label>
+      <div class="form-row">
+        <input class="form-input" type="number" value="<%= gc('music_max_song_duration', '0') %>" min="0" max="360" style="width:100px;" name="music_max_song_duration">
+        <span style="font-size:12px;color:var(--text-muted);">Minutes (0 = unlimited)</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Inactivity Timeout</label>
+      <div class="form-row">
+        <input class="form-input" type="number" value="<%= gc('music_inactivity_timeout', '300') %>" min="10" max="3600" style="width:100px;" name="music_inactivity_timeout">
+        <span style="font-size:12px;color:var(--text-muted);">Seconds before leaving voice</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Buffer Size</label>
+      <select class="form-select" name="music_buffer_size">
+        <option value="low" <%= gc('music_buffer_size', 'medium') === 'low' ? 'selected' : '' %>>Low (faster start)</option>
+        <option value="medium" <%= gc('music_buffer_size', 'medium') === 'medium' ? 'selected' : '' %>>Medium (balanced)</option>
+        <option value="high" <%= gc('music_buffer_size', 'medium') === 'high' ? 'selected' : '' %>>High (best stability)</option>
+      </select>
+      <div class="form-hint">Higher buffer = smoother playback but slower start</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Sources</span>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">YouTube</div><div class="setting-desc">Songs, playlists, livestreams, shorts</div></div>
+      <label class="toggle"><input type="checkbox" <%= gc('music_source_youtube', true) ? 'checked' : '' %> name="music_source_youtube"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">SoundCloud</div><div class="setting-desc">SoundCloud track support</div></div>
+      <label class="toggle"><input type="checkbox" <%= gc('music_source_soundcloud', false) ? 'checked' : '' %> name="music_source_soundcloud"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Search Default</div></div>
+      <select class="form-select" style="width:160px;" name="music_search_default">
+        <option value="ytmsearch" <%= gc('music_search_default', 'ytmsearch') === 'ytmsearch' ? 'selected' : '' %>>YouTube Music</option>
+        <option value="ytsearch" <%= gc('music_search_default', 'ytmsearch') === 'ytsearch' ? 'selected' : '' %>>YouTube</option>
+        <option value="scsearch" <%= gc('music_search_default', 'ytmsearch') === 'scsearch' ? 'selected' : '' %>>SoundCloud</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <span class="card-title">Now Playing Panel</span>
+      <div class="card-desc">Interactive music control panel shown via /nowplaying</div>
+    </div>
+    <span class="badge badge-green">Active</span>
+  </div>
+  <div style="background:var(--bg-input);border-radius:12px;padding:20px;margin-top:8px;">
+    <div class="flex items-center gap-4" style="margin-bottom:16px;">
+      <div style="width:72px;height:72px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#7c3aed);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;">🎵</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:16px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">No music playing</div>
+        <div style="font-size:13px;color:var(--text-secondary);margin-top:2px;">Queue is empty — add songs with /play</div>
+        <div class="flex items-center gap-2" style="margin-top:6px;">
+          <span style="font-size:11px;color:var(--text-muted);">Volume: 50%</span>
+          <span style="font-size:11px;color:var(--text-muted);">·</span>
+          <span style="font-size:11px;color:var(--text-muted);">Loop: Off</span>
+          <span style="font-size:11px;color:var(--text-muted);">·</span>
+          <span style="font-size:11px;color:var(--text-muted);">Shuffle: Off</span>
+        </div>
+      </div>
+    </div>
+    <div class="flex items-center justify-center gap-2" style="flex-wrap:wrap;">
+      <button class="btn btn-outline btn-sm" style="font-size:16px;padding:8px 12px;" title="Previous">⏮</button>
+      <button class="btn btn-outline btn-sm" style="font-size:16px;padding:8px 12px;" title="Pause">⏸</button>
+      <button class="btn btn-primary btn-sm" style="font-size:16px;padding:8px 12px;" title="Play/Pause">▶</button>
+      <button class="btn btn-outline btn-sm" style="font-size:16px;padding:8px 12px;" title="Stop">⏹</button>
+      <button class="btn btn-outline btn-sm" style="font-size:16px;padding:8px 12px;" title="Skip">⏭</button>
+      <span style="width:1px;height:24px;background:var(--border);margin:0 4px;"></span>
+      <button class="btn btn-outline btn-sm" style="font-size:14px;padding:8px 12px;" title="Shuffle">🔀</button>
+      <button class="btn btn-outline btn-sm" style="font-size:14px;padding:8px 12px;" title="Queue">📋</button>
+      <button class="btn btn-outline btn-sm" style="font-size:14px;padding:8px 12px;" title="Volume">🔊</button>
+      <button class="btn btn-outline btn-sm" style="font-size:14px;padding:8px 12px;" title="Autoplay">↻</button>
+      <button class="btn btn-outline btn-sm" style="font-size:14px;padding:8px 12px;" title="Lyrics">📝</button>
+    </div>
+    <div style="margin-top:16px;display:flex;align-items:center;gap:8px;">
+      <span style="font-size:11px;color:var(--text-muted);">0:00</span>
+      <div style="flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden;">
+        <div style="width:0%;height:100%;background:var(--accent);border-radius:2px;"></div>
+      </div>
+      <span style="font-size:11px;color:var(--text-muted);">0:00</span>
+    </div>
+    <div style="margin-top:12px;">
+      <div style="font-size:12px;color:var(--text-muted);font-weight:600;margin-bottom:4px;">UP NEXT</div>
+      <div style="font-size:12px;color:var(--text-secondary);">No upcoming tracks</div>
+    </div>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Loop & Autoplay Modes</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Default Loop Mode</label>
+      <select class="form-select" name="music_default_loop_mode">
+        <option value="off" <%= gc('music_default_loop_mode', 'off') === 'off' ? 'selected' : '' %>>Off</option>
+        <option value="track" <%= gc('music_default_loop_mode', 'off') === 'track' ? 'selected' : '' %>>Loop Track</option>
+        <option value="queue" <%= gc('music_default_loop_mode', 'off') === 'queue' ? 'selected' : '' %>>Loop Queue</option>
+        <option value="autoplay" <%= gc('music_default_loop_mode', 'off') === 'autoplay' ? 'selected' : '' %>>Autoplay (related tracks)</option>
+      </select>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Allow Loop Track</div><div class="setting-desc">Users can loop the current track</div></div>
+      <label class="toggle"><input type="checkbox" <%= gc('music_allow_loop_track', true) ? 'checked' : '' %> name="music_allow_loop_track"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Allow Loop Queue</div><div class="setting-desc">Users can loop the entire queue</div></div>
+      <label class="toggle"><input type="checkbox" <%= gc('music_allow_loop_queue', true) ? 'checked' : '' %> name="music_allow_loop_queue"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Autoplay</div><div class="setting-desc">Automatically play related tracks when queue ends</div></div>
+      <label class="toggle"><input type="checkbox" <%= gc('music_autoplay', false) ? 'checked' : '' %> name="music_autoplay"><span class="toggle-slider"></span></label>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Lyrics</span>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Lyrics Preview</div><div class="setting-desc">Fetch and display song lyrics via /nowplaying or /lyrics</div></div>
+      <label class="toggle"><input type="checkbox" <%= gc('music_lyrics_enabled', true) ? 'checked' : '' %> name="music_lyrics_enabled"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Lyrics Provider</label>
+      <select class="form-select" name="music_lyrics_provider">
+        <option value="genius" <%= gc('music_lyrics_provider', 'genius') === 'genius' ? 'selected' : '' %>>Genius</option>
+        <option value="azlyrics" <%= gc('music_lyrics_provider', 'genius') === 'azlyrics' ? 'selected' : '' %>>AZLyrics</option>
+        <option value="musixmatch" <%= gc('music_lyrics_provider', 'genius') === 'musixmatch' ? 'selected' : '' %>>Musixmatch</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Genius API Token</label>
+      <input class="form-input" type="password" value="<%= gc('music_genius_api_token', 'your_genius_token') %>" placeholder="Required for lyrics" name="music_genius_api_token">
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <span class="card-title">All Commands</span>
+      <div class="card-desc">Slash commands available for music control</div>
+    </div>
+  </div>
+  <div class="grid-2">
+    <div><span class="badge badge-blue">/play</span><span style="font-size:12px;color:var(--text-secondary);margin-left:6px;">Play a song, playlist, or URL</span></div>
+    <div><span class="badge badge-blue">/queue</span><span style="font-size:12px;color:var(--text-secondary);margin-left:6px;">Show the current music queue</span></div>
+    <div><span class="badge badge-blue">/nowplaying</span><span style="font-size:12px;color:var(--text-secondary);margin-left:6px;">Open the playback control panel</span></div>
+    <div><span class="badge badge-blue">/pause</span><span style="font-size:12px;color:var(--text-secondary);margin-left:6px;">Pause current playback</span></div>
+    <div><span class="badge badge-blue">/resume</span><span style="font-size:12px;color:var(--text-secondary);margin-left:6px;">Resume paused playback</span></div>
+    <div><span class="badge badge-blue">/skip</span><span style="font-size:12px;color:var(--text-secondary);margin-left:6px;">Skip the current track</span></div>
+    <div><span class="badge badge-blue">/previous</span><span style="font-size:12px;color:var(--text-secondary);margin-left:6px;">Play previous track from history</span></div>
+    <div><span class="badge badge-blue">/stop</span><span style="font-size:12px;color:var(--text-secondary);margin-left:6px;">Stop playback and clear queue</span></div>
+    <div><span class="badge badge-blue">/shuffle</span><span style="font-size:12px;color:var(--text-secondary);margin-left:6px;">Toggle shuffle mode</span></div>
+    <div><span class="badge badge-blue">/loop</span><span style="font-size:12px;color:var(--text-secondary);margin-left:6px;">Set loop/autoplay mode</span></div>
+    <div><span class="badge badge-blue">/volume</span><span style="font-size:12px;color:var(--text-secondary);margin-left:6px;">Change volume (10-150)</span></div>
+    <div><span class="badge badge-blue">/remove</span><span style="font-size:12px;color:var(--text-secondary);margin-left:6px;">Remove a track from queue</span></div>
+    <div><span class="badge badge-blue">/clear</span><span style="font-size:12px;color:var(--text-secondary);margin-left:6px;">Clear all upcoming tracks</span></div>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <span class="card-title">Local HTTP API</span>
+        <div class="card-desc">REST API for health checks, queue inspection, and remote control</div>
+      </div>
+      <label class="toggle"><input type="checkbox" <%= gc('music_api_enabled', true) ? 'checked' : '' %> name="music_api_enabled"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="form-group">
+      <label class="form-label">API Port</label>
+      <input class="form-input" type="number" value="<%= gc('music_api_port', '7788') %>" min="1024" max="65535" name="music_api_port">
+    </div>
+    <div class="form-group">
+      <label class="form-label">API Key</label>
+      <input class="form-input" type="password" value="<%= gc('music_api_key', 'your_api_key') %>" name="music_api_key">
+      <div class="form-hint">Required for authenticated API requests</div>
+    </div>
+    <div style="font-size:12px;color:var(--text-muted);">
+      <div>GET /health — Server health check</div>
+      <div>GET /queue — Current queue data</div>
+      <div>POST /play — Remote playback control</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Multi-Language</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Default Language</label>
+      <select class="form-select" name="music_default_language">
+        <option value="en" <%= gc('music_default_language', 'en') === 'en' ? 'selected' : '' %>>English</option>
+        <option value="tr" <%= gc('music_default_language', 'en') === 'tr' ? 'selected' : '' %>>Turkish</option>
+        <option value="fr" <%= gc('music_default_language', 'en') === 'fr' ? 'selected' : '' %>>French</option>
+        <option value="de" <%= gc('music_default_language', 'en') === 'de' ? 'selected' : '' %>>German</option>
+        <option value="it" <%= gc('music_default_language', 'en') === 'it' ? 'selected' : '' %>>Italian</option>
+        <option value="ru" <%= gc('music_default_language', 'en') === 'ru' ? 'selected' : '' %>>Russian</option>
+        <option value="zh" <%= gc('music_default_language', 'en') === 'zh' ? 'selected' : '' %>>Chinese</option>
+      </select>
+      <div class="form-hint">Music bot responses and messages will use this language</div>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Per-User Language</div><div class="setting-desc">Allow users to set their preferred language</div></div>
+      <label class="toggle"><input type="checkbox" <%= gc('music_per_user_language', true) ? 'checked' : '' %> name="music_per_user_language"><span class="toggle-slider"></span></label>
+    </div>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <span class="card-title">Queue</span>
+        <div class="card-desc">Up to 500 tracks, with history and shuffle</div>
+      </div>
+      <span class="badge badge-green">0 tracks</span>
+    </div>
+    <div class="empty-state" style="padding:16px;">
+      <div class="empty-state-text" style="font-size:13px;">Queue is empty</div>
+    </div>
+    <div class="setting-row" style="border-top:1px solid var(--border);margin-top:4px;padding-top:8px;">
+      <div><div class="setting-label">Show Queue on Add</div><div class="setting-desc">Auto-display queue after adding a song</div></div>
+      <label class="toggle"><input type="checkbox" <%= gc('music_show_queue_on_add', false) ? 'checked' : '' %> name="music_show_queue_on_add"><span class="toggle-slider"></span></label>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <span class="card-title">Permissions</span>
+        <div class="card-desc">Control who can use music commands</div>
+      </div>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">DJ Role Required</div><div class="setting-desc">Restrict music commands to users with DJ role</div></div>
+      <label class="toggle"><input type="checkbox" <%= gc('music_dj_role_required', false) ? 'checked' : '' %> name="music_dj_role_required"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">DJ Role</div></div>
+      <select class="form-select" style="width:160px;" name="music_dj_role">
+        <option value="" <%= gc('music_dj_role', '') === '' ? 'selected' : '' %>>Select role...</option>
+        <% (selectedGuild.roles || []).forEach(r => { %>
+          <option value="<%= r.id %>" <%= gc('music_dj_role', '') === r.id ? 'selected' : '' %>><%= r.name %></option>
+        <% }) %>
+      </select>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Vote Skip</div><div class="setting-desc">Skip requires votes instead of instant</div></div>
+      <label class="toggle"><input type="checkbox" <%= gc('music_vote_skip', false) ? 'checked' : '' %> name="music_vote_skip"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Vote Percentage</div></div>
+      <input class="form-input inline-input" type="number" value="<%= gc('music_vote_percentage', '50') %>" min="1" max="100" name="music_vote_percentage">
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Allowed Voice Channels</div></div>
+      <select class="form-select" style="width:160px;" name="music_allowed_voice_channels">
+        <option value="" <%= gc('music_allowed_voice_channels', '') === '' ? 'selected' : '' %>>All channels</option>
+        <% (selectedGuild.voiceChannels || []).forEach(vc => { %>
+          <option value="<%= vc.id %>" <%= gc('music_allowed_voice_channels', '') === vc.id ? 'selected' : '' %>><%= vc.name %></option>
+        <% }) %>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="flex gap-2">
+  <button class="btn btn-primary">Save Changes</button>
+  <button class="btn btn-outline">Reset to Default</button>
+</div>
+
+</form>

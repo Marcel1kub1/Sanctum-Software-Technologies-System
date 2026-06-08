@@ -1,0 +1,100 @@
+<div class="page-header">
+  <h1 class="page-title">Temp Voice</h1>
+  <p class="page-desc">Dynamic temporary voice channels for members</p>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <div class="card-title">Temp Voice Module</div>
+      <div class="card-desc">Enable or disable temporary voice channels</div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox">
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Channel Settings</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Interface Channel</label>
+      <select class="form-select">
+        <option value="">Select a voice channel...</option>
+        <option value="create-voice">🔊 Create Voice</option>
+      </select>
+      <div class="form-hint">Users join this channel to create their own temporary channel</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Category</label>
+      <select class="form-select">
+        <option value="">Select a category...</option>
+        <option value="temp-channels">Temp Channels</option>
+        <option value="voice-channels">Voice Channels</option>
+      </select>
+      <div class="form-hint">Temporary channels will be created in this category</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Channel Name Format</label>
+      <input class="form-input" value="{user}'s Channel">
+      <div class="form-hint">Variables: {user}, {count}</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">User Limit</label>
+      <input class="form-input" type="number" value="0" min="0">
+      <div class="form-hint">0 for unlimited</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Channel Controls</span>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Allow Rename</div><div class="setting-desc">Let users rename their temporary channel</div></div>
+      <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Allow User Limit Change</div><div class="setting-desc">Let users change the user limit</div></div>
+      <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Allow Bitrate Change</div><div class="setting-desc">Let users change the channel bitrate</div></div>
+      <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Allow Kick from Channel</div><div class="setting-desc">Let users kick others from their channel</div></div>
+      <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Auto-Delete on Empty</div><div class="setting-desc">Delete channel when everyone leaves</div></div>
+      <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <span class="card-title">Active Temporary Channels</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Channel</th><th>Owner</th><th>Users</th><th>Created</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="5" class="text-center" style="color:var(--text-muted);padding:20px;">No active temporary channels</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="flex gap-2">
+  <button class="btn btn-primary">Save Changes</button>
+  <button class="btn btn-outline">Reset to Default</button>
+</div>

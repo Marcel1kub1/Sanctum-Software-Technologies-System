@@ -1,0 +1,164 @@
+<div class="page-header">
+  <h1 class="page-title">Infractions</h1>
+  <p class="page-desc">View and manage member infraction history</p>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <div class="card-title">Infractions Module</div>
+      <div class="card-desc">Enable or disable the infractions tracking system</div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox" checked>
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+</div>
+
+<div class="grid-4">
+  <div class="card">
+    <div class="stat-card-value" style="font-size:28px;font-weight:800;color:var(--yellow);">0</div>
+    <div class="card-desc">Total Warnings</div>
+  </div>
+  <div class="card">
+    <div class="stat-card-value" style="font-size:28px;font-weight:800;color:var(--red);">0</div>
+    <div class="card-desc">Total Bans</div>
+  </div>
+  <div class="card">
+    <div class="stat-card-value" style="font-size:28px;font-weight:800;color:var(--accent);">0</div>
+    <div class="card-desc">Total Kicks</div>
+  </div>
+  <div class="card">
+    <div class="stat-card-value" style="font-size:28px;font-weight:800;color:var(--green);">0</div>
+    <div class="card-desc">Total Mutes</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <div class="card-title">Infraction History</div>
+      <div class="card-desc">Recent infractions and actions taken</div>
+    </div>
+    <div class="flex gap-2">
+      <input class="form-input" style="width:200px;" placeholder="Search by user...">
+      <button class="btn btn-primary btn-sm">Search</button>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>User</th><th>Type</th><th>Reason</th><th>Moderator</th><th>Date</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr><td colspan="6" class="text-center" style="color:var(--text-muted);padding:20px;">No infractions recorded yet</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="form-hint" style="margin-top:8px;">Infractions will appear here once moderation actions are taken.</div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Auto-Punishment Thresholds</span>
+      <div class="card-desc">Automatic actions when infraction counts are reached</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Warnings until Mute</label>
+      <div class="form-row">
+        <input class="form-input inline-input" type="number" value="3" min="1">
+        <span style="font-size:12px;color:var(--text-muted);">warnings</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Mute Duration</label>
+      <div class="form-row">
+        <input class="form-input inline-input" type="number" value="1" min="1">
+        <select class="form-select" style="width:100px;">
+          <option value="hours">Hours</option>
+          <option value="days">Days</option>
+          <option value="permanent">Permanent</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Warnings until Kick</label>
+      <div class="form-row">
+        <input class="form-input inline-input" type="number" value="5" min="1">
+        <span style="font-size:12px;color:var(--text-muted);">warnings</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Warnings until Ban</label>
+      <div class="form-row">
+        <input class="form-input inline-input" type="number" value="7" min="1">
+        <span style="font-size:12px;color:var(--text-muted);">warnings</span>
+      </div>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Reset After Action</div><div class="setting-desc">Reset warning count after an auto-punishment is applied</div></div>
+      <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Infraction Expiry</span>
+      <div class="card-desc">Automatically expire infractions after a set time</div>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Auto-Expire Warnings</div><div class="setting-desc">Warnings expire after a set period</div></div>
+      <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Expiry Period</label>
+      <div class="form-row">
+        <input class="form-input inline-input" type="number" value="30" min="1">
+        <select class="form-select" style="width:100px;">
+          <option value="days">Days</option>
+          <option value="weeks">Weeks</option>
+          <option value="months">Months</option>
+        </select>
+      </div>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">DM on Infraction</div><div class="setting-desc">Send DM to user when they receive an infraction</div></div>
+      <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Infraction Log Channel</label>
+      <select class="form-select">
+        <option value="">Select a channel...</option>
+        <option value="infraction-logs">#infraction-logs</option>
+        <option value="mod-logs">#mod-logs</option>
+      </select>
+      <div class="form-hint">Channel for detailed infraction logging</div>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Notify Moderators</div><div class="setting-desc">Alert mods when threshold is reached</div></div>
+      <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <span class="card-title">Infraction Reasons</span>
+      <div class="card-desc">Predefined reasons for common infractions</div>
+    </div>
+    <button class="btn btn-primary btn-sm">+ Add Reason</button>
+  </div>
+  <div class="flex flex-wrap gap-2" style="margin-top:8px;">
+    <span class="badge badge-blue" style="padding:6px 12px;font-size:12px;">Spam ✕</span>
+    <span class="badge badge-blue" style="padding:6px 12px;font-size:12px;">Harassment ✕</span>
+    <span class="badge badge-blue" style="padding:6px 12px;font-size:12px;">NSFW Content ✕</span>
+    <span class="badge badge-blue" style="padding:6px 12px;font-size:12px;">Advertising ✕</span>
+  </div>
+</div>
+
+<div class="flex gap-2">
+  <button class="btn btn-primary">Save Changes</button>
+  <button class="btn btn-outline">Reset to Default</button>
+</div>

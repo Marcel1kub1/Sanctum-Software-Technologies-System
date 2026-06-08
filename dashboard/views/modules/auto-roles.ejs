@@ -1,0 +1,148 @@
+<div class="page-header">
+  <h1 class="page-title">Auto Roles</h1>
+  <p class="page-desc">Automatically assign roles to new members</p>
+</div>
+
+<form method="POST" action="/dashboard/config?guild=<%= selectedGuild ? selectedGuild.id : '' %>">
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <div class="card-title">Auto Roles Module</div>
+      <div class="card-desc">Enable or disable automatic role assignment</div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox" name="autoroles_enabled" <%= gc('autoroles_enabled', false) ? 'checked' : '' %>>
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <span class="card-title">Join Roles</span>
+        <div class="card-desc">Roles automatically assigned when a member joins</div>
+      </div>
+      <button class="btn btn-primary btn-sm">+ Add Role</button>
+    </div>
+    <div style="margin-top:4px;">
+      <div class="level-row">
+        <div class="level-badge" style="background:var(--bg-hover);color:var(--text-secondary);">R</div>
+        <div class="level-info">
+          <div class="level-name">@Members</div>
+          <div class="level-role">Basic member role</div>
+        </div>
+        <label class="toggle"><input type="checkbox" name="autoroles_members_enabled" <%= gc('autoroles_members_enabled', true) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+      </div>
+      <div class="level-row">
+        <div class="level-badge" style="background:var(--bg-hover);color:var(--text-secondary);">N</div>
+        <div class="level-info">
+          <div class="level-name">@Newcomer</div>
+          <div class="level-role">Temporary newcomer role</div>
+        </div>
+        <label class="toggle"><input type="checkbox" name="autoroles_newcomer_enabled" <%= gc('autoroles_newcomer_enabled', true) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Role Assignment Settings</span>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Delay Assignment</div><div class="setting-desc">Wait before assigning roles</div></div>
+      <label class="toggle"><input type="checkbox" name="autoroles_delay_assignment" <%= gc('autoroles_delay_assignment', false) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Delay Duration (seconds)</label>
+      <input class="form-input" type="number" name="autoroles_delay_duration" value="<%= gc('autoroles_delay_duration', '10') %>" min="1" max="3600">
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Assign to Bots</div><div class="setting-desc">Also assign roles to bots upon join</div></div>
+      <label class="toggle"><input type="checkbox" name="autoroles_assign_to_bots" <%= gc('autoroles_assign_to_bots', false) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Stack Roles</div><div class="setting-desc">Assign all configured roles</div></div>
+      <label class="toggle"><input type="checkbox" name="autoroles_stack_roles" <%= gc('autoroles_stack_roles', true) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Remove on Leave</div><div class="setting-desc">Remove auto-roles when member leaves</div></div>
+      <label class="toggle"><input type="checkbox" name="autoroles_remove_on_leave" <%= gc('autoroles_remove_on_leave', false) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+    </div>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Role Groups (Pick One)</span>
+      <div class="card-desc">Members can only receive one role from each group</div>
+    </div>
+    <button class="btn btn-primary btn-sm" style="flex-shrink:0;">+ Add Group</button>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Verification Requirement</span>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Require Verification</div><div class="setting-desc">Only assign roles after member is verified</div></div>
+      <label class="toggle"><input type="checkbox" name="autoroles_require_verification" <%= gc('autoroles_require_verification', false) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Verified Role</label>
+      <select class="form-select" name="autoroles_verified_role">
+        <option value="">Select a role...</option>
+        <% if (selectedGuild && selectedGuild.roles) selectedGuild.roles.forEach(r => { %>
+          <option value="<%= r.id %>" <%= gc('autoroles_verified_role', '') === r.id ? 'selected' : '' %>>@<%= r.name %></option>
+        <% }); %>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <span class="card-title">Excluded Roles</span>
+      <div class="card-desc">Roles that won't be auto-assigned</div>
+    </div>
+  </div>
+  <div class="form-group">
+    <input class="form-input" name="autoroles_excluded_roles" value="<%= gc('autoroles_excluded_roles', '') %>" placeholder="@Admin @Staff @Moderator">
+    <div class="form-hint">These roles will be skipped during auto-assignment</div>
+  </div>
+  <div class="setting-row">
+    <div><div class="setting-label">Exclude Bots</div><div class="setting-desc">Skip role assignment for bot accounts</div></div>
+      <label class="toggle"><input type="checkbox" name="autoroles_exclude_bots" <%= gc('autoroles_exclude_bots', true) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <span class="card-title">Role Persistence</span>
+    <div class="card-desc">Re-assign roles when members rejoin</div>
+  </div>
+  <div class="setting-row">
+    <div><div class="setting-label">Persist Roles on Rejoin</div><div class="setting-desc">Re-assign previously held roles when a member rejoins</div></div>
+      <label class="toggle"><input type="checkbox" name="autoroles_persist_roles" <%= gc('autoroles_persist_roles', false) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+  </div>
+  <div class="setting-row">
+    <div><div class="setting-label">Persist Duration</div></div>
+    <div class="form-row">
+      <input class="form-input inline-input" type="number" name="autoroles_persist_duration" value="<%= gc('autoroles_persist_duration', '7') %>" min="1">
+      <select class="form-select" name="autoroles_persist_unit" style="width:100px;">
+        <option value="days" <%= gc('autoroles_persist_unit', 'days') === 'days' ? 'selected' : '' %>>Days</option>
+        <option value="weeks" <%= gc('autoroles_persist_unit', 'days') === 'weeks' ? 'selected' : '' %>>Weeks</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-hint">Roles are remembered for this duration after a member leaves</div>
+</div>
+
+<div class="flex gap-2">
+  <button class="btn btn-primary">Save Changes</button>
+  <button class="btn btn-outline">Reset to Default</button>
+</div>
+
+</form>

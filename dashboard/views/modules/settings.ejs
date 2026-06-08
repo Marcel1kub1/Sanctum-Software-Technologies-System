@@ -1,0 +1,126 @@
+<div class="page-header">
+  <h1 class="page-title">Server Settings</h1>
+  <p class="page-desc">Global bot configuration for this server</p>
+</div>
+
+<form method="POST" action="/dashboard/config?guild=<%= selectedGuild ? selectedGuild.id : '' %>">
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Command Prefix</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Text Command Prefix</label>
+      <div class="flex gap-2" style="flex-wrap:wrap;">
+        <label class="toggle" style="margin-right:4px;">
+          <input type="radio" name="settings_prefix" checked>
+          <span class="toggle-slider" style="width:auto;padding:4px 12px;border-radius:6px;background:var(--bg-input);border:1px solid var(--border);color:var(--text-primary);font-size:13px;display:flex;align-items:center;gap:4px;">!</span>
+        </label>
+        <label class="toggle" style="margin-right:4px;">
+          <input type="radio" name="settings_prefix">
+          <span class="toggle-slider" style="width:auto;padding:4px 12px;border-radius:6px;background:var(--bg-input);border:1px solid var(--border);color:var(--text-primary);font-size:13px;display:flex;align-items:center;gap:4px;">?</span>
+        </label>
+        <label class="toggle">
+          <input type="radio" name="settings_prefix">
+          <span class="toggle-slider" style="width:auto;padding:4px 12px;border-radius:6px;background:var(--bg-input);border:1px solid var(--border);color:var(--text-primary);font-size:13px;display:flex;align-items:center;gap:4px;">$</span>
+        </label>
+      </div>
+      <div class="form-hint">Choose the command prefix for text commands</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Regional Settings</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Timezone</label>
+      <select class="form-select" name="settings_timezone">
+        <option value="UTC" <%= gc('settings_timezone', 'UTC') === 'UTC' ? 'selected' : '' %>>UTC</option>
+        <option value="US/Eastern" <%= gc('settings_timezone', 'UTC') === 'US/Eastern' ? 'selected' : '' %>>US/Eastern</option>
+        <option value="US/Pacific" <%= gc('settings_timezone', 'UTC') === 'US/Pacific' ? 'selected' : '' %>>US/Pacific</option>
+        <option value="Europe/Berlin" <%= gc('settings_timezone', 'UTC') === 'Europe/Berlin' ? 'selected' : '' %>>Europe/Berlin</option>
+        <option value="Europe/London" <%= gc('settings_timezone', 'UTC') === 'Europe/London' ? 'selected' : '' %>>Europe/London</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Language</label>
+      <select class="form-select" name="settings_language">
+        <option value="en" <%= gc('settings_language', 'en') === 'en' ? 'selected' : '' %>>English (US)</option>
+        <option value="de" <%= gc('settings_language', 'en') === 'de' ? 'selected' : '' %>>Deutsch</option>
+        <option value="fr" <%= gc('settings_language', 'en') === 'fr' ? 'selected' : '' %>>Francais</option>
+        <option value="es" <%= gc('settings_language', 'en') === 'es' ? 'selected' : '' %>>Espanol</option>
+        <option value="pt" <%= gc('settings_language', 'en') === 'pt' ? 'selected' : '' %>>Portugues</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Date Format</label>
+      <select class="form-select" name="settings_dateformat">
+        <option value="MM/DD/YYYY" <%= gc('settings_dateformat', 'MM/DD/YYYY') === 'MM/DD/YYYY' ? 'selected' : '' %>>MM/DD/YYYY</option>
+        <option value="DD/MM/YYYY" <%= gc('settings_dateformat', 'MM/DD/YYYY') === 'DD/MM/YYYY' ? 'selected' : '' %>>DD/MM/YYYY</option>
+        <option value="YYYY-MM-DD" <%= gc('settings_dateformat', 'MM/DD/YYYY') === 'YYYY-MM-DD' ? 'selected' : '' %>>YYYY-MM-DD</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <span class="card-title">General Behavior</span>
+      <div class="card-desc">Control how the bot behaves in this server</div>
+    </div>
+  </div>
+  <div class="setting-row">
+    <div><div class="setting-label">Silent Mode</div><div class="setting-desc">Suppress non-essential messages</div></div>
+    <label class="toggle"><input type="checkbox" name="settings_silentmode" <%= gc('settings_silentmode', false) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+  </div>
+  <div class="setting-row">
+    <div><div class="setting-label">Delete Command Messages</div><div class="setting-desc">Auto-delete user commands after execution</div></div>
+    <label class="toggle"><input type="checkbox" name="settings_deletecommandmessages" <%= gc('settings_deletecommandmessages', false) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+  </div>
+  <div class="setting-row">
+    <div><div class="setting-label">Command Cooldowns</div><div class="setting-desc">Enable cooldowns to prevent spam</div></div>
+    <label class="toggle"><input type="checkbox" name="settings_commandcooldowns" <%= gc('settings_commandcooldowns', true) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+  </div>
+  <div class="setting-row">
+    <div><div class="setting-label">DM Error Messages</div><div class="setting-desc">Send command errors via DM instead of channel</div></div>
+    <label class="toggle"><input type="checkbox" name="settings_dmerrormessages" <%= gc('settings_dmerrormessages', false) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+  </div>
+  <div class="setting-row">
+    <div><div class="setting-label">Auto-Delete Bot Messages</div><div class="setting-desc">Delete bot responses after a set time</div></div>
+    <label class="toggle"><input type="checkbox" name="settings_autodeletebotmessages" <%= gc('settings_autodeletebotmessages', false) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+  </div>
+  <div class="form-group" style="margin-bottom:0;">
+    <label class="form-label">Auto-Delete Delay (seconds)</label>
+    <input class="form-input" type="number" name="settings_autodeletedelay" value="<%= gc('settings_autodeletedelay', '30') %>" min="5" max="300">
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <span class="card-title">Command Permissions</span>
+      <div class="card-desc">Override default command permissions for the server</div>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Command</th><th>Minimum Permission Level</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Moderation commands</td><td><select class="form-select" style="width:160px;" name="settings_perm_moderation"><option <%= gc('settings_perm_moderation', 'Moderator') === 'Moderator' ? 'selected' : '' %>>Moderator</option><option <%= gc('settings_perm_moderation', 'Moderator') === 'Admin' ? 'selected' : '' %>>Admin</option><option <%= gc('settings_perm_moderation', 'Moderator') === 'Owner' ? 'selected' : '' %>>Owner</option></select></td></tr>
+        <tr><td>Economy commands</td><td><select class="form-select" style="width:160px;" name="settings_perm_economy"><option <%= gc('settings_perm_economy', 'Everyone') === 'Everyone' ? 'selected' : '' %>>Everyone</option><option <%= gc('settings_perm_economy', 'Everyone') === 'Moderator' ? 'selected' : '' %>>Moderator</option><option <%= gc('settings_perm_economy', 'Everyone') === 'Admin' ? 'selected' : '' %>>Admin</option></select></td></tr>
+        <tr><td>Music commands</td><td><select class="form-select" style="width:160px;" name="settings_perm_music"><option <%= gc('settings_perm_music', 'Everyone') === 'Everyone' ? 'selected' : '' %>>Everyone</option><option <%= gc('settings_perm_music', 'Everyone') === 'Moderator' ? 'selected' : '' %>>Moderator</option><option <%= gc('settings_perm_music', 'Everyone') === 'Admin' ? 'selected' : '' %>>Admin</option></select></td></tr>
+        <tr><td>Administration commands</td><td><select class="form-select" style="width:160px;" name="settings_perm_administration"><option <%= gc('settings_perm_administration', 'Admin') === 'Moderator' ? 'selected' : '' %>>Moderator</option><option <%= gc('settings_perm_administration', 'Admin') === 'Admin' ? 'selected' : '' %>>Admin</option><option <%= gc('settings_perm_administration', 'Admin') === 'Owner' ? 'selected' : '' %>>Owner</option></select></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="flex gap-2">
+  <button class="btn btn-primary">Save Changes</button>
+  <button class="btn btn-outline">Reset to Default</button>
+</div>
+</form>

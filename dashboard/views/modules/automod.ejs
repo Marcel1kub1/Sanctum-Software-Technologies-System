@@ -1,0 +1,125 @@
+<div class="page-header">
+  <h1 class="page-title">Auto Moderation</h1>
+  <p class="page-desc">Automatic content filtering and anti-spam protection</p>
+</div>
+
+<form method="POST" action="/dashboard/config?guild=<%= selectedGuild ? selectedGuild.id : '' %>">
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <div class="card-title">Auto Mod Module</div>
+      <div class="card-desc">Enable or disable automatic moderation</div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox" name="automod_enabled" <%= gc('automod_enabled', true) ? 'checked' : '' %>>
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Anti-Spam</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Max Messages</label>
+      <input class="form-input" type="number" name="automod_max_messages" value="<%= gc('automod_max_messages', '5') %>" min="1" max="20">
+      <div class="form-hint">Maximum messages allowed in the interval</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Interval (seconds)</label>
+      <input class="form-input" type="number" name="automod_interval" value="<%= gc('automod_interval', '3') %>" min="1" max="60">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Action</label>
+      <select class="form-select" name="automod_action">
+        <option value="warn" <%= gc('automod_action', 'warn') === 'warn' ? 'selected' : '' %>>Warn</option>
+        <option value="mute" <%= gc('automod_action', 'warn') === 'mute' ? 'selected' : '' %>>Mute</option>
+        <option value="kick" <%= gc('automod_action', 'warn') === 'kick' ? 'selected' : '' %>>Kick</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Mute Duration (seconds)</label>
+      <input class="form-input" type="number" name="automod_mute_duration" value="<%= gc('automod_mute_duration', '60') %>" min="1">
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Content Filtering</span>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Max Mentions</div></div>
+      <input class="form-input inline-input" type="number" name="automod_max_mentions" value="<%= gc('automod_max_mentions', '5') %>" min="1">
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Max Links</div></div>
+      <input class="form-input inline-input" type="number" name="automod_max_links" value="<%= gc('automod_max_links', '3') %>" min="1">
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Max Lines</div></div>
+      <input class="form-input inline-input" type="number" name="automod_max_lines" value="<%= gc('automod_max_lines', '10') %>" min="1">
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Max Caps %</div></div>
+      <input class="form-input inline-input" type="number" name="automod_max_caps" value="<%= gc('automod_max_caps', '70') %>" min="1" max="100">
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Block Invites</div><div class="setting-desc">Block Discord invite links</div></div>
+      <label class="toggle"><input type="checkbox" name="automod_block_invites" <%= gc('automod_block_invites', true) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Block Spoilers</div><div class="setting-desc">Block excessive spoiler tags</div></div>
+      <label class="toggle"><input type="checkbox" name="automod_block_spoilers" <%= gc('automod_block_spoilers', false) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Block Mass Mentions</div><div class="setting-desc">Block @everyone and @here spam</div></div>
+      <label class="toggle"><input type="checkbox" name="automod_block_mass_mentions" <%= gc('automod_block_mass_mentions', true) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Block Zalgo</div><div class="setting-desc">Block glitch text characters</div></div>
+      <label class="toggle"><input type="checkbox" name="automod_block_zalgo" <%= gc('automod_block_zalgo', false) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <span class="card-title">Word Blacklist</span>
+      <div class="card-desc">Automatically remove messages containing blacklisted words</div>
+    </div>
+    <button class="btn btn-primary btn-sm">+ Add Word</button>
+  </div>
+  <div class="flex flex-wrap gap-2" style="margin-top:8px;">
+    <span class="badge badge-red" style="padding:6px 12px;font-size:12px;cursor:pointer;">word1 ✕</span>
+    <span class="badge badge-red" style="padding:6px 12px;font-size:12px;cursor:pointer;">badword ✕</span>
+    <span class="badge badge-red" style="padding:6px 12px;font-size:12px;cursor:pointer;">spamterm ✕</span>
+  </div>
+  <div class="form-group" style="margin-top:12px;">
+    <label class="form-label">Action on Blacklist Match</label>
+    <select class="form-select" name="automod_blacklist_action">
+        <option value="delete" <%= gc('automod_blacklist_action', 'delete') === 'delete' ? 'selected' : '' %>>Delete Message</option>
+        <option value="warn" <%= gc('automod_blacklist_action', 'delete') === 'warn' ? 'selected' : '' %>>Warn User</option>
+        <option value="mute" <%= gc('automod_blacklist_action', 'delete') === 'mute' ? 'selected' : '' %>>Mute User</option>
+    </select>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <span class="card-title">Whitelisted Channels</span>
+  </div>
+  <div class="form-hint" style="margin-bottom:12px;">Auto mod will not act in these channels</div>
+  <div class="flex flex-wrap gap-2">
+    <span class="badge badge-green" style="padding:6px 12px;font-size:12px;cursor:pointer;">#admin ✕</span>
+    <span class="badge badge-green" style="padding:6px 12px;font-size:12px;cursor:pointer;">#mod-only ✕</span>
+  </div>
+</div>
+
+<div class="flex gap-2">
+  <button class="btn btn-primary">Save Changes</button>
+  <button class="btn btn-outline">Reset to Default</button>
+</div>
+</form>

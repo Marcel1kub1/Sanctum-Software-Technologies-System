@@ -1,0 +1,96 @@
+<div class="page-header">
+  <h1 class="page-title">Custom Commands</h1>
+  <p class="page-desc">Create and manage your own custom bot commands</p>
+</div>
+
+<form method="POST" action="/dashboard/config?guild=<%= selectedGuild ? selectedGuild.id : '' %>">
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <div class="card-title">Custom Commands Module</div>
+      <div class="card-desc">Enable or disable custom commands</div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox" <%= gc('customcommands_enabled', true) ? 'checked' : '' %> name="customcommands_enabled">
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <span class="card-title">All Custom Commands</span>
+      <div class="card-desc">Manage your server's custom commands</div>
+    </div>
+    <button class="btn btn-primary btn-sm">+ New Command</button>
+  </div>
+  <div class="empty-state" style="padding:20px;">
+    <div class="empty-state-icon">⌨</div>
+    <div class="empty-state-text">No custom commands yet</div>
+    <p style="font-size:12px;color:var(--text-muted);margin-top:4px;">Create custom text or embed responses triggered by commands.</p>
+  </div>
+  <div style="margin-top:16px;">
+    <div class="card" style="padding:16px;">
+      <div class="card-header" style="margin-bottom:8px;">
+        <div class="flex items-center gap-2">
+          <span class="badge badge-blue">/</span>
+          <span class="card-title">example</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <label class="toggle"><input type="checkbox" <%= gc('customcommands_example_enabled', true) ? 'checked' : '' %> name="customcommands_example_enabled"><span class="toggle-slider"></span></label>
+          <button class="btn btn-outline btn-sm">✕</button>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label">Command Name</label>
+          <input class="form-input" value="<%= gc('customcommands_example_name', 'example') %>" name="customcommands_example_name">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Response Type</label>
+          <select class="form-select" name="customcommands_example_type">
+            <option value="text" <%= gc('customcommands_example_type', 'text') === 'text' ? 'selected' : '' %>>Text</option>
+            <option value="embed" <%= gc('customcommands_example_type', 'text') === 'embed' ? 'selected' : '' %>>Embed</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Response</label>
+        <textarea class="form-textarea" rows="2" name="customcommands_example_response"><%= gc('customcommands_example_response', 'This is an example custom command response!') %></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Aliases</label>
+        <input class="form-input" value="<%= gc('customcommands_example_aliases', 'eg, ex') %>" name="customcommands_example_aliases">
+        <div class="form-hint">Comma-separated alternative trigger names</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <span class="card-title">Permissions</span>
+  </div>
+  <div class="setting-row">
+    <div><div class="setting-label">Required Role to Use</div><div class="setting-desc">Restrict command usage to specific roles</div></div>
+    <select class="form-select" style="width:200px;" name="customcommands_required_role">
+      <option value="" <%= gc('customcommands_required_role', '') === '' ? 'selected' : '' %>>Everyone</option>
+      <% (selectedGuild.roles || []).forEach(r => { %>
+        <option value="<%= r.id %>" <%= gc('customcommands_required_role', '') === r.id ? 'selected' : '' %>><%= r.name %></option>
+      <% }) %>
+    </select>
+  </div>
+  <div class="setting-row">
+    <div><div class="setting-label">Ignore Bots</div><div class="setting-desc">Don't respond to bot commands</div></div>
+    <label class="toggle"><input type="checkbox" <%= gc('customcommands_ignore_bots', true) ? 'checked' : '' %> name="customcommands_ignore_bots"><span class="toggle-slider"></span></label>
+  </div>
+</div>
+
+<div class="flex gap-2">
+  <button class="btn btn-primary">Save Changes</button>
+  <button class="btn btn-outline">Reset to Default</button>
+</div>
+
+</form>

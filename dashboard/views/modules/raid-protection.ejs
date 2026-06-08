@@ -1,0 +1,92 @@
+<div class="page-header">
+  <h1 class="page-title">Raid Protection</h1>
+  <p class="page-desc">Detect and prevent server raids automatically</p>
+</div>
+
+<form method="POST" action="/dashboard/config?guild=<%= selectedGuild ? selectedGuild.id : '' %>">
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <div class="card-title">Raid Protection Module</div>
+      <div class="card-desc">Enable or disable raid protection</div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox" name="raidprotection_enabled" <%= gc('raidprotection_enabled', false) ? 'checked' : '' %>>
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Detection Settings</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Max Joins per Interval</label>
+      <input class="form-input" type="number" name="raidprotection_max_joins" value="<%= gc('raidprotection_max_joins', '10') %>" min="1" max="50">
+      <div class="form-hint">Maximum joins allowed in the time window</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Detection Interval (seconds)</label>
+      <input class="form-input" type="number" name="raidprotection_interval" value="<%= gc('raidprotection_interval', '30') %>" min="5" max="300">
+      <div class="form-hint">Time window to check for raid conditions</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Account Age Threshold (minutes)</label>
+      <input class="form-input" type="number" name="raidprotection_account_age" value="<%= gc('raidprotection_account_age', '15') %>" min="1">
+      <div class="form-hint">New accounts younger than this will be flagged</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Action on Raid Detection</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Primary Action</label>
+      <select class="form-select" name="raidprotection_primary_action">
+        <option value="lockdown" <%= gc('raidprotection_primary_action', 'lockdown') === 'lockdown' ? 'selected' : '' %>>Server Lockdown</option>
+        <option value="kick" <%= gc('raidprotection_primary_action', 'lockdown') === 'kick' ? 'selected' : '' %>>Mass Kick New Members</option>
+        <option value="ban" <%= gc('raidprotection_primary_action', 'lockdown') === 'ban' ? 'selected' : '' %>>Mass Ban New Members</option>
+        <option value="notify" <%= gc('raidprotection_primary_action', 'lockdown') === 'notify' ? 'selected' : '' %>>Notify Staff Only</option>
+      </select>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Auto-Enable Verification</div><div class="setting-desc">Require verification for new joins during raid</div></div>
+      <label class="toggle"><input type="checkbox" name="raidprotection_auto_verification" <%= gc('raidprotection_auto_verification', true) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Notify Staff</div><div class="setting-desc">Send raid alert to staff channel</div></div>
+      <label class="toggle"><input type="checkbox" name="raidprotection_notify_staff" <%= gc('raidprotection_notify_staff', true) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Staff Alert Channel</label>
+      <select class="form-select" name="raidprotection_staff_channel">
+        <option value="">Select a channel...</option>
+        <% if (selectedGuild && selectedGuild.textChannels) selectedGuild.textChannels.forEach(c => { %>
+          <option value="<%= c.id %>" <%= gc('raidprotection_staff_channel', '') === c.id ? 'selected' : '' %>>#<%= c.name %></option>
+        <% }); %>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <span class="card-title">Whitelisted Users/Roles</span>
+      <div class="card-desc">Users and roles exempt from raid detection</div>
+    </div>
+    <button class="btn btn-primary btn-sm">+ Add</button>
+  </div>
+  <div class="empty-state" style="padding:16px;">
+    <div class="empty-state-text" style="font-size:13px;">No whitelisted entries</div>
+  </div>
+</div>
+
+<div class="flex gap-2">
+  <button class="btn btn-primary">Save Changes</button>
+  <button class="btn btn-outline">Reset to Default</button>
+</div>
+</form>

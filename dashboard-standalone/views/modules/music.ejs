@@ -1,0 +1,400 @@
+<div class="page-header">
+  <h1 class="page-title">Music</h1>
+  <p class="page-desc">High-quality music playback with Lavalink, queue management, and interactive controls</p>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <div class="card-title">Music Module</div>
+      <div class="card-desc">Enable or disable the music system</div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox" checked>
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Lavalink Configuration</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Engine</label>
+      <select class="form-select">
+        <option value="lavalink" selected>Lavalink</option>
+        <option value="discord-player">discord-player (built-in)</option>
+      </select>
+      <div class="form-hint">Lavalink provides superior audio quality and stability</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Lavalink Host</label>
+      <input class="form-input" value="localhost" placeholder="127.0.0.1">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Port</label>
+      <input class="form-input" type="number" value="2333" min="1" max="65535">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input class="form-input" type="password" value="youshallnotpass" placeholder="Lavalink server password">
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">SSL / Secure</div><div class="setting-desc">Connect using secure WebSocket (wss://)</div></div>
+      <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Auto-Resume</div><div class="setting-desc">Reconnect to Lavalink on disconnect</div></div>
+      <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <span class="card-title">Lavalink Status</span>
+        <div class="card-desc">Connected Lavalink node information</div>
+      </div>
+      <span class="badge badge-green">● Connected</span>
+    </div>
+    <div class="form-group">
+      <div class="form-label">Node</div>
+      <div style="font-size:13px;font-weight:600;">Main Node (localhost:2333)</div>
+    </div>
+    <div class="form-group">
+      <div class="form-label">Players</div>
+      <div style="font-size:13px;font-weight:600;">0 active</div>
+    </div>
+    <div class="form-group">
+      <div class="form-label">Uptime</div>
+      <div style="font-size:13px;font-weight:600;">12h 34m</div>
+    </div>
+    <div class="form-group">
+      <div class="form-label">CPU Load</div>
+      <div style="font-size:13px;font-weight:600;">2.4%</div>
+    </div>
+    <div class="form-group">
+      <div class="form-label">Memory</div>
+      <div style="font-size:13px;font-weight:600;">128MB / 512MB</div>
+    </div>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Playback Settings</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Default Volume</label>
+      <div class="form-row">
+        <input class="form-input" type="number" value="50" min="10" max="150" style="width:100px;">
+        <span style="font-size:12px;color:var(--text-muted);">Range: 10-150</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Max Queue Size</label>
+      <div class="form-row">
+        <input class="form-input" type="number" value="500" min="1" max="1000" style="width:100px;">
+        <span style="font-size:12px;color:var(--text-muted);">Tracks (max 500)</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Playback History Limit</label>
+      <div class="form-row">
+        <input class="form-input" type="number" value="50" min="1" max="100" style="width:100px;">
+        <span style="font-size:12px;color:var(--text-muted);">Tracks (max 50)</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Max Song Duration</label>
+      <div class="form-row">
+        <input class="form-input" type="number" value="0" min="0" max="360" style="width:100px;">
+        <span style="font-size:12px;color:var(--text-muted);">Minutes (0 = unlimited)</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Inactivity Timeout</label>
+      <div class="form-row">
+        <input class="form-input" type="number" value="300" min="10" max="3600" style="width:100px;">
+        <span style="font-size:12px;color:var(--text-muted);">Seconds before leaving voice</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Buffer Size</label>
+      <select class="form-select">
+        <option value="low">Low (faster start)</option>
+        <option value="medium" selected>Medium (balanced)</option>
+        <option value="high">High (best stability)</option>
+      </select>
+      <div class="form-hint">Higher buffer = smoother playback but slower start</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Sources</span>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">YouTube</div><div class="setting-desc">Songs, playlists, livestreams, shorts</div></div>
+      <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Spotify</div><div class="setting-desc">Track and playlist URL support</div></div>
+      <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">SoundCloud</div><div class="setting-desc">SoundCloud track support</div></div>
+      <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Search Default</div></div>
+      <select class="form-select" style="width:160px;">
+        <option value="ytmsearch" selected>YouTube Music</option>
+        <option value="ytsearch">YouTube</option>
+        <option value="scsearch">SoundCloud</option>
+        <option value="spsearch">Spotify</option>
+      </select>
+    </div>
+    <div class="form-group" style="margin-top:8px;">
+      <label class="form-label">Spotify Client ID</label>
+      <input class="form-input" value="your_spotify_client_id" placeholder="Optional for Spotify support">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Spotify Client Secret</label>
+      <input class="form-input" type="password" value="your_spotify_client_secret" placeholder="Optional for Spotify support">
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <span class="card-title">Now Playing Panel</span>
+      <div class="card-desc">Interactive music control panel shown via /nowplaying</div>
+    </div>
+    <span class="badge badge-green">Active</span>
+  </div>
+  <div style="background:var(--bg-input);border-radius:12px;padding:20px;margin-top:8px;">
+    <div class="flex items-center gap-4" style="margin-bottom:16px;">
+      <div style="width:72px;height:72px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#7c3aed);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;">🎵</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:16px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">No music playing</div>
+        <div style="font-size:13px;color:var(--text-secondary);margin-top:2px;">Queue is empty — add songs with /play</div>
+        <div class="flex items-center gap-2" style="margin-top:6px;">
+          <span style="font-size:11px;color:var(--text-muted);">Volume: 50%</span>
+          <span style="font-size:11px;color:var(--text-muted);">·</span>
+          <span style="font-size:11px;color:var(--text-muted);">Loop: Off</span>
+          <span style="font-size:11px;color:var(--text-muted);">·</span>
+          <span style="font-size:11px;color:var(--text-muted);">Shuffle: Off</span>
+        </div>
+      </div>
+    </div>
+    <div class="flex items-center justify-center gap-2" style="flex-wrap:wrap;">
+      <button class="btn btn-outline btn-sm" style="font-size:16px;padding:8px 12px;" title="Previous">⏮</button>
+      <button class="btn btn-outline btn-sm" style="font-size:16px;padding:8px 12px;" title="Pause">⏸</button>
+      <button class="btn btn-primary btn-sm" style="font-size:16px;padding:8px 12px;" title="Play/Pause">▶</button>
+      <button class="btn btn-outline btn-sm" style="font-size:16px;padding:8px 12px;" title="Stop">⏹</button>
+      <button class="btn btn-outline btn-sm" style="font-size:16px;padding:8px 12px;" title="Skip">⏭</button>
+      <span style="width:1px;height:24px;background:var(--border);margin:0 4px;"></span>
+      <button class="btn btn-outline btn-sm" style="font-size:14px;padding:8px 12px;" title="Shuffle">🔀</button>
+      <button class="btn btn-outline btn-sm" style="font-size:14px;padding:8px 12px;" title="Queue">📋</button>
+      <button class="btn btn-outline btn-sm" style="font-size:14px;padding:8px 12px;" title="Volume">🔊</button>
+      <button class="btn btn-outline btn-sm" style="font-size:14px;padding:8px 12px;" title="Autoplay">↻</button>
+      <button class="btn btn-outline btn-sm" style="font-size:14px;padding:8px 12px;" title="Lyrics">📝</button>
+    </div>
+    <div style="margin-top:16px;display:flex;align-items:center;gap:8px;">
+      <span style="font-size:11px;color:var(--text-muted);">0:00</span>
+      <div style="flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden;">
+        <div style="width:0%;height:100%;background:var(--accent);border-radius:2px;"></div>
+      </div>
+      <span style="font-size:11px;color:var(--text-muted);">0:00</span>
+    </div>
+    <div style="margin-top:12px;">
+      <div style="font-size:12px;color:var(--text-muted);font-weight:600;margin-bottom:4px;">UP NEXT</div>
+      <div style="font-size:12px;color:var(--text-secondary);">No upcoming tracks</div>
+    </div>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Loop & Autoplay Modes</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Default Loop Mode</label>
+      <select class="form-select">
+        <option value="off">Off</option>
+        <option value="track">Loop Track</option>
+        <option value="queue">Loop Queue</option>
+        <option value="autoplay">Autoplay (related tracks)</option>
+      </select>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Allow Loop Track</div><div class="setting-desc">Users can loop the current track</div></div>
+      <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Allow Loop Queue</div><div class="setting-desc">Users can loop the entire queue</div></div>
+      <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Autoplay</div><div class="setting-desc">Automatically play related tracks when queue ends</div></div>
+      <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Lyrics</span>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Lyrics Preview</div><div class="setting-desc">Fetch and display song lyrics via /nowplaying or /lyrics</div></div>
+      <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Lyrics Provider</label>
+      <select class="form-select">
+        <option value="genius">Genius</option>
+        <option value="azlyrics">AZLyrics</option>
+        <option value="musixmatch">Musixmatch</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Genius API Token</label>
+      <input class="form-input" type="password" value="your_genius_token" placeholder="Required for lyrics">
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <span class="card-title">All Commands</span>
+      <div class="card-desc">Slash commands available for music control</div>
+    </div>
+  </div>
+  <div class="grid-2">
+    <div><span class="badge badge-blue">/play</span><span style="font-size:12px;color:var(--text-secondary);margin-left:6px;">Play a song, playlist, or URL</span></div>
+    <div><span class="badge badge-blue">/queue</span><span style="font-size:12px;color:var(--text-secondary);margin-left:6px;">Show the current music queue</span></div>
+    <div><span class="badge badge-blue">/nowplaying</span><span style="font-size:12px;color:var(--text-secondary);margin-left:6px;">Open the playback control panel</span></div>
+    <div><span class="badge badge-blue">/pause</span><span style="font-size:12px;color:var(--text-secondary);margin-left:6px;">Pause current playback</span></div>
+    <div><span class="badge badge-blue">/resume</span><span style="font-size:12px;color:var(--text-secondary);margin-left:6px;">Resume paused playback</span></div>
+    <div><span class="badge badge-blue">/skip</span><span style="font-size:12px;color:var(--text-secondary);margin-left:6px;">Skip the current track</span></div>
+    <div><span class="badge badge-blue">/previous</span><span style="font-size:12px;color:var(--text-secondary);margin-left:6px;">Play previous track from history</span></div>
+    <div><span class="badge badge-blue">/stop</span><span style="font-size:12px;color:var(--text-secondary);margin-left:6px;">Stop playback and clear queue</span></div>
+    <div><span class="badge badge-blue">/shuffle</span><span style="font-size:12px;color:var(--text-secondary);margin-left:6px;">Toggle shuffle mode</span></div>
+    <div><span class="badge badge-blue">/loop</span><span style="font-size:12px;color:var(--text-secondary);margin-left:6px;">Set loop/autoplay mode</span></div>
+    <div><span class="badge badge-blue">/volume</span><span style="font-size:12px;color:var(--text-secondary);margin-left:6px;">Change volume (10-150)</span></div>
+    <div><span class="badge badge-blue">/remove</span><span style="font-size:12px;color:var(--text-secondary);margin-left:6px;">Remove a track from queue</span></div>
+    <div><span class="badge badge-blue">/clear</span><span style="font-size:12px;color:var(--text-secondary);margin-left:6px;">Clear all upcoming tracks</span></div>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <span class="card-title">Local HTTP API</span>
+        <div class="card-desc">REST API for health checks, queue inspection, and remote control</div>
+      </div>
+      <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+    </div>
+    <div class="form-group">
+      <label class="form-label">API Port</label>
+      <input class="form-input" type="number" value="7788" min="1024" max="65535">
+    </div>
+    <div class="form-group">
+      <label class="form-label">API Key</label>
+      <input class="form-input" type="password" value="your_api_key">
+      <div class="form-hint">Required for authenticated API requests</div>
+    </div>
+    <div style="font-size:12px;color:var(--text-muted);">
+      <div>GET /health — Server health check</div>
+      <div>GET /queue — Current queue data</div>
+      <div>POST /play — Remote playback control</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Multi-Language</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Default Language</label>
+      <select class="form-select">
+        <option value="en">English</option>
+        <option value="tr">Turkish</option>
+        <option value="fr">French</option>
+        <option value="de">German</option>
+        <option value="it">Italian</option>
+        <option value="ru">Russian</option>
+        <option value="zh">Chinese</option>
+      </select>
+      <div class="form-hint">Music bot responses and messages will use this language</div>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Per-User Language</div><div class="setting-desc">Allow users to set their preferred language</div></div>
+      <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+    </div>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <span class="card-title">Queue</span>
+        <div class="card-desc">Up to 500 tracks, with history and shuffle</div>
+      </div>
+      <span class="badge badge-green">0 tracks</span>
+    </div>
+    <div class="empty-state" style="padding:16px;">
+      <div class="empty-state-text" style="font-size:13px;">Queue is empty</div>
+    </div>
+    <div class="setting-row" style="border-top:1px solid var(--border);margin-top:4px;padding-top:8px;">
+      <div><div class="setting-label">Show Queue on Add</div><div class="setting-desc">Auto-display queue after adding a song</div></div>
+      <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <span class="card-title">Permissions</span>
+        <div class="card-desc">Control who can use music commands</div>
+      </div>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">DJ Role Required</div><div class="setting-desc">Restrict music commands to users with DJ role</div></div>
+      <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">DJ Role</div></div>
+      <select class="form-select" style="width:160px;">
+        <option value="">Select role...</option>
+        <option value="dj">@DJ</option>
+        <option value="mod">@Moderator</option>
+        <option value="admin">@Admin</option>
+      </select>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Vote Skip</div><div class="setting-desc">Skip requires votes instead of instant</div></div>
+      <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Vote Percentage</div></div>
+      <input class="form-input inline-input" type="number" value="50" min="1" max="100">
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Allowed Voice Channels</div></div>
+      <select class="form-select" style="width:160px;">
+        <option value="">All channels</option>
+        <option value="music">#Music</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="flex gap-2">
+  <button class="btn btn-primary">Save Changes</button>
+  <button class="btn btn-outline">Reset to Default</button>
+</div>

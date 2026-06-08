@@ -1,0 +1,85 @@
+<div class="page-header">
+  <h1 class="page-title">Verification</h1>
+  <p class="page-desc">Gate server access with verification checks</p>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <div class="card-title">Verification Module</div>
+      <div class="card-desc">Enable or disable the verification system</div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox">
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Verification Method</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Type</label>
+      <select class="form-select">
+        <option value="captcha">CAPTCHA Verification</option>
+        <option value="button">Button Role Verification</option>
+        <option value="reaction">Reaction Role Verification</option>
+        <option value="question">Question-Based Verification</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Verified Role</label>
+      <select class="form-select">
+        <option value="">Select a role...</option>
+        <option value="member">@Member</option>
+        <option value="verified">@Verified</option>
+      </select>
+      <div class="form-hint">Role assigned after successful verification</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Unverified Role</label>
+      <select class="form-select">
+        <option value="">Select a role...</option>
+        <option value="unverified">@Unverified</option>
+      </select>
+      <div class="form-hint">Temporary role before verification</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Verification Channel</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Channel</label>
+      <select class="form-select">
+        <option value="">Select a channel...</option>
+        <option value="verify">#verify</option>
+        <option value="welcome">#welcome</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Verification Message</label>
+      <textarea class="form-textarea" rows="3">Click the button below to verify your access to this server.</textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Button Label</label>
+      <input class="form-input" value="Verify">
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Kick on Failure</div><div class="setting-desc">Kick users who fail verification after timeout</div></div>
+      <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Timeout (minutes)</label>
+      <input class="form-input" type="number" value="10" min="1">
+    </div>
+  </div>
+</div>
+
+<div class="flex gap-2">
+  <button class="btn btn-primary">Save Changes</button>
+  <button class="btn btn-outline">Reset to Default</button>
+</div>

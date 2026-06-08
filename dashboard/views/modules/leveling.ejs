@@ -1,0 +1,139 @@
+<div class="page-header">
+  <h1 class="page-title">Leveling System</h1>
+  <p class="page-desc">Reward active members with XP, levels, and roles</p>
+</div>
+
+<form method="POST" action="/dashboard/config?guild=<%= selectedGuild ? selectedGuild.id : '' %>">
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <div class="card-title">Leveling Module</div>
+      <div class="card-desc">Enable or disable the leveling system</div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox" name="leveling_enabled" <%= gc('leveling_enabled', true) ? 'checked' : '' %>>
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">XP Settings</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">XP per Message</label>
+      <input class="form-input" type="number" name="leveling_xp_per_message" value="<%= gc('leveling_xp_per_message', '15') %>" min="1" max="100">
+    </div>
+    <div class="form-group">
+      <label class="form-label">XP per Voice Minute</label>
+      <input class="form-input" type="number" name="leveling_xp_per_voice" value="<%= gc('leveling_xp_per_voice', '2') %>" min="0" max="20">
+    </div>
+    <div class="form-group">
+      <label class="form-label">XP Cooldown (seconds)</label>
+      <input class="form-input" type="number" name="leveling_xp_cooldown" value="<%= gc('leveling_xp_cooldown', '60') %>" min="1" max="3600">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Base XP Requirement</label>
+      <input class="form-input" type="number" name="leveling_base_xp" value="<%= gc('leveling_base_xp', '100') %>" min="1">
+    </div>
+    <div class="form-group">
+      <label class="form-label">XP Multiplier</label>
+      <input class="form-input" type="number" name="leveling_xp_multiplier" value="<%= gc('leveling_xp_multiplier', '1.5') %>" step="0.1" min="1">
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Stack Voice & Message XP</div><div class="setting-desc">Allow gaining XP from both simultaneously</div></div>
+      <label class="toggle"><input type="checkbox" name="leveling_stack_xp" <%= gc('leveling_stack_xp', true) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Level-Up Settings</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Channel</label>
+      <select class="form-select" name="leveling_channel">
+        <option value="">Same channel (default)</option>
+        <% if (selectedGuild && selectedGuild.textChannels) selectedGuild.textChannels.forEach(c => { %>
+          <option value="<%= c.id %>" <%= gc('leveling_channel', '') === c.id ? 'selected' : '' %>>#<%= c.name %></option>
+        <% }); %>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Level-Up Message</label>
+      <textarea class="form-textarea" name="leveling_levelup_message" rows="3"><%= gc('leveling_levelup_message', 'GG {user}, you reached level {level}!') %></textarea>
+      <div class="form-hint">Variables: {user}, {level}, {server}</div>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Level-Up DM</div><div class="setting-desc">Send level-up notification via DM</div></div>
+      <label class="toggle"><input type="checkbox" name="leveling_levelup_dm" <%= gc('leveling_levelup_dm', false) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Role @mention on Level-Up</div><div class="setting-desc">Mention the user in level-up message</div></div>
+      <label class="toggle"><input type="checkbox" name="leveling_mention_on_levelup" <%= gc('leveling_mention_on_levelup', false) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Ignore XP in Bot Channels</div><div class="setting-desc">No XP earned in bot command channels</div></div>
+      <label class="toggle"><input type="checkbox" name="leveling_ignore_bot_channels" <%= gc('leveling_ignore_bot_channels', false) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <div class="card-title">Level Rewards</div>
+      <div class="card-desc">Auto-assign roles when members reach certain levels</div>
+    </div>
+    <button class="btn btn-primary btn-sm">+ Add Reward</button>
+  </div>
+  <div class="level-row">
+    <div class="level-badge">10</div>
+    <div class="level-info">
+      <div class="level-name">Level 10 Reward</div>
+      <div class="level-role">@Member · Role ID: 123456789</div>
+    </div>
+    <label class="toggle"><input type="checkbox" name="leveling_reward_10_enabled" <%= gc('leveling_reward_10_enabled', true) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+  </div>
+  <div class="level-row">
+    <div class="level-badge">20</div>
+    <div class="level-info">
+      <div class="level-name">Level 20 Reward</div>
+      <div class="level-role">@Trusted · Role ID: 123456790</div>
+    </div>
+    <label class="toggle"><input type="checkbox" name="leveling_reward_20_enabled" <%= gc('leveling_reward_20_enabled', true) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+  </div>
+  <div class="level-row">
+    <div class="level-badge">30</div>
+    <div class="level-info">
+      <div class="level-name">Level 30 Reward</div>
+      <div class="level-role">@Veteran · Role ID: 123456791</div>
+    </div>
+    <label class="toggle"><input type="checkbox" name="leveling_reward_30_enabled" <%= gc('leveling_reward_30_enabled', false) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <span class="card-title">XP Blacklist</span>
+  </div>
+  <div class="form-group">
+    <label class="form-label">Blacklisted Channels</label>
+    <input class="form-input" name="leveling_blacklist_channels" value="<%= gc('leveling_blacklist_channels', '') %>" placeholder="#spam #bot-commands">
+    <div class="form-hint">Channels where no XP is earned</div>
+  </div>
+  <div class="form-group">
+    <label class="form-label">Blacklisted Roles</label>
+    <input class="form-input" name="leveling_blacklist_roles" value="<%= gc('leveling_blacklist_roles', '') %>" placeholder="@NoXP @Muted">
+    <div class="form-hint">Roles that cannot earn XP</div>
+  </div>
+</div>
+
+<div class="flex gap-2">
+  <button class="btn btn-primary">Save Changes</button>
+  <button class="btn btn-outline">Reset to Default</button>
+</div>
+
+</form>

@@ -1,0 +1,88 @@
+<div class="page-header">
+  <h1 class="page-title">Raid Protection</h1>
+  <p class="page-desc">Detect and prevent server raids automatically</p>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <div class="card-title">Raid Protection Module</div>
+      <div class="card-desc">Enable or disable raid protection</div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox">
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Detection Settings</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Max Joins per Interval</label>
+      <input class="form-input" type="number" value="10" min="1" max="50">
+      <div class="form-hint">Maximum joins allowed in the time window</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Detection Interval (seconds)</label>
+      <input class="form-input" type="number" value="30" min="5" max="300">
+      <div class="form-hint">Time window to check for raid conditions</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Account Age Threshold (minutes)</label>
+      <input class="form-input" type="number" value="15" min="1">
+      <div class="form-hint">New accounts younger than this will be flagged</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Action on Raid Detection</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Primary Action</label>
+      <select class="form-select">
+        <option value="lockdown">Server Lockdown</option>
+        <option value="kick">Mass Kick New Members</option>
+        <option value="ban">Mass Ban New Members</option>
+        <option value="notify">Notify Staff Only</option>
+      </select>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Auto-Enable Verification</div><div class="setting-desc">Require verification for new joins during raid</div></div>
+      <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Notify Staff</div><div class="setting-desc">Send raid alert to staff channel</div></div>
+      <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Staff Alert Channel</label>
+      <select class="form-select">
+        <option value="">Select a channel...</option>
+        <option value="staff">#staff</option>
+        <option value="mod-alerts">#mod-alerts</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <span class="card-title">Whitelisted Users/Roles</span>
+      <div class="card-desc">Users and roles exempt from raid detection</div>
+    </div>
+    <button class="btn btn-primary btn-sm">+ Add</button>
+  </div>
+  <div class="empty-state" style="padding:16px;">
+    <div class="empty-state-text" style="font-size:13px;">No whitelisted entries</div>
+  </div>
+</div>
+
+<div class="flex gap-2">
+  <button class="btn btn-primary">Save Changes</button>
+  <button class="btn btn-outline">Reset to Default</button>
+</div>

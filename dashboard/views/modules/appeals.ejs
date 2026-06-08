@@ -1,0 +1,92 @@
+<div class="page-header">
+  <h1 class="page-title">Appeals</h1>
+  <p class="page-desc">Manage moderation appeal submissions</p>
+</div>
+
+<form method="POST" action="/dashboard/config?guild=<%= selectedGuild ? selectedGuild.id : '' %>">
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <div class="card-title">Appeals Module</div>
+      <div class="card-desc">Enable or disable the appeals system</div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox" name="appeals_enabled" <%= gc('appeals_enabled', false) ? 'checked' : '' %>>
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Appeal Settings</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Appeal Channel</label>
+      <select class="form-select" name="appeals_channel">
+        <option value="">Select a channel...</option>
+        <% if (selectedGuild && selectedGuild.textChannels) selectedGuild.textChannels.forEach(c => { %>
+          <option value="<%= c.id %>" <%= gc('appeals_channel', '') === c.id ? 'selected' : '' %>>#<%= c.name %></option>
+        <% }); %>
+      </select>
+      <div class="form-hint">Appeals will be posted here for staff review</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Staff Ping Role</label>
+      <select class="form-select" name="appeals_staffpingrole">
+        <option value="">Select a role...</option>
+        <% if (selectedGuild && selectedGuild.roles) selectedGuild.roles.forEach(r => { %>
+          <option value="<%= r.id %>" <%= gc('appeals_staffpingrole', '') === r.id ? 'selected' : '' %>>@<%= r.name %></option>
+        <% }); %>
+      </select>
+      <div class="form-hint">Role to ping when a new appeal is submitted</div>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Auto-Close on Verdict</div><div class="setting-desc">Automatically close appeal threads after decision</div></div>
+      <label class="toggle"><input type="checkbox" name="appeals_autocloseonverdict" <%= gc('appeals_autocloseonverdict', true) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Pending Appeals</span>
+    </div>
+    <div class="empty-state" style="padding:20px;">
+      <div class="empty-state-icon" style="font-size:32px;">🔄</div>
+      <div class="empty-state-text" style="font-size:13px;">No pending appeals</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <span class="card-title">Appeal Form</span>
+  </div>
+  <div class="form-group">
+    <label class="form-label">Form Title</label>
+    <input class="form-input" name="appeals_formtitle" value="<%= gc('appeals_formtitle', 'Submit a Moderation Appeal') %>">
+  </div>
+  <div class="form-group">
+    <label class="form-label">Form Description</label>
+    <textarea class="form-textarea" name="appeals_formdescription" rows="2"><%= gc('appeals_formdescription', 'If you believe a moderation action was taken in error, please fill out this form to appeal.') %></textarea>
+  </div>
+  <div class="form-group">
+    <label class="form-label">Questions</label>
+    <div class="setting-row">
+      <span style="font-size:13px;">Why should this appeal be accepted?</span>
+      <button class="btn btn-outline btn-sm">✕</button>
+    </div>
+    <div class="setting-row">
+      <span style="font-size:13px;">Do you acknowledge the server rules?</span>
+      <button class="btn btn-outline btn-sm">✕</button>
+    </div>
+    <button class="btn btn-primary btn-sm mt-4">+ Add Question</button>
+  </div>
+</div>
+
+<div class="flex gap-2">
+  <button class="btn btn-primary">Save Changes</button>
+  <button class="btn btn-outline">Reset to Default</button>
+</div>
+</form>

@@ -1,0 +1,333 @@
+<div class="server-header">
+  <div class="server-header-left">
+    <div class="server-icon">
+      <%= selectedGuild ? selectedGuild.name.charAt(0).toUpperCase() : 'S' %>
+    </div>
+    <div class="server-info">
+      <div class="server-name"><%= selectedGuild ? selectedGuild.name : 'No Server Selected' %></div>
+      <div class="server-stats">
+        <span><%= selectedGuild ? selectedGuild.memberCount : 0 %> members</span>
+        <span>·</span>
+        <span>ID: <%= selectedGuild ? selectedGuild.id : '—' %></span>
+      </div>
+    </div>
+  </div>
+  <div class="server-header-right">
+    <div class="stat-pill">
+      <span class="pill-dot green"></span>
+      <span>Online</span>
+    </div>
+    <div class="stat-pill">
+      <span class="value"><%= Math.floor((stats.uptime || 0) / 86400) %>d</span>
+      <span>uptime</span>
+    </div>
+    <div class="stat-pill">
+      <span class="value"><%= stats.ping || 0 %>ms</span>
+      <span>latency</span>
+    </div>
+  </div>
+</div>
+
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-card-icon">👥</div>
+    <div class="stat-card-value" style="color:var(--accent);"><%= selectedGuild ? selectedGuild.memberCount : 0 %></div>
+    <div class="stat-card-label">Total Members</div>
+    <div class="stat-card-change up">+2 this week</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-card-icon">🎫</div>
+    <div class="stat-card-value" style="color:var(--green);">0</div>
+    <div class="stat-card-label">Open Tickets</div>
+    <div class="stat-card-change">No active tickets</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-card-icon">🛡</div>
+    <div class="stat-card-value" style="color:var(--yellow);">0</div>
+    <div class="stat-card-label">Mod Actions</div>
+    <div class="stat-card-change up">0 this week</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-card-icon">📈</div>
+    <div class="stat-card-value" style="color:var(--orange);">0</div>
+    <div class="stat-card-label">Leveled Users</div>
+    <div class="stat-card-change">0 level-ups this week</div>
+  </div>
+</div>
+
+<div class="chart-container">
+  <div class="chart-header">
+    <span class="chart-title">7-Day Activity</span>
+    <div class="chart-legend">
+      <div class="chart-legend-item">
+        <span class="chart-legend-dot" style="background:var(--accent);"></span>
+        <span>Mod Actions</span>
+      </div>
+      <div class="chart-legend-item">
+        <span class="chart-legend-dot" style="background:var(--green);"></span>
+        <span>Tickets</span>
+      </div>
+    </div>
+  </div>
+  <div class="chart-bars">
+    <% const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']; %>
+    <% const modData = [35, 55, 25, 70, 45, 30, 20]; %>
+    <% const ticketData = [12, 8, 15, 10, 20, 5, 0]; %>
+    <% const maxVal = 80; %>
+    <% for (let i = 0; i < 7; i++) { %>
+    <div class="chart-bar-group">
+      <div class="chart-bar-wrapper">
+        <div class="chart-bar blue" style="height:<%= Math.round((modData[i]/maxVal)*140) %>px;"></div>
+        <div class="chart-bar green" style="height:<%= Math.round((ticketData[i]/maxVal)*140) %>px;"></div>
+      </div>
+      <div class="chart-bar-label"><%= days[i] %></div>
+    </div>
+    <% } %>
+  </div>
+</div>
+
+<div class="modules-section">
+  <div class="modules-section-title">🛡️ Moderation Modules</div>
+  <div class="modules-grid">
+    <div class="module-card">
+      <div class="module-card-top">
+        <div class="module-card-icon">🛡</div>
+        <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+      </div>
+      <div class="module-card-title">Moderation</div>
+      <div class="module-card-desc">Ban, kick, mute, warn, and track case histories.</div>
+      <div class="module-card-actions">
+        <span class="module-card-status on">● Enabled</span>
+        <a href="/dashboard?tab=moderation" class="btn-configure">Configure</a>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-card-top">
+        <div class="module-card-icon">🤖</div>
+        <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+      </div>
+      <div class="module-card-title">Auto Mod</div>
+      <div class="module-card-desc">Filters spam, unwanted links, excessive caps, and specific text.</div>
+      <div class="module-card-actions">
+        <span class="module-card-status on">● Enabled</span>
+        <a href="/dashboard?tab=automod" class="btn-configure">Configure</a>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-card-top">
+        <div class="module-card-icon">🚨</div>
+        <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+      </div>
+      <div class="module-card-title">Raid Protection</div>
+      <div class="module-card-desc">Detects rapid joins and stops raids using lockdowns or mass kicks.</div>
+      <div class="module-card-actions">
+        <span class="module-card-status off">● Disabled</span>
+        <a href="/dashboard?tab=raid-protection" class="btn-configure">Configure</a>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-card-top">
+        <div class="module-card-icon">✅</div>
+        <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+      </div>
+      <div class="module-card-title">Verification</div>
+      <div class="module-card-desc">Gates server access using CAPTCHAs or reaction-based button roles.</div>
+      <div class="module-card-actions">
+        <span class="module-card-status off">● Disabled</span>
+        <a href="/dashboard?tab=verification" class="btn-configure">Configure</a>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-card-top">
+        <div class="module-card-icon">🔒</div>
+        <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+      </div>
+      <div class="module-card-title">Role/Channel/Voice Mod</div>
+      <div class="module-card-desc">Prevents unauthorized role assignments, locks channels, manages voice.</div>
+      <div class="module-card-actions">
+        <span class="module-card-status off">● Disabled</span>
+        <a href="/dashboard?tab=role-channel-voice" class="btn-configure">Configure</a>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-card-top">
+        <div class="module-card-icon">📌</div>
+        <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+      </div>
+      <div class="module-card-title">Auto Dehoist</div>
+      <div class="module-card-desc">Auto-renames users who use special characters to top the member list.</div>
+      <div class="module-card-actions">
+        <span class="module-card-status off">● Disabled</span>
+        <a href="/dashboard?tab=auto-dehoist" class="btn-configure">Configure</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modules-section">
+  <div class="modules-section-title">👥 Community & Engagement Modules</div>
+  <div class="modules-grid">
+    <div class="module-card">
+      <div class="module-card-top">
+        <div class="module-card-icon">👋</div>
+        <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+      </div>
+      <div class="module-card-title">Welcome & Bye</div>
+      <div class="module-card-desc">Customizable join/leave messages with embed layouts.</div>
+      <div class="module-card-actions">
+        <span class="module-card-status on">● Enabled</span>
+        <a href="/dashboard?tab=welcome" class="btn-configure">Configure</a>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-card-top">
+        <div class="module-card-icon">📈</div>
+        <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+      </div>
+      <div class="module-card-title">Leveling</div>
+      <div class="module-card-desc">XP and leveling progression system with leaderboards.</div>
+      <div class="module-card-actions">
+        <span class="module-card-status on">● Enabled</span>
+        <a href="/dashboard?tab=leveling" class="btn-configure">Configure</a>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-card-top">
+        <div class="module-card-icon">💡</div>
+        <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+      </div>
+      <div class="module-card-title">Suggestions</div>
+      <div class="module-card-desc">Members submit and vote on community suggestions.</div>
+      <div class="module-card-actions">
+        <span class="module-card-status off">● Disabled</span>
+        <a href="/dashboard?tab=suggestions" class="btn-configure">Configure</a>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-card-top">
+        <div class="module-card-icon">🎭</div>
+        <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+      </div>
+      <div class="module-card-title">Auto Roles</div>
+      <div class="module-card-desc">Auto-assign roles to new members upon joining.</div>
+      <div class="module-card-actions">
+        <span class="module-card-status off">● Disabled</span>
+        <a href="/dashboard?tab=auto-roles" class="btn-configure">Configure</a>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-card-top">
+        <div class="module-card-icon">🤖</div>
+        <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+      </div>
+      <div class="module-card-title">Auto Responder</div>
+      <div class="module-card-desc">Automated trigger replies for specific keywords.</div>
+      <div class="module-card-actions">
+        <span class="module-card-status off">● Disabled</span>
+        <a href="/dashboard?tab=auto-responder" class="btn-configure">Configure</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modules-section">
+  <div class="modules-section-title">⚙️ Utility Features</div>
+  <div class="modules-grid">
+    <div class="module-card">
+      <div class="module-card-top">
+        <div class="module-card-icon">🎫</div>
+        <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+      </div>
+      <div class="module-card-title">Tickets</div>
+      <div class="module-card-desc">Support ticket creation with transcripts and categories.</div>
+      <div class="module-card-actions">
+        <span class="module-card-status on">● Enabled</span>
+        <a href="/dashboard?tab=tickets" class="btn-configure">Configure</a>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-card-top">
+        <div class="module-card-icon">🎉</div>
+        <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+      </div>
+      <div class="module-card-title">Giveaways</div>
+      <div class="module-card-desc">Automated item giveaways with timer and winner selection.</div>
+      <div class="module-card-actions">
+        <span class="module-card-status off">● Disabled</span>
+        <a href="/dashboard?tab=giveaways" class="btn-configure">Configure</a>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-card-top">
+        <div class="module-card-icon">🔊</div>
+        <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+      </div>
+      <div class="module-card-title">Temp Voice</div>
+      <div class="module-card-desc">Dynamic temporary voice channels created by members.</div>
+      <div class="module-card-actions">
+        <span class="module-card-status off">● Disabled</span>
+        <a href="/dashboard?tab=temp-voice" class="btn-configure">Configure</a>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-card-top">
+        <div class="module-card-icon">⌨</div>
+        <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+      </div>
+      <div class="module-card-title">Custom Commands</div>
+      <div class="module-card-desc">Create and manage your own custom bot commands.</div>
+      <div class="module-card-actions">
+        <span class="module-card-status off">● Disabled</span>
+        <a href="/dashboard?tab=custom-commands" class="btn-configure">Configure</a>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-card-top">
+        <div class="module-card-icon">💰</div>
+        <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+      </div>
+      <div class="module-card-title">Economy</div>
+      <div class="module-card-desc">Virtual currency, daily rewards, and leaderboards.</div>
+      <div class="module-card-actions">
+        <span class="module-card-status on">● Enabled</span>
+        <a href="/dashboard?tab=economy" class="btn-configure">Configure</a>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-card-top">
+        <div class="module-card-icon">🎮</div>
+        <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+      </div>
+      <div class="module-card-title">Games</div>
+      <div class="module-card-desc">Mini-games for community fun and engagement.</div>
+      <div class="module-card-actions">
+        <span class="module-card-status off">● Disabled</span>
+        <a href="/dashboard?tab=games" class="btn-configure">Configure</a>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-card-top">
+        <div class="module-card-icon">🎵</div>
+        <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+      </div>
+      <div class="module-card-title">Music</div>
+      <div class="module-card-desc">Play, skip, queue, and manage music in voice channels.</div>
+      <div class="module-card-actions">
+        <span class="module-card-status on">● Enabled</span>
+        <a href="/dashboard?tab=music" class="btn-configure">Configure</a>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-card-top">
+        <div class="module-card-icon">📋</div>
+        <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+      </div>
+      <div class="module-card-title">Logging</div>
+      <div class="module-card-desc">Server event logging for audits and case history.</div>
+      <div class="module-card-actions">
+        <span class="module-card-status on">● Enabled</span>
+        <a href="/dashboard?tab=logging" class="btn-configure">Configure</a>
+      </div>
+    </div>
+  </div>
+</div>

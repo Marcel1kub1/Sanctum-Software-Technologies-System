@@ -1,0 +1,106 @@
+<div class="page-header">
+  <h1 class="page-title">Games</h1>
+  <p class="page-desc">Mini-games for community fun and engagement</p>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <div class="card-title">Games Module</div>
+      <div class="card-desc">Enable or disable the games system</div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox">
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Available Games</span>
+    </div>
+    <div class="setting-row">
+      <div>
+        <div class="setting-label">🎰 Slots</div>
+        <div class="setting-desc">Slot machine gambling game</div>
+      </div>
+      <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div>
+        <div class="setting-label">🎲 Dice</div>
+        <div class="setting-desc">Roll dice and bet on outcomes</div>
+      </div>
+      <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div>
+        <div class="setting-label">🃏 Blackjack</div>
+        <div class="setting-desc">Classic card game against the dealer</div>
+      </div>
+      <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div>
+        <div class="setting-label">🔮 Trivia</div>
+        <div class="setting-desc">Answer trivia questions for rewards</div>
+      </div>
+      <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div>
+        <div class="setting-label">✊ Rock Paper Scissors</div>
+        <div class="setting-desc">Challenge other members</div>
+      </div>
+      <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Game Settings</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Cooldown (seconds)</label>
+      <input class="form-input" type="number" value="30" min="1" max="300">
+      <div class="form-hint">Time between game plays per user</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Max Bet Amount</label>
+      <input class="form-input" type="number" value="1000" min="1">
+      <div class="form-hint">Maximum bet per game (requires economy module)</div>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Require Economy</div><div class="setting-desc">Require economy account to play</div></div>
+      <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Allow Free Games</div><div class="setting-desc">Allow playing without betting</div></div>
+      <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <span class="card-title">Game Payout Multipliers</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Game</th><th>Win Multiplier</th><th>Jackpot Multiplier</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Slots</td><td><input class="form-input inline-input" type="number" value="2" step="0.1"></td><td><input class="form-input inline-input" type="number" value="10" step="0.1"></td></tr>
+        <tr><td>Dice</td><td><input class="form-input inline-input" type="number" value="2" step="0.1"></td><td><span style="font-size:12px;color:var(--text-muted);">—</span></td></tr>
+        <tr><td>Blackjack</td><td><input class="form-input inline-input" type="number" value="2.5" step="0.1"></td><td><span style="font-size:12px;color:var(--text-muted);">—</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="flex gap-2">
+  <button class="btn btn-primary">Save Changes</button>
+  <button class="btn btn-outline">Reset to Default</button>
+</div>

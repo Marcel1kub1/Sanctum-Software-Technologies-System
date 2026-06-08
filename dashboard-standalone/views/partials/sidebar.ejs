@@ -1,0 +1,134 @@
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-server">
+    <div class="server-select">
+      <select id="guildSelect" onchange="switchGuild(this.value)">
+        <% guilds.forEach(g => { %>
+          <option value="<%= g.id %>" <%= selectedGuild && selectedGuild.id === g.id ? 'selected' : '' %>>
+            <%= g.name %>
+          </option>
+        <% }) %>
+      </select>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-category">General</div>
+    <a href="/dashboard?tab=overview" class="nav-item <%= tab === 'overview' ? 'active' : '' %>">
+      <span class="nav-icon">◉</span>
+      <span>Overview</span>
+    </a>
+    <a href="/dashboard?tab=settings" class="nav-item <%= tab === 'settings' ? 'active' : '' %>">
+      <span class="nav-icon">⚙</span>
+      <span>Settings</span>
+    </a>
+
+    <div class="nav-category">Logs & Cases</div>
+    <a href="/dashboard?tab=logging" class="nav-item <%= tab === 'logging' ? 'active' : '' %>">
+      <span class="nav-icon">📋</span>
+      <span>Logging</span>
+    </a>
+    <a href="/dashboard?tab=infractions" class="nav-item <%= tab === 'infractions' ? 'active' : '' %>">
+      <span class="nav-icon">⚠</span>
+      <span>Infractions</span>
+    </a>
+    <a href="/dashboard?tab=reports" class="nav-item <%= tab === 'reports' ? 'active' : '' %>">
+      <span class="nav-icon">📝</span>
+      <span>Reports</span>
+    </a>
+    <a href="/dashboard?tab=appeals" class="nav-item <%= tab === 'appeals' ? 'active' : '' %>">
+      <span class="nav-icon">🔄</span>
+      <span>Appeals</span>
+    </a>
+
+    <div class="nav-category">Moderation</div>
+    <a href="/dashboard?tab=moderation" class="nav-item <%= tab === 'moderation' ? 'active' : '' %>">
+      <span class="nav-icon">🛡</span>
+      <span>Moderation</span>
+    </a>
+    <a href="/dashboard?tab=automod" class="nav-item <%= tab === 'automod' ? 'active' : '' %>">
+      <span class="nav-icon">🤖</span>
+      <span>Auto Mod</span>
+    </a>
+    <a href="/dashboard?tab=raid-protection" class="nav-item <%= tab === 'raid-protection' ? 'active' : '' %>">
+      <span class="nav-icon">🚨</span>
+      <span>Raid Protection</span>
+    </a>
+    <a href="/dashboard?tab=verification" class="nav-item <%= tab === 'verification' ? 'active' : '' %>">
+      <span class="nav-icon">✅</span>
+      <span>Verification</span>
+    </a>
+    <a href="/dashboard?tab=role-channel-voice" class="nav-item <%= tab === 'role-channel-voice' ? 'active' : '' %>">
+      <span class="nav-icon">🔒</span>
+      <span>Role/Channel/Voice Mod</span>
+    </a>
+    <a href="/dashboard?tab=auto-dehoist" class="nav-item <%= tab === 'auto-dehoist' ? 'active' : '' %>">
+      <span class="nav-icon">📌</span>
+      <span>Auto Dehoist</span>
+    </a>
+
+    <div class="nav-category">Community</div>
+    <a href="/dashboard?tab=welcome" class="nav-item <%= tab === 'welcome' ? 'active' : '' %>">
+      <span class="nav-icon">👋</span>
+      <span>Welcome & Bye</span>
+    </a>
+    <a href="/dashboard?tab=leveling" class="nav-item <%= tab === 'leveling' ? 'active' : '' %>">
+      <span class="nav-icon">📈</span>
+      <span>Leveling</span>
+    </a>
+    <a href="/dashboard?tab=suggestions" class="nav-item <%= tab === 'suggestions' ? 'active' : '' %>">
+      <span class="nav-icon">💡</span>
+      <span>Suggestions</span>
+    </a>
+    <a href="/dashboard?tab=auto-roles" class="nav-item <%= tab === 'auto-roles' ? 'active' : '' %>">
+      <span class="nav-icon">🎭</span>
+      <span>Auto Roles</span>
+    </a>
+    <a href="/dashboard?tab=auto-responder" class="nav-item <%= tab === 'auto-responder' ? 'active' : '' %>">
+      <span class="nav-icon">🤖</span>
+      <span>Auto Responder</span>
+    </a>
+
+    <div class="nav-category">Economy & Games</div>
+    <a href="/dashboard?tab=economy" class="nav-item <%= tab === 'economy' ? 'active' : '' %>">
+      <span class="nav-icon">💰</span>
+      <span>Economy</span>
+    </a>
+    <a href="/dashboard?tab=games" class="nav-item <%= tab === 'games' ? 'active' : '' %>">
+      <span class="nav-icon">🎮</span>
+      <span>Games</span>
+    </a>
+
+    <div class="nav-category">Music</div>
+    <a href="/dashboard?tab=music" class="nav-item <%= tab === 'music' ? 'active' : '' %>">
+      <span class="nav-icon">🎵</span>
+      <span>Music</span>
+    </a>
+
+    <div class="nav-category">Features</div>
+    <a href="/dashboard?tab=custom-commands" class="nav-item <%= tab === 'custom-commands' ? 'active' : '' %>">
+      <span class="nav-icon">⌨</span>
+      <span>Custom Commands</span>
+    </a>
+    <a href="/dashboard?tab=tickets" class="nav-item <%= tab === 'tickets' ? 'active' : '' %>">
+      <span class="nav-icon">🎫</span>
+      <span>Tickets</span>
+    </a>
+    <a href="/dashboard?tab=giveaways" class="nav-item <%= tab === 'giveaways' ? 'active' : '' %>">
+      <span class="nav-icon">🎉</span>
+      <span>Giveaways</span>
+    </a>
+    <a href="/dashboard?tab=temp-voice" class="nav-item <%= tab === 'temp-voice' ? 'active' : '' %>">
+      <span class="nav-icon">🔊</span>
+      <span>Temp Voice</span>
+    </a>
+  </nav>
+  <div class="sidebar-footer">
+    <a href="<%= config.botInvite %>" target="_blank" class="nav-item">
+      <span class="nav-icon">＋</span>
+      <span>Add to Server</span>
+    </a>
+    <a href="<%= config.supportServer %>" target="_blank" class="nav-item">
+      <span class="nav-icon">?</span>
+      <span>Support</span>
+    </a>
+  </div>
+</aside>

@@ -1,0 +1,101 @@
+<div class="page-header">
+  <h1 class="page-title">Suggestions</h1>
+  <p class="page-desc">Community suggestion voting system</p>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <div class="card-title">Suggestions Module</div>
+      <div class="card-desc">Enable or disable the suggestions system</div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox">
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Suggestion Settings</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Suggestions Channel</label>
+      <select class="form-select">
+        <option value="">Select a channel...</option>
+        <option value="suggestions">#suggestions</option>
+        <option value="feedback">#feedback</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Approved Suggestions Channel</label>
+      <select class="form-select">
+        <option value="">Select a channel...</option>
+        <option value="approved">#approved-suggestions</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Vote Duration (hours)</label>
+      <input class="form-input" type="number" value="24" min="1" max="168">
+      <div class="form-hint">How long suggestions stay open for voting</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Vote Configuration</span>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Upvote Emoji</div></div>
+      <input class="form-input" style="width:60px;" value="👍">
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Downvote Emoji</div></div>
+      <input class="form-input" style="width:60px;" value="👎">
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Minimum Vote Threshold</div></div>
+      <input class="form-input inline-input" type="number" value="5" min="1">
+    </div>
+    <div class="form-hint" style="margin-top:8px;">Suggestions must reach this threshold to be approved</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <span class="card-title">Recent Suggestions</span>
+      <div class="card-desc">Latest community suggestions</div>
+    </div>
+  </div>
+  <div class="empty-state" style="padding:16px;">
+    <div class="empty-state-text" style="font-size:13px;">No suggestions submitted yet</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <span class="card-title">Suggestion Status Messages</span>
+      <div class="card-desc">Messages shown for different suggestion statuses</div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="form-label">Approved Message</label>
+    <input class="form-input" value="This suggestion has been approved!">
+  </div>
+  <div class="form-group">
+    <label class="form-label">Rejected Message</label>
+    <input class="form-input" value="This suggestion has been rejected.">
+  </div>
+  <div class="form-group">
+    <label class="form-label">Considered Message</label>
+    <input class="form-input" value="This suggestion is being considered.">
+  </div>
+</div>
+
+<div class="flex gap-2">
+  <button class="btn btn-primary">Save Changes</button>
+  <button class="btn btn-outline">Reset to Default</button>
+</div>

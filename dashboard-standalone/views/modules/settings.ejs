@@ -1,0 +1,123 @@
+<div class="page-header">
+  <h1 class="page-title">Server Settings</h1>
+  <p class="page-desc">Global bot configuration for this server</p>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Command Prefix</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Text Command Prefix</label>
+      <div class="flex gap-2" style="flex-wrap:wrap;">
+        <label class="toggle" style="margin-right:4px;">
+          <input type="radio" name="prefix" checked>
+          <span class="toggle-slider" style="width:auto;padding:4px 12px;border-radius:6px;background:var(--bg-input);border:1px solid var(--border);color:var(--text-primary);font-size:13px;display:flex;align-items:center;gap:4px;">!</span>
+        </label>
+        <label class="toggle" style="margin-right:4px;">
+          <input type="radio" name="prefix">
+          <span class="toggle-slider" style="width:auto;padding:4px 12px;border-radius:6px;background:var(--bg-input);border:1px solid var(--border);color:var(--text-primary);font-size:13px;display:flex;align-items:center;gap:4px;">?</span>
+        </label>
+        <label class="toggle">
+          <input type="radio" name="prefix">
+          <span class="toggle-slider" style="width:auto;padding:4px 12px;border-radius:6px;background:var(--bg-input);border:1px solid var(--border);color:var(--text-primary);font-size:13px;display:flex;align-items:center;gap:4px;">$</span>
+        </label>
+      </div>
+      <div class="form-hint">Choose the command prefix for text commands</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Regional Settings</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Timezone</label>
+      <select class="form-select">
+        <option value="UTC" selected>UTC</option>
+        <option value="US/Eastern">US/Eastern</option>
+        <option value="US/Pacific">US/Pacific</option>
+        <option value="Europe/Berlin">Europe/Berlin</option>
+        <option value="Europe/London">Europe/London</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Language</label>
+      <select class="form-select">
+        <option value="en" selected>English (US)</option>
+        <option value="de">Deutsch</option>
+        <option value="fr">Francais</option>
+        <option value="es">Espanol</option>
+        <option value="pt">Portugues</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Date Format</label>
+      <select class="form-select">
+        <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+        <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+        <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <span class="card-title">General Behavior</span>
+      <div class="card-desc">Control how the bot behaves in this server</div>
+    </div>
+  </div>
+  <div class="setting-row">
+    <div><div class="setting-label">Silent Mode</div><div class="setting-desc">Suppress non-essential messages</div></div>
+    <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+  </div>
+  <div class="setting-row">
+    <div><div class="setting-label">Delete Command Messages</div><div class="setting-desc">Auto-delete user commands after execution</div></div>
+    <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+  </div>
+  <div class="setting-row">
+    <div><div class="setting-label">Command Cooldowns</div><div class="setting-desc">Enable cooldowns to prevent spam</div></div>
+    <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+  </div>
+  <div class="setting-row">
+    <div><div class="setting-label">DM Error Messages</div><div class="setting-desc">Send command errors via DM instead of channel</div></div>
+    <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+  </div>
+  <div class="setting-row">
+    <div><div class="setting-label">Auto-Delete Bot Messages</div><div class="setting-desc">Delete bot responses after a set time</div></div>
+    <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+  </div>
+  <div class="form-group" style="margin-bottom:0;">
+    <label class="form-label">Auto-Delete Delay (seconds)</label>
+    <input class="form-input" type="number" value="30" min="5" max="300">
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <span class="card-title">Command Permissions</span>
+      <div class="card-desc">Override default command permissions for the server</div>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Command</th><th>Minimum Permission Level</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Moderation commands</td><td><select class="form-select" style="width:160px;"><option>Moderator</option><option>Admin</option><option>Owner</option></select></td></tr>
+        <tr><td>Economy commands</td><td><select class="form-select" style="width:160px;"><option selected>Everyone</option><option>Moderator</option><option>Admin</option></select></td></tr>
+        <tr><td>Music commands</td><td><select class="form-select" style="width:160px;"><option selected>Everyone</option><option>Moderator</option><option>Admin</option></select></td></tr>
+        <tr><td>Administration commands</td><td><select class="form-select" style="width:160px;"><option>Moderator</option><option selected>Admin</option><option>Owner</option></select></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="flex gap-2">
+  <button class="btn btn-primary">Save Changes</button>
+  <button class="btn btn-outline">Reset to Default</button>
+</div>
