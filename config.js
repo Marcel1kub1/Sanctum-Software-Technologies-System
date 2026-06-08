@@ -1,9 +1,9 @@
 module.exports = {
   bot: {
-    token: process.env.BOT_TOKEN || 'YOUR_BOT_TOKEN_HERE',
-    clientId: process.env.CLIENT_ID || 'YOUR_CLIENT_ID_HERE',
-    clientSecret: process.env.CLIENT_SECRET || 'YOUR_CLIENT_SECRET_HERE',
-    prefix: process.env.PREFIX || '!',
+    token: 'YOUR_BOT_TOKEN_HERE',
+    clientId: 'YOUR_CLIENT_ID_HERE',
+    clientSecret: 'YOUR_CLIENT_SECRET_HERE',
+    prefix: '!',
     status: 'online',
     activity: {
       type: 'PLAYING',
@@ -12,11 +12,11 @@ module.exports = {
   },
 
   database: {
-    host: process.env.DB_HOST || 'db2.vortexspace.one',
-    port: parseInt(process.env.DB_PORT) || 3306,
-    user: process.env.DB_USER || 'u48_oQ3cFBGfIz',
-    password: process.env.DB_PASSWORD || 'muJX!B.R4IxP@RUTw4KOYGrB',
-    database: process.env.DB_NAME || 's48_New_System',
+    host: 'YOUR_DB_HOST_HERE',
+    port: 3306,
+    user: 'YOUR_DB_USER_HERE',
+    password: 'YOUR_DB_PASSWORD_HERE',
+    database: 'YOUR_DB_NAME_HERE',
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
@@ -24,32 +24,20 @@ module.exports = {
 
   dashboard: {
     enabled: true,
-    port: parseInt(process.env.DASHBOARD_PORT) || 10057,
-    url: process.env.DASHBOARD_URL || 'http://localhost:10057',
-    sessionSecret: process.env.SESSION_SECRET || '08771616896cdfef70c4ab4768ef1bd0',
-    botInvite: process.env.BOT_INVITE || 'https://discord.com/oauth2/authorize?client_id=1511800635836862525&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A10057%2Fauth%2Fcallback&integration_type=0&scope=connections+guilds.members.read+guilds+guilds.channels.read+identify+applications.commands',
-    supportServer: process.env.SUPPORT_SERVER || 'https://discord.gg/disabled'
+    port: 10057,
+    url: 'http://localhost:10057',
+    sessionSecret: 'change-this-to-a-random-secret',
+    botInvite: 'https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A10057%2Fauth%2Fcallback&integration_type=0&scope=connections+guilds.members.read+guilds+guilds.channels.read+identify+applications.commands',
+    supportServer: 'https://discord.gg/YOUR_SERVER'
   },
 
-  modLog: {
-    enabled: true,
-    channelName: 'mod-logs'
-  },
-
-music: {
-    enabled: true,
-    defaultVolume: 50,
-    maxQueueSize: 200,
-    timeout: 300000
-  },
-
-	 music: {
+  music: {
     enabled: true,
     engine: 'lavalink',
     lavalink: {
-      host: 'lava1.mineserver.it',
+      host: 'YOUR_LAVALINK_HOST_HERE',
       port: 6004,
-      password: 'discord.vortexspace.one',
+      password: 'YOUR_LAVALINK_PASSWORD_HERE',
       ssl: false,
       autoResume: true
     },
@@ -87,7 +75,7 @@ music: {
     votePercentage: 50,
     allowedVoiceChannels: ''
   },
-	
+
   economy: {
     enabled: true,
     currency: '\uD83D\uDCB0',
@@ -135,7 +123,7 @@ music: {
     }
   },
 
-  ownerID: process.env.OWNER_ID || '1263166644868481117',
-  supportGuildID: process.env.SUPPORT_GUILD_ID || '1511317798859833434',
-  debug: process.env.DEBUG === 'true'
+  ownerID: 'YOUR_DISCORD_USER_ID_HERE',
+  supportGuildID: 'YOUR_SUPPORT_GUILD_ID_HERE',
+  debug: false
 };
