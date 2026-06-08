@@ -1,7 +1,7 @@
 module.exports = {
   bot: {
     token: 'YOUR_BOT_TOKEN_HERE',
-    clientId: 'YOUR_CLIENT_ID_HERE',
+    clientId: '1511800635836862525',
     clientSecret: 'YOUR_CLIENT_SECRET_HERE',
     prefix: '!',
     status: 'online',
@@ -12,11 +12,11 @@ module.exports = {
   },
 
   database: {
-    host: 'YOUR_DB_HOST_HERE',
+    host: 'db2.vortexspace.one',
     port: 3306,
-    user: 'YOUR_DB_USER_HERE',
+    user: 'u48_oQ3cFBGfIz',
     password: 'YOUR_DB_PASSWORD_HERE',
-    database: 'YOUR_DB_NAME_HERE',
+    database: 's48_New_System',
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
@@ -26,18 +26,18 @@ module.exports = {
     enabled: true,
     port: 10057,
     url: 'http://localhost:10057',
-    sessionSecret: 'change-this-to-a-random-secret',
-    botInvite: 'https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A10057%2Fauth%2Fcallback&integration_type=0&scope=connections+guilds.members.read+guilds+guilds.channels.read+identify+applications.commands',
-    supportServer: 'https://discord.gg/YOUR_SERVER'
+    sessionSecret: '08771616896cdfef70c4ab4768ef1bd0',
+    botInvite: 'https://discord.com/oauth2/authorize?client_id=1511800635836862525&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A10057%2Fauth%2Fcallback&integration_type=0&scope=connections+guilds.members.read+guilds+guilds.channels.read+identify+applications.commands',
+    supportServer: 'https://discord.gg/disabled'
   },
 
   music: {
     enabled: true,
     engine: 'lavalink',
     lavalink: {
-      host: 'YOUR_LAVALINK_HOST_HERE',
+      host: 'lava1.mineserver.it',
       port: 6004,
-      password: 'YOUR_LAVALINK_PASSWORD_HERE',
+      password: 'discord.vortexspace.one',
       ssl: false,
       autoResume: true
     },
@@ -123,7 +123,7 @@ module.exports = {
     }
   },
 
-  ownerID: 'YOUR_DISCORD_USER_ID_HERE',
-  supportGuildID: 'YOUR_SUPPORT_GUILD_ID_HERE',
+  ownerID: '1263166644868481117',
+  supportGuildID: '1511317798859833434',
   debug: false
 };
