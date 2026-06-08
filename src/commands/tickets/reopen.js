@@ -3,39 +3,43 @@ const Command = require('../../structures/Command');
 const db = require('../../database/connection');
 const { sendLog } = require('../../handlers/ticketHandler');
 
-module.exports = class CloseCommand extends Command {
+module.exports = class ReopenCommand extends Command {
   constructor(bot) {
     super(bot);
-    this.name = 'close';
-    this.description = 'Close the current ticket';
+    this.name = 'reopen';
+    this.description = 'Reopen a closed ticket';
     this.category = 'tickets';
     this.slashData = new SlashCommandBuilder()
       .setName(this.name)
-      .setDescription(this.description)
-      .addStringOption(opt => opt.setName('reason').setDescription('Reason for closing').setRequired(false));
+      .setDescription(this.description);
   }
 
   async execute(bot, message, args) {
     const guildData = await db.getGuild(message.guild.id);
     const supportRoles = guildData.ticket_support_roles ? JSON.parse(guildData.ticket_support_roles) : [];
     const isStaff = message.member.permissions.has('Administrator') || message.member.roles.cache.some(r => supportRoles.includes(r.id));
-
-    if (!isStaff) return message.reply('Only staff can close tickets.');
+    if (!isStaff) return message.reply('Only staff can reopen tickets.');
 
     const ticket = await db.query('SELECT * FROM tickets WHERE channel_id = ? AND guild_id = ?', [message.channel.id, message.guild.id]);
     if (ticket.length === 0) return message.reply('This is not a ticket channel.');
-    if (ticket[0].status === 'closed') return message.reply('This ticket is already closed.');
+    if (ticket[0].status === 'open') return message.reply('This ticket is already open.');
 
-    await db.query('UPDATE tickets SET status = ?, closed_at = NOW() WHERE channel_id = ?', ['closed', message.channel.id]);
-    await message.channel.send('🔒 Ticket closed. Use `/reopen` to reopen or click Delete to remove.');
-    await message.channel.permissionOverwrites.edit(ticket[0].creator_id, { ViewChannel: false }).catch(() => {});
+    await db.query('UPDATE tickets SET status = ?, closed_at = NULL, claimed_by = NULL WHERE channel_id = ?', ['open', message.channel.id]);
+    await message.channel.permissionOverwrites.edit(ticket[0].creator_id, { ViewChannel: true }).catch(() => {});
+
+    const embed = new EmbedBuilder()
+      .setColor(Colors.Green)
+      .setDescription(`🔓 Ticket reopened by **${message.author}**.`)
+      .setTimestamp();
+
+    await message.channel.send({ embeds: [embed] });
 
     const logEmbed = new EmbedBuilder()
-      .setColor(Colors.Orange)
-      .setTitle('Ticket Closed')
+      .setColor(Colors.Green)
+      .setTitle('Ticket Reopened')
       .addFields(
         { name: 'Ticket', value: ticket[0].ticket_id, inline: true },
-        { name: 'Closed by', value: `${message.author.tag} (${message.author.id})`, inline: true },
+        { name: 'Reopened by', value: `${message.author.tag} (${message.author.id})`, inline: true },
         { name: 'Channel', value: `${message.channel}`, inline: true }
       )
       .setTimestamp();
@@ -49,32 +53,28 @@ module.exports = class CloseCommand extends Command {
     const guildData = await db.getGuild(interaction.guild.id);
     const supportRoles = guildData.ticket_support_roles ? JSON.parse(guildData.ticket_support_roles) : [];
     const isStaff = interaction.member.permissions.has('Administrator') || interaction.member.roles.cache.some(r => supportRoles.includes(r.id));
-
-    if (!isStaff) return interaction.editReply('Only staff can close tickets.');
-
-    const reason = interaction.options.getString('reason') || 'No reason provided';
+    if (!isStaff) return interaction.editReply('Only staff can reopen tickets.');
 
     const ticket = await db.query('SELECT * FROM tickets WHERE channel_id = ? AND guild_id = ?', [interaction.channel.id, interaction.guild.id]);
     if (ticket.length === 0) return interaction.editReply('This is not a ticket channel.');
-    if (ticket[0].status === 'closed') return interaction.editReply('This ticket is already closed.');
+    if (ticket[0].status === 'open') return interaction.editReply('This ticket is already open.');
 
-    await db.query('UPDATE tickets SET status = ?, closed_at = NOW() WHERE channel_id = ?', ['closed', interaction.channel.id]);
+    await db.query('UPDATE tickets SET status = ?, closed_at = NULL, claimed_by = NULL WHERE channel_id = ?', ['open', interaction.channel.id]);
+    await interaction.channel.permissionOverwrites.edit(ticket[0].creator_id, { ViewChannel: true }).catch(() => {});
 
-    const closeEmbed = new EmbedBuilder()
-      .setColor(Colors.Orange)
-      .setDescription(`🔒 Ticket closed by **${interaction.user}**\n**Reason:** ${reason}\nUse \`/reopen\` to reopen.`)
+    const embed = new EmbedBuilder()
+      .setColor(Colors.Green)
+      .setDescription(`🔓 Ticket reopened by **${interaction.user}**.`)
       .setTimestamp();
 
-    await interaction.editReply({ embeds: [closeEmbed] });
-    await interaction.channel.permissionOverwrites.edit(ticket[0].creator_id, { ViewChannel: false }).catch(() => {});
+    await interaction.editReply({ embeds: [embed] });
 
     const logEmbed = new EmbedBuilder()
-      .setColor(Colors.Orange)
-      .setTitle('Ticket Closed')
+      .setColor(Colors.Green)
+      .setTitle('Ticket Reopened')
       .addFields(
         { name: 'Ticket', value: ticket[0].ticket_id, inline: true },
-        { name: 'Closed by', value: `${interaction.user.tag} (${interaction.user.id})`, inline: true },
-        { name: 'Reason', value: reason, inline: false },
+        { name: 'Reopened by', value: `${interaction.user.tag} (${interaction.user.id})`, inline: true },
         { name: 'Channel', value: `${interaction.channel}`, inline: true }
       )
       .setTimestamp();

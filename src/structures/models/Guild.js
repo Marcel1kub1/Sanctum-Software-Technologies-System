@@ -32,6 +32,23 @@ class Guild {
     await db.query('UPDATE guilds SET ticket_category = ? WHERE guild_id = ?', [categoryId, guildId]);
   }
 
+  static async setTicketPanelChannel(guildId, channelId) {
+    await db.query('UPDATE guilds SET ticket_panel_channel = ? WHERE guild_id = ?', [channelId, guildId]);
+  }
+
+  static async setTicketSupportRoles(guildId, roleIds) {
+    const json = JSON.stringify(roleIds);
+    await db.query('UPDATE guilds SET ticket_support_roles = ? WHERE guild_id = ?', [json, guildId]);
+  }
+
+  static async setTicketLogChannel(guildId, channelId) {
+    await db.query('UPDATE guilds SET ticket_log_channel = ? WHERE guild_id = ?', [channelId, guildId]);
+  }
+
+  static async setTicketLimit(guildId, limit) {
+    await db.query('UPDATE guilds SET ticket_limit = ? WHERE guild_id = ?', [limit, guildId]);
+  }
+
   static async setMuteRole(guildId, roleId) {
     await db.query('UPDATE guilds SET mute_role = ? WHERE guild_id = ?', [roleId, guildId]);
   }
