@@ -27,7 +27,7 @@ module.exports = {
     port: 10057,
     url: 'http://localhost:10057',
     sessionSecret: 'YOUR_SESSION_SECRET_HERE',
-    botInvite: 'https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID_HERE&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A10057%2Fauth%2Fcallback&integration_type=0&scope=connections+guilds.members.read+guilds+guilds.channels.read+identify+applications.commands',
+    botInvite: 'https://discord.com/api/oauth2/authorize?client_id=YOUR_CLIENT_ID_HERE&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A10057%2Fauth%2Fcallback&integration_type=0&scope=connections+guilds.members.read+guilds+guilds.channels.read+identify+applications.commands',
     supportServer: 'https://discord.gg/YOUR_SERVER_HERE'
   },
 

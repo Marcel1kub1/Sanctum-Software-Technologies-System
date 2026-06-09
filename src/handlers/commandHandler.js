@@ -2,16 +2,15 @@ const fs = require('fs');
 const path = require('path');
 
 function loadCommands(bot) {
-  const categories = [
-    'moderation', 'music', 'economy', 'tickets',
-    'giveaways', 'utility', 'fun', 'welcome',
-    'leveling', 'security'
-  ];
+  const commandsDir = path.join(__dirname, '..', 'commands');
+  if (!fs.existsSync(commandsDir)) return;
+
+  const categories = fs.readdirSync(commandsDir).filter(item =>
+    fs.statSync(path.join(commandsDir, item)).isDirectory()
+  );
 
   for (const category of categories) {
-    const dir = path.join(__dirname, '..', 'commands', category);
-    if (!fs.existsSync(dir)) continue;
-
+    const dir = path.join(commandsDir, category);
     const files = fs.readdirSync(dir).filter(f => f.endsWith('.js'));
     for (const file of files) {
       const Command = require(path.join(dir, file));

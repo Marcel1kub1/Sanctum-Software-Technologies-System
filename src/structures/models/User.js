@@ -17,10 +17,12 @@ class User {
   }
 
   static async addBalance(userId, amount) {
+    await db.getUser(userId);
     await db.query('UPDATE users SET balance = balance + ? WHERE user_id = ?', [amount, userId]);
   }
 
   static async removeBalance(userId, amount) {
+    await db.getUser(userId);
     await db.query('UPDATE users SET balance = balance - ? WHERE user_id = ?', [amount, userId]);
   }
 

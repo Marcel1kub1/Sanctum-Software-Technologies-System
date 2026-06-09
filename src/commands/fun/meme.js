@@ -15,13 +15,14 @@ module.exports = class MemeCommand extends Command {
 
   async execute(bot, message, args) {
     try {
-      const res = await axios.get('https://www.reddit.com/r/memes/random/.json');
-      const data = res.data[0].data.children[0].data;
+      const res = await axios.get('https://meme-api.com/gimme');
+      const data = res.data;
       const embed = new EmbedBuilder()
         .setTitle(data.title)
+        .setURL(data.postLink)
         .setImage(data.url)
         .setColor(0x5865F2)
-        .setFooter({ text: `👍 ${data.ups}` });
+        .setFooter({ text: `👍 ${data.ups} | r/${data.subreddit}` });
       await message.reply({ embeds: [embed] });
     } catch {
       await message.reply('Could not fetch a meme right now.');
@@ -31,13 +32,14 @@ module.exports = class MemeCommand extends Command {
   async executeSlash(bot, interaction) {
     await interaction.deferReply();
     try {
-      const res = await axios.get('https://www.reddit.com/r/memes/random/.json');
-      const data = res.data[0].data.children[0].data;
+      const res = await axios.get('https://meme-api.com/gimme');
+      const data = res.data;
       const embed = new EmbedBuilder()
         .setTitle(data.title)
+        .setURL(data.postLink)
         .setImage(data.url)
         .setColor(0x5865F2)
-        .setFooter({ text: `👍 ${data.ups}` });
+        .setFooter({ text: `👍 ${data.ups} | r/${data.subreddit}` });
       await interaction.editReply({ embeds: [embed] });
     } catch {
       await interaction.editReply('Could not fetch a meme right now.');

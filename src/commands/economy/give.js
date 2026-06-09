@@ -32,6 +32,7 @@ module.exports = class GiveCommand extends Command {
       return;
     }
     await db.query('UPDATE users SET balance = balance - ? WHERE user_id = ?', [amount, message.author.id]);
+    await db.getUser(target.id);
     await db.query('UPDATE users SET balance = balance + ? WHERE user_id = ?', [amount, target.id]);
     await message.reply(`You gave ${bot.config.economy.currency}${amount} to ${target.username}.`);
   }
@@ -46,6 +47,7 @@ module.exports = class GiveCommand extends Command {
     }
     await interaction.deferReply();
     await db.query('UPDATE users SET balance = balance - ? WHERE user_id = ?', [amount, interaction.user.id]);
+    await db.getUser(target.id);
     await db.query('UPDATE users SET balance = balance + ? WHERE user_id = ?', [amount, target.id]);
     await interaction.editReply(`You gave ${bot.config.economy.currency}${amount} to ${target.username}.`);
   }

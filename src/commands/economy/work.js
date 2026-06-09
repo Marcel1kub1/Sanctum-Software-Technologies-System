@@ -16,6 +16,7 @@ module.exports = class WorkCommand extends Command {
   }
 
   async execute(bot, message, args) {
+    await db.getUser(message.author.id);
     const earned = randomRange(bot.config.economy.workMin, bot.config.economy.workMax);
     await db.query('UPDATE users SET balance = balance + ? WHERE user_id = ?', [earned, message.author.id]);
     await message.reply(`You worked and earned ${bot.config.economy.currency}${earned}!`);
@@ -23,6 +24,7 @@ module.exports = class WorkCommand extends Command {
 
   async executeSlash(bot, interaction) {
     await interaction.deferReply();
+    await db.getUser(interaction.user.id);
     const earned = randomRange(bot.config.economy.workMin, bot.config.economy.workMax);
     await db.query('UPDATE users SET balance = balance + ? WHERE user_id = ?', [earned, interaction.user.id]);
     await interaction.editReply(`You worked and earned ${bot.config.economy.currency}${earned}!`);
