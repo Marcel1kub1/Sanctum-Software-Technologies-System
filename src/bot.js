@@ -7,7 +7,7 @@ const setupMusicHandler = require('./handlers/musicHandler');
 const { getConfig } = require('./database/guildConfig');
 
 class Bot extends Client {
-  constructor(customConfig) {
+  constructor() {
     super({
       intents: [
         GatewayIntentBits.Guilds,
@@ -39,7 +39,7 @@ class Bot extends Client {
       ]
     });
 
-    this.config = customConfig || config;
+    this.config = config;
     this.commands = new Collection();
     this.slashCommands = new Collection();
     this.cooldowns = new Collection();

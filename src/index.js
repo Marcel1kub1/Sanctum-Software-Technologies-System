@@ -1,8 +1,7 @@
 const { createPool } = require('./database/connection');
 const { runMigrations } = require('./database/schema');
 const Bot = require('./bot');
-const { loadConfig } = require('./utils/configLoader');
-const config = loadConfig();
+const config = require('../config');
 
 async function start() {
   console.log('==========================================');
@@ -14,7 +13,7 @@ async function start() {
 
   let bot = null;
   if (config.bot.token && !config.bot.token.includes('your_')) {
-    bot = new Bot(config);
+    bot = new Bot();
     try {
       await bot.login();
     } catch (e) {

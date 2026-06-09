@@ -18,8 +18,8 @@ module.exports = class RolePanelCommand extends Command {
         .setName('create')
         .setDescription('Create a new role panel')
         .addStringOption(opt => opt.setName('title').setDescription('Panel title').setRequired(true))
-        .addStringOption(opt => opt.setName('description').setDescription('Panel description').setRequired(false))
         .addChannelOption(opt => opt.setName('channel').setDescription('Channel to send the panel to').setRequired(true))
+        .addStringOption(opt => opt.setName('description').setDescription('Panel description').setRequired(false))
       )
       .addSubcommand(sub => sub
         .setName('addrole')

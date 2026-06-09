@@ -1,8 +1,0 @@
-{
-  "_comment": "Override any config.js value here. Changes made via the dashboard are saved here. This file is NOT tracked by git.",
-  "bot": {},
-  "economy": {},
-  "music": {},
-  "leveling": {},
-  "dashboard": {}
-}
