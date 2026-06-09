@@ -388,6 +388,8 @@
         <%- include('modules/giveaways', { config, selectedGuild, guildConfig, gc }) %>
       <% } else if (tab === 'temp-voice') { %>
         <%- include('modules/temp-voice', { config, selectedGuild, guildConfig, gc }) %>
+      <% } else if (tab === 'role-panels') { %>
+        <%- include('modules/role-panels', { config, selectedGuild, guildConfig, gc }) %>
       <% } else { %>
         <%- include('modules/overview', { config, stats, user, selectedGuild, guildConfig, gc }) %>
       <% } %>

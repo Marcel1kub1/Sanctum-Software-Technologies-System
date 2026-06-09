@@ -14,21 +14,25 @@ module.exports = class LeaderboardCommand extends Command {
   }
 
   async execute(bot, message, args) {
+    const cfg = await bot.guildConfig(message.guild.id);
     const top = await User.getLeaderboard(10);
+    const currency = cfg.economy_currency || bot.config.economy.currency;
     const embed = new EmbedBuilder()
       .setTitle('Economy Leaderboard')
       .setColor(0xFFD700)
-      .setDescription(top.map((u, i) => `**${i + 1}.** <@${u.user_id}> - ${bot.config.economy.currency}${u.balance}`).join('\n') || 'No data');
+      .setDescription(top.map((u, i) => `**${i + 1}.** <@${u.user_id}> - ${currency}${u.balance}`).join('\n') || 'No data');
     await message.reply({ embeds: [embed] });
   }
 
   async executeSlash(bot, interaction) {
     await interaction.deferReply();
+    const cfg = await bot.guildConfig(interaction.guild.id);
     const top = await User.getLeaderboard(10);
+    const currency = cfg.economy_currency || bot.config.economy.currency;
     const embed = new EmbedBuilder()
       .setTitle('Economy Leaderboard')
       .setColor(0xFFD700)
-      .setDescription(top.map((u, i) => `**${i + 1}.** <@${u.user_id}> - ${bot.config.economy.currency}${u.balance}`).join('\n') || 'No data');
+      .setDescription(top.map((u, i) => `**${i + 1}.** <@${u.user_id}> - ${currency}${u.balance}`).join('\n') || 'No data');
     await interaction.editReply({ embeds: [embed] });
   }
 };

@@ -15,10 +15,13 @@ module.exports = class RankCommand extends Command {
   }
 
   async execute(bot, message, args) {
+    const cfg = await bot.guildConfig(message.guild.id);
     const target = message.mentions.users.first() || message.author;
     const rows = await db.query('SELECT * FROM levels WHERE user_id = ? AND guild_id = ?', [target.id, message.guild.id]);
     const data = rows[0] || { xp: 0, level: 0 };
-    const nextXP = Math.floor(bot.config.leveling.baseXP * Math.pow(bot.config.leveling.xpMultiplier, data.level));
+    const baseXP = cfg.leveling_base_xp || bot.config.leveling.baseXP;
+    const xpMult = cfg.leveling_xp_multiplier || bot.config.leveling.xpMultiplier;
+    const nextXP = Math.floor(baseXP * Math.pow(xpMult, data.level));
     const embed = new EmbedBuilder()
       .setTitle(`${target.username}'s Level`)
       .setColor(0x5865F2)
@@ -31,10 +34,13 @@ module.exports = class RankCommand extends Command {
 
   async executeSlash(bot, interaction) {
     await interaction.deferReply();
+    const cfg = await bot.guildConfig(interaction.guild.id);
     const target = interaction.options.getUser('user') || interaction.user;
     const rows = await db.query('SELECT * FROM levels WHERE user_id = ? AND guild_id = ?', [target.id, interaction.guild.id]);
     const data = rows[0] || { xp: 0, level: 0 };
-    const nextXP = Math.floor(bot.config.leveling.baseXP * Math.pow(bot.config.leveling.xpMultiplier, data.level));
+    const baseXP = cfg.leveling_base_xp || bot.config.leveling.baseXP;
+    const xpMult = cfg.leveling_xp_multiplier || bot.config.leveling.xpMultiplier;
+    const nextXP = Math.floor(baseXP * Math.pow(xpMult, data.level));
     const embed = new EmbedBuilder()
       .setTitle(`${target.username}'s Level`)
       .setColor(0x5865F2)

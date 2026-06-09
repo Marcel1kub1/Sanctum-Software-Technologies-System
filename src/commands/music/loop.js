@@ -24,20 +24,24 @@ module.exports = class LoopCommand extends Command {
       await message.reply('You need to be in a voice channel.');
       return;
     }
-    const mode = args[0] || 'off';
-    if (!['off', 'track', 'queue', 'autoplay'].includes(mode)) {
-      await message.reply('Mode must be: off, track, queue, or autoplay');
-      return;
-    }
+    try {
+      const mode = args[0] || 'off';
+      if (!['off', 'track', 'queue', 'autoplay'].includes(mode)) {
+        await message.reply('Mode must be: off, track, queue, or autoplay');
+        return;
+      }
 
-    if (mode === 'autoplay') {
-      bot.lavalink.setAutoplay(message.guild.id, true);
-      bot.lavalink.setLoop(message.guild.id, 'autoplay');
-    } else {
-      bot.lavalink.setAutoplay(message.guild.id, false);
-      bot.lavalink.setLoop(message.guild.id, mode);
+      if (mode === 'autoplay') {
+        bot.lavalink.setAutoplay(message.guild.id, true);
+        bot.lavalink.setLoop(message.guild.id, 'autoplay');
+      } else {
+        bot.lavalink.setAutoplay(message.guild.id, false);
+        bot.lavalink.setLoop(message.guild.id, mode);
+      }
+      await message.reply(`Loop mode set to: ${mode}`);
+    } catch (err) {
+      await message.reply(`Error: ${err.message}`);
     }
-    await message.reply(`Loop mode set to: ${mode}`);
   }
 
   async executeSlash(bot, interaction) {
@@ -45,15 +49,19 @@ module.exports = class LoopCommand extends Command {
       await interaction.reply({ content: 'You need to be in a voice channel.', ephemeral: true });
       return;
     }
-    const mode = interaction.options.getString('mode');
+    try {
+      const mode = interaction.options.getString('mode');
 
-    if (mode === 'autoplay') {
-      bot.lavalink.setAutoplay(interaction.guild.id, true);
-      bot.lavalink.setLoop(interaction.guild.id, 'autoplay');
-    } else {
-      bot.lavalink.setAutoplay(interaction.guild.id, false);
-      bot.lavalink.setLoop(interaction.guild.id, mode);
+      if (mode === 'autoplay') {
+        bot.lavalink.setAutoplay(interaction.guild.id, true);
+        bot.lavalink.setLoop(interaction.guild.id, 'autoplay');
+      } else {
+        bot.lavalink.setAutoplay(interaction.guild.id, false);
+        bot.lavalink.setLoop(interaction.guild.id, mode);
+      }
+      await interaction.reply(`Loop mode set to: ${mode}`);
+    } catch (err) {
+      await interaction.reply(`Error: ${err.message}`);
     }
-    await interaction.reply(`Loop mode set to: ${mode}`);
   }
 };

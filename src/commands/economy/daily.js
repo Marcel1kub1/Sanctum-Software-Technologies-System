@@ -15,6 +15,7 @@ module.exports = class DailyCommand extends Command {
   }
 
   async execute(bot, message, args) {
+    const cfg = await bot.guildConfig(message.guild.id);
     const userData = await db.getUser(message.author.id);
     const now = Date.now();
     const lastDaily = userData.daily_last ? new Date(userData.daily_last).getTime() : 0;
@@ -23,13 +24,16 @@ module.exports = class DailyCommand extends Command {
       await message.reply(`You can claim your daily in ${Math.ceil(remaining / 3600000)} hours.`);
       return;
     }
+    const amount = cfg.economy_daily_amount || bot.config.economy.dailyAmount;
+    const currency = cfg.economy_currency || bot.config.economy.currency;
     await db.query('UPDATE users SET balance = balance + ?, daily_last = NOW() WHERE user_id = ?',
-      [bot.config.economy.dailyAmount, message.author.id]);
-    await message.reply(`You claimed ${bot.config.economy.currency}${bot.config.economy.dailyAmount} as your daily reward!`);
+      [amount, message.author.id]);
+    await message.reply(`You claimed ${currency}${amount} as your daily reward!`);
   }
 
   async executeSlash(bot, interaction) {
     await interaction.deferReply();
+    const cfg = await bot.guildConfig(interaction.guild.id);
     const userData = await db.getUser(interaction.user.id);
     const now = Date.now();
     const lastDaily = userData.daily_last ? new Date(userData.daily_last).getTime() : 0;
@@ -38,8 +42,10 @@ module.exports = class DailyCommand extends Command {
       await interaction.editReply(`You can claim your daily in ${Math.ceil(remaining / 3600000)} hours.`);
       return;
     }
+    const amount = cfg.economy_daily_amount || bot.config.economy.dailyAmount;
+    const currency = cfg.economy_currency || bot.config.economy.currency;
     await db.query('UPDATE users SET balance = balance + ?, daily_last = NOW() WHERE user_id = ?',
-      [bot.config.economy.dailyAmount, interaction.user.id]);
-    await interaction.editReply(`You claimed ${bot.config.economy.currency}${bot.config.economy.dailyAmount} as your daily reward!`);
+      [amount, interaction.user.id]);
+    await interaction.editReply(`You claimed ${currency}${amount} as your daily reward!`);
   }
 };

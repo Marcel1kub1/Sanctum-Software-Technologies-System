@@ -16,6 +16,7 @@ module.exports = class GiveCommand extends Command {
   }
 
   async execute(bot, message, args) {
+    const cfg = await bot.guildConfig(message.guild.id);
     const target = message.mentions.users.first();
     if (!target) {
       await message.reply('Please mention a user.');
@@ -34,10 +35,12 @@ module.exports = class GiveCommand extends Command {
     await db.query('UPDATE users SET balance = balance - ? WHERE user_id = ?', [amount, message.author.id]);
     await db.getUser(target.id);
     await db.query('UPDATE users SET balance = balance + ? WHERE user_id = ?', [amount, target.id]);
-    await message.reply(`You gave ${bot.config.economy.currency}${amount} to ${target.username}.`);
+    const currency = cfg.economy_currency || bot.config.economy.currency;
+    await message.reply(`You gave ${currency}${amount} to ${target.username}.`);
   }
 
   async executeSlash(bot, interaction) {
+    const cfg = await bot.guildConfig(interaction.guild.id);
     const target = interaction.options.getUser('user');
     const amount = interaction.options.getInteger('amount');
     const sender = await db.getUser(interaction.user.id);
@@ -49,6 +52,7 @@ module.exports = class GiveCommand extends Command {
     await db.query('UPDATE users SET balance = balance - ? WHERE user_id = ?', [amount, interaction.user.id]);
     await db.getUser(target.id);
     await db.query('UPDATE users SET balance = balance + ? WHERE user_id = ?', [amount, target.id]);
-    await interaction.editReply(`You gave ${bot.config.economy.currency}${amount} to ${target.username}.`);
+    const currency = cfg.economy_currency || bot.config.economy.currency;
+    await interaction.editReply(`You gave ${currency}${amount} to ${target.username}.`);
   }
 };

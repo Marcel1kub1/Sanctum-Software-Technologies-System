@@ -167,6 +167,38 @@ const schemas = [
     data JSON DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     INDEX idx_guild_id (guild_id)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+
+  `CREATE TABLE IF NOT EXISTS role_panels (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    guild_id VARCHAR(255) NOT NULL,
+    message_id VARCHAR(255) DEFAULT NULL,
+    channel_id VARCHAR(255) DEFAULT NULL,
+    title VARCHAR(255) DEFAULT 'Role Selection',
+    description TEXT DEFAULT NULL,
+    color VARCHAR(20) DEFAULT '#5865f2',
+    style VARCHAR(20) DEFAULT 'button',
+    max_roles INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_guild_id (guild_id),
+    INDEX idx_message_id (message_id)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+
+  `CREATE TABLE IF NOT EXISTS role_panel_roles (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    panel_id INT NOT NULL,
+    guild_id VARCHAR(255) NOT NULL,
+    role_id VARCHAR(255) NOT NULL,
+    label VARCHAR(255) DEFAULT NULL,
+    emoji VARCHAR(100) DEFAULT NULL,
+    description VARCHAR(255) DEFAULT NULL,
+    color VARCHAR(20) DEFAULT '#5865f2',
+    position INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_panel_id (panel_id),
+    INDEX idx_guild_id (guild_id),
+    FOREIGN KEY (panel_id) REFERENCES role_panels(id) ON DELETE CASCADE
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`
 ];
 

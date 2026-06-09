@@ -4,9 +4,10 @@ const { loadCommands } = require('./handlers/commandHandler');
 const { loadEvents } = require('./handlers/eventHandler');
 const LavalinkManager = require('./structures/LavalinkManager');
 const setupMusicHandler = require('./handlers/musicHandler');
+const { getConfig } = require('./database/guildConfig');
 
 class Bot extends Client {
-  constructor() {
+  constructor(customConfig) {
     super({
       intents: [
         GatewayIntentBits.Guilds,
@@ -38,16 +39,32 @@ class Bot extends Client {
       ]
     });
 
-    this.config = config;
+    this.config = customConfig || config;
     this.commands = new Collection();
     this.slashCommands = new Collection();
     this.cooldowns = new Collection();
     this.queues = new Collection();
     this.tempBans = new Collection();
     this.lavalink = new LavalinkManager(this);
+    this._guildConfigCache = new Map();
 
     loadCommands(this);
     loadEvents(this);
+  }
+
+  async guildConfig(guildId) {
+    const cacheKey = `guild_${guildId}`;
+    if (this._guildConfigCache.has(cacheKey)) {
+      return this._guildConfigCache.get(cacheKey);
+    }
+    try {
+      const cfg = await getConfig(guildId);
+      this._guildConfigCache.set(cacheKey, cfg);
+      setTimeout(() => this._guildConfigCache.delete(cacheKey), 30000);
+      return cfg;
+    } catch {
+      return {};
+    }
   }
 
   async login() {

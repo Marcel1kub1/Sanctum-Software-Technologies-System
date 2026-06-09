@@ -15,15 +15,19 @@ module.exports = class BalanceCommand extends Command {
   }
 
   async execute(bot, message, args) {
+    const cfg = await bot.guildConfig(message.guild.id);
     const target = message.mentions.users.first() || message.author;
     const userData = await User.get(target.id);
-    await message.reply(`${target.username}'s balance: ${bot.config.economy.currency}${userData.balance}`);
+    const currency = cfg.economy_currency || bot.config.economy.currency;
+    await message.reply(`${target.username}'s balance: ${currency}${userData.balance}`);
   }
 
   async executeSlash(bot, interaction) {
     await interaction.deferReply();
+    const cfg = await bot.guildConfig(interaction.guild.id);
     const target = interaction.options.getUser('user') || interaction.user;
     const userData = await User.get(target.id);
-    await interaction.editReply(`${target.username}'s balance: ${bot.config.economy.currency}${userData.balance}`);
+    const currency = cfg.economy_currency || bot.config.economy.currency;
+    await interaction.editReply(`${target.username}'s balance: ${currency}${userData.balance}`);
   }
 };

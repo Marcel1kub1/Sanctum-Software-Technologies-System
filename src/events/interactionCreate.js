@@ -1,5 +1,6 @@
 const { handleTicketInteraction } = require('../handlers/ticketHandler');
 const { handleGiveawayButton } = require('../handlers/giveawayHandler');
+const { handleRoleButton } = require('../handlers/rolePanelHandler');
 const { executeCommand } = require('../handlers/executeHandler');
 
 module.exports = {
@@ -24,6 +25,10 @@ module.exports = {
       ];
       if (ticketCustomIds.includes(interaction.customId)) {
         return handleTicketInteraction(bot, interaction);
+      }
+
+      if (interaction.customId.startsWith('role_panel_')) {
+        return handleRoleButton(bot, interaction);
       }
     }
 

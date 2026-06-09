@@ -17,9 +17,13 @@ module.exports = class ShuffleCommand extends Command {
       await message.reply('You need to be in a voice channel.');
       return;
     }
-    const status = bot.lavalink.getStatus(message.guild.id);
-    bot.lavalink.setShuffle(message.guild.id, !status.shuffled);
-    await message.reply(`Shuffle ${status.shuffled ? 'disabled' : 'enabled'}.`);
+    try {
+      const status = bot.lavalink.getStatus(message.guild.id);
+      bot.lavalink.setShuffle(message.guild.id, !status.shuffled);
+      await message.reply(`Shuffle ${status.shuffled ? 'disabled' : 'enabled'}.`);
+    } catch (err) {
+      await message.reply(`Error: ${err.message}`);
+    }
   }
 
   async executeSlash(bot, interaction) {
@@ -27,8 +31,12 @@ module.exports = class ShuffleCommand extends Command {
       await interaction.reply({ content: 'You need to be in a voice channel.', ephemeral: true });
       return;
     }
-    const status = bot.lavalink.getStatus(interaction.guild.id);
-    bot.lavalink.setShuffle(interaction.guild.id, !status.shuffled);
-    await interaction.reply(`Shuffle ${status.shuffled ? 'disabled' : 'enabled'}.`);
+    try {
+      const status = bot.lavalink.getStatus(interaction.guild.id);
+      bot.lavalink.setShuffle(interaction.guild.id, !status.shuffled);
+      await interaction.reply(`Shuffle ${status.shuffled ? 'disabled' : 'enabled'}.`);
+    } catch (err) {
+      await interaction.reply(`Error: ${err.message}`);
+    }
   }
 };

@@ -6,6 +6,8 @@ const path = require('path');
 const config = require('../config');
 const { getConfig, updateConfig } = require('../src/database/guildConfig');
 const { ChannelType } = require('discord.js');
+const db = require('../src/database/connection');
+const { sendPanel } = require('../src/handlers/rolePanelHandler');
 
 module.exports = (client) => {
   const app = express();
@@ -100,9 +102,26 @@ module.exports = (client) => {
     }
 
     let guildConfig = {};
+    let rolePanels = [];
     if (selectedGuild) {
       try {
         guildConfig = await getConfig(selectedGuild.id);
+        rolePanels = await db.query(
+          'SELECT p.*, (SELECT COUNT(*) FROM role_panel_roles WHERE panel_id = p.id) as roles_count FROM role_panels p WHERE p.guild_id = ?',
+          [selectedGuild.id]
+        );
+        const guild = client ? client.guilds.cache.get(selectedGuild.id) : null;
+        for (const panel of rolePanels) {
+          if (panel.channel_id) {
+            const ch = guild ? guild.channels.cache.get(panel.channel_id) : null;
+            panel.channel_name = ch ? ch.name : null;
+          }
+          panel.roles = await db.query('SELECT * FROM role_panel_roles WHERE panel_id = ? ORDER BY position ASC', [panel.id]);
+          for (const r of panel.roles) {
+            const role = guild ? guild.roles.cache.get(r.role_id) : null;
+            r.role_name = role ? role.name : 'Unknown';
+          }
+        }
       } catch (e) {
         guildConfig = {};
       }
@@ -140,10 +159,89 @@ module.exports = (client) => {
 
     try {
       await updateConfig(guild, sanitized);
+      if (client && client._guildConfigCache) client._guildConfigCache.delete(`guild_${guild}`);
       res.redirect(req.get('Referer') || `/dashboard?guild=${guild}`);
     } catch (e) {
       console.error('[Dashboard] Config save error:', e);
       res.status(500).send('Failed to save configuration');
+    }
+  });
+
+  app.post('/dashboard/role-panels/create', checkAuth, async (req, res) => {
+    const guild = req.query.guild;
+    if (!guild) return res.status(400).send('Missing guild');
+    const { title, description, channel_id } = req.body;
+    if (!title || !channel_id) return res.status(400).send('Missing fields');
+    try {
+      const result = await db.query('INSERT INTO role_panels (guild_id, title, description, channel_id) VALUES (?, ?, ?, ?)',
+        [guild, title, description || '', channel_id]);
+      const panel = (await db.query('SELECT * FROM role_panels WHERE id = ?', [result.insertId]))[0];
+      if (panel && client) await sendPanel(client, guild, panel);
+      res.redirect(`/dashboard?tab=role-panels&guild=${guild}`);
+    } catch (e) {
+      console.error('[Dashboard] Role panel create error:', e);
+      res.status(500).send('Failed to create panel');
+    }
+  });
+
+  app.post('/dashboard/role-panels/send', checkAuth, async (req, res) => {
+    const guild = req.query.guild;
+    const { panel_id } = req.body;
+    if (!guild || !panel_id) return res.status(400).send('Missing fields');
+    try {
+      const panel = (await db.query('SELECT * FROM role_panels WHERE id = ? AND guild_id = ?', [panel_id, guild]))[0];
+      if (panel && client) await sendPanel(client, guild, panel);
+      res.redirect(`/dashboard?tab=role-panels&guild=${guild}`);
+    } catch (e) {
+      console.error('[Dashboard] Role panel send error:', e);
+      res.status(500).send('Failed to send panel');
+    }
+  });
+
+  app.post('/dashboard/role-panels/add-role', checkAuth, async (req, res) => {
+    const guild = req.query.guild;
+    const { panel_id, role_id, label, emoji } = req.body;
+    if (!guild || !panel_id || !role_id) return res.status(400).send('Missing fields');
+    try {
+      const count = (await db.query('SELECT COUNT(*) as c FROM role_panel_roles WHERE panel_id = ?', [panel_id]))[0].c;
+      await db.query('INSERT INTO role_panel_roles (panel_id, guild_id, role_id, label, emoji, position) VALUES (?, ?, ?, ?, ?, ?)',
+        [panel_id, guild, role_id, label || '', emoji || '', count]);
+      const panel = (await db.query('SELECT * FROM role_panels WHERE id = ?', [panel_id]))[0];
+      if (panel && client) await sendPanel(client, guild, panel);
+      res.redirect(`/dashboard?tab=role-panels&guild=${guild}`);
+    } catch (e) {
+      console.error('[Dashboard] Role panel add-role error:', e);
+      res.status(500).send('Failed to add role');
+    }
+  });
+
+  app.post('/dashboard/role-panels/remove-role', checkAuth, async (req, res) => {
+    const guild = req.query.guild;
+    const { entry_id } = req.body;
+    if (!guild || !entry_id) return res.status(400).send('Missing fields');
+    try {
+      const entry = (await db.query('SELECT panel_id FROM role_panel_roles WHERE id = ?', [entry_id]))[0];
+      await db.query('DELETE FROM role_panel_roles WHERE id = ?', [entry_id]);
+      if (entry && client) {
+        const panel = (await db.query('SELECT * FROM role_panels WHERE id = ?', [entry.panel_id]))[0];
+        if (panel) await sendPanel(client, guild, panel);
+      }
+      res.redirect(`/dashboard?tab=role-panels&guild=${guild}`);
+    } catch (e) {
+      res.status(500).send('Failed to remove role');
+    }
+  });
+
+  app.post('/dashboard/role-panels/delete', checkAuth, async (req, res) => {
+    const guild = req.query.guild;
+    const { panel_id } = req.body;
+    if (!guild || !panel_id) return res.status(400).send('Missing fields');
+    try {
+      await db.query('DELETE FROM role_panel_roles WHERE panel_id = ?', [panel_id]);
+      await db.query('DELETE FROM role_panels WHERE id = ? AND guild_id = ?', [panel_id, guild]);
+      res.redirect(`/dashboard?tab=role-panels&guild=${guild}`);
+    } catch (e) {
+      res.status(500).send('Failed to delete panel');
     }
   });
 

@@ -15,26 +15,45 @@ module.exports = class LyricsCommand extends Command {
   }
 
   async execute(bot, message, args) {
-    let query = args.join(' ');
-    if (!query) {
+    let artist = '';
+    let title = '';
+    const query = args.join(' ');
+    if (query) {
+      const parts = query.split(/ - /);
+      if (parts.length > 1) {
+        artist = parts[0].trim();
+        title = parts.slice(1).join(' - ').trim();
+      } else {
+        artist = query;
+        title = query;
+      }
+    } else {
       const status = bot.lavalink.getStatus(message.guild.id);
       if (!status.current) {
         await message.reply('Nothing is playing. Provide a song name.');
         return;
       }
-      query = `${status.current.info.title} ${status.current.info.author}`;
+      artist = status.current.info.author;
+      title = status.current.info.title;
     }
 
     try {
-      const lyrics = await this.fetchLyrics(query, bot.config.music.lyrics);
+      const guildCfg = await bot.guildConfig(message.guild.id);
+      const lyricsConfig = {
+        enabled: guildCfg.music_lyrics_enabled !== undefined ? guildCfg.music_lyrics_enabled : bot.config.music.lyrics.enabled,
+        provider: guildCfg.music_lyrics_provider || bot.config.music.lyrics.provider,
+        geniusToken: guildCfg.music_lyrics_genius_token || bot.config.music.lyrics.geniusToken
+      };
+      const lyrics = await this.fetchLyrics(artist, title, lyricsConfig);
       if (!lyrics) {
         await message.reply('No lyrics found for that song.');
         return;
       }
 
+      const display = title + (artist && artist !== title ? ` - ${artist}` : '');
       const embed = new EmbedBuilder()
         .setColor('#5865f2')
-        .setTitle(`Lyrics - ${query}`)
+        .setTitle(`Lyrics - ${display}`)
         .setDescription(lyrics.length > 4096 ? lyrics.substring(0, 4093) + '...' : lyrics);
 
       await message.reply({ embeds: [embed] });
@@ -44,27 +63,46 @@ module.exports = class LyricsCommand extends Command {
   }
 
   async executeSlash(bot, interaction) {
-    let query = interaction.options.getString('song');
-    if (!query) {
+    let artist = '';
+    let title = '';
+    const query = interaction.options.getString('song');
+    if (query) {
+      const parts = query.split(/ - /);
+      if (parts.length > 1) {
+        artist = parts[0].trim();
+        title = parts.slice(1).join(' - ').trim();
+      } else {
+        artist = query;
+        title = query;
+      }
+    } else {
       const status = bot.lavalink.getStatus(interaction.guild.id);
       if (!status.current) {
         await interaction.reply({ content: 'Nothing is playing. Provide a song name.', ephemeral: true });
         return;
       }
-      query = `${status.current.info.title} ${status.current.info.author}`;
+      artist = status.current.info.author;
+      title = status.current.info.title;
     }
 
     await interaction.deferReply();
     try {
-      const lyrics = await this.fetchLyrics(query, bot.config.music.lyrics);
+      const guildCfg = await bot.guildConfig(interaction.guild.id);
+      const lyricsConfig = {
+        enabled: guildCfg.music_lyrics_enabled !== undefined ? guildCfg.music_lyrics_enabled : bot.config.music.lyrics.enabled,
+        provider: guildCfg.music_lyrics_provider || bot.config.music.lyrics.provider,
+        geniusToken: guildCfg.music_lyrics_genius_token || bot.config.music.lyrics.geniusToken
+      };
+      const lyrics = await this.fetchLyrics(artist, title, lyricsConfig);
       if (!lyrics) {
         await interaction.editReply('No lyrics found for that song.');
         return;
       }
 
+      const display = title + (artist && artist !== title ? ` - ${artist}` : '');
       const embed = new EmbedBuilder()
         .setColor('#5865f2')
-        .setTitle(`Lyrics - ${query}`)
+        .setTitle(`Lyrics - ${display}`)
         .setDescription(lyrics.length > 4096 ? lyrics.substring(0, 4093) + '...' : lyrics);
 
       await interaction.editReply({ embeds: [embed] });
@@ -73,22 +111,18 @@ module.exports = class LyricsCommand extends Command {
     }
   }
 
-  async fetchLyrics(query, lyricsConfig) {
+  async fetchLyrics(artist, title, lyricsConfig) {
     if (!lyricsConfig.enabled) return null;
 
-    if (lyricsConfig.provider === 'genius' && lyricsConfig.geniusToken) {
+    if (lyricsConfig.provider === 'genius') {
       try {
-        const res = await axios.get('https://api.genius.com/search', {
-          params: { q: query },
-          headers: { Authorization: `Bearer ${lyricsConfig.geniusToken}` }
-        });
-        const hit = res.data.response.hits[0];
-        if (!hit) return null;
+        const a = artist.replace(/ \(.*?\)|\[.*?\]/g, '').trim();
+        const t = title.replace(/ \(.*?\)|\[.*?\]/g, '').trim();
 
-        const songRes = await axios.get(hit.result.url);
-        const html = songRes.data;
-        const match = html.match(/<div class="lyrics">([\s\S]*?)<\/div>/);
-        return match ? match[1].replace(/<[^>]*>/g, '').trim() : 'Lyrics found but could not be parsed.';
+        if (!a || !t) return null;
+
+        const res = await axios.get(`https://api.lyrics.ovh/v1/${encodeURIComponent(a)}/${encodeURIComponent(t)}`);
+        return res.data.lyrics || null;
       } catch {
         return null;
       }

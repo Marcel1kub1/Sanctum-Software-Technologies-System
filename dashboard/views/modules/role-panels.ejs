@@ -1,0 +1,138 @@
+<div class="page-header">
+  <h1 class="page-title">Role Panels</h1>
+  <p class="page-desc">Create and manage role selection panels with buttons</p>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <div class="card-title">Create New Panel</div>
+      <div class="card-desc">Set up a role selection panel in a channel</div>
+    </div>
+  </div>
+  <form method="POST" action="/dashboard/role-panels/create?guild=<%= selectedGuild ? selectedGuild.id : '' %>" data-noajax="true">
+    <div class="grid-2">
+      <div class="form-group">
+        <label class="form-label">Panel Title</label>
+        <input class="form-input" name="title" placeholder="e.g. Select your roles" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Channel</label>
+        <select class="form-select" name="channel_id" required>
+          <option value="">Select channel...</option>
+          <% (selectedGuild.textChannels || []).forEach(c => { %>
+            <option value="<%= c.id %>">#<%= c.name %></option>
+          <% }) %>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Description</label>
+      <textarea class="form-textarea" name="description" placeholder="Click the buttons below to assign roles to yourself."></textarea>
+    </div>
+    <div class="flex gap-2">
+      <button class="btn btn-primary">Create Panel</button>
+    </div>
+  </form>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <div class="card-title">Existing Panels</div>
+      <div class="card-desc">Manage your role panels</div>
+    </div>
+  </div>
+  <% if (!selectedGuild.rolePanels || selectedGuild.rolePanels.length === 0) { %>
+    <div class="empty-state">
+      <div class="empty-state-text">No role panels configured</div>
+    </div>
+  <% } else { %>
+    <% selectedGuild.rolePanels.forEach(panel => { %>
+      <div style="border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px;">
+        <div class="flex items-center justify-between" style="margin-bottom:12px;">
+          <div>
+            <div style="font-size:15px;font-weight:600;">#<%= panel.id %> — <%= panel.title %></div>
+            <div style="font-size:12px;color:var(--text-secondary);margin-top:2px;">
+              Channel: <%= panel.channel_id ? `#${panel.channel_name || panel.channel_id}` : 'Not set' %>
+              · Roles: <%= panel.roles_count || 0 %>
+              · Max per user: <%= panel.max_roles || 'Unlimited' %>
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <form method="POST" action="/dashboard/role-panels/send?guild=<%= selectedGuild.id %>" style="display:inline;">
+              <input type="hidden" name="panel_id" value="<%= panel.id %>">
+              <button class="btn btn-outline btn-sm">Send</button>
+            </form>
+            <form method="POST" action="/dashboard/role-panels/delete?guild=<%= selectedGuild.id %>" style="display:inline;" onsubmit="return confirm('Delete this panel?');">
+              <input type="hidden" name="panel_id" value="<%= panel.id %>">
+              <button class="btn btn-danger btn-sm">Delete</button>
+            </form>
+          </div>
+        </div>
+
+        <div style="border-top:1px solid var(--border);padding-top:12px;">
+          <div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:8px;">ADD ROLE</div>
+          <form method="POST" action="/dashboard/role-panels/add-role?guild=<%= selectedGuild.id %>" class="flex items-center gap-2" style="flex-wrap:wrap;">
+            <input type="hidden" name="panel_id" value="<%= panel.id %>">
+            <select class="form-select" name="role_id" style="width:180px;" required>
+              <option value="">Select role...</option>
+              <% (selectedGuild.roles || []).forEach(r => { %>
+                <option value="<%= r.id %>"><%= r.name %></option>
+              <% }) %>
+            </select>
+            <input class="form-input" name="label" placeholder="Button label" style="width:140px;">
+            <input class="form-input" name="emoji" placeholder="Emoji" style="width:80px;">
+            <button class="btn btn-success btn-sm">Add</button>
+          </form>
+        </div>
+
+        <% if (panel.roles && panel.roles.length > 0) { %>
+          <div style="margin-top:12px;border-top:1px solid var(--border);padding-top:12px;">
+            <div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:8px;">ROLES IN THIS PANEL</div>
+            <div class="flex flex-wrap gap-2">
+              <% panel.roles.forEach(r => { %>
+                <div style="display:flex;align-items:center;gap:6px;padding:6px 10px;background:var(--bg-input);border:1px solid var(--border);border-radius:8px;font-size:12px;">
+                  <span><%= r.emoji || '' %> <%= r.label || r.role_name %></span>
+                  <form method="POST" action="/dashboard/role-panels/remove-role?guild=<%= selectedGuild.id %>" style="display:inline;">
+                    <input type="hidden" name="entry_id" value="<%= r.id %>">
+                    <button style="background:none;border:none;color:var(--red);cursor:pointer;font-size:14px;padding:0 2px;">×</button>
+                  </form>
+                </div>
+              <% }) %>
+            </div>
+          </div>
+        <% } %>
+      </div>
+    <% }) %>
+  <% } %>
+</div>
+
+<script>
+document.querySelectorAll('form[action*="/dashboard/role-panels/"]').forEach(form => {
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    const params = new URLSearchParams(window.location.search);
+    const guild = params.get('guild');
+    const action = this.action.includes('delete') && !confirm('Delete this panel?') ? null : this.action;
+    if (!action) return;
+
+    try {
+      const res = await fetch(this.action, {
+        method: 'POST',
+        body: new URLSearchParams(formData),
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+      });
+      if (res.ok || res.status === 302) {
+        showNotification(true, 'Saved', 'Role panel updated');
+        setTimeout(() => window.location.reload(), 1000);
+      } else {
+        showNotification(false, 'Failed', 'Could not update role panel');
+      }
+    } catch {
+      showNotification(false, 'Error', 'Network error');
+    }
+  });
+});
+</script>
