@@ -220,6 +220,24 @@ async function runMigrations() {
       await connection.execute(sql);
     }
 
+    const missingColumns = [
+      { column: 'ticket_panel_channel', def: 'VARCHAR(255) DEFAULT NULL', after: 'ticket_category' },
+      { column: 'ticket_support_roles', def: 'TEXT DEFAULT NULL', after: 'ticket_panel_channel' },
+      { column: 'ticket_log_channel', def: 'VARCHAR(255) DEFAULT NULL', after: 'ticket_support_roles' },
+      { column: 'ticket_limit', def: 'INT DEFAULT 5', after: 'ticket_log_channel' },
+      { column: 'mute_role', def: 'VARCHAR(255) DEFAULT NULL', after: 'ticket_limit' },
+      { column: 'auto_mod_level', def: `VARCHAR(50) DEFAULT 'off'`, after: 'mute_role' },
+    ];
+
+    const [existingCols] = await connection.query(`SHOW COLUMNS FROM guilds`);
+    const existingNames = new Set(existingCols.map(c => c.Field));
+
+    for (const col of missingColumns) {
+      if (!existingNames.has(col.column)) {
+        await connection.execute(`ALTER TABLE guilds ADD COLUMN ${col.column} ${col.def} AFTER ${col.after}`);
+      }
+    }
+
     console.log('[Schema] All tables created successfully.');
   } catch (err) {
     console.error('[Schema] Migration failed:', err.message);
