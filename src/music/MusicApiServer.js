@@ -37,7 +37,7 @@ class MusicApiServer {
 
       const status = this.bot.lavalink.getStatus(guildId);
       const queue = this.bot.lavalink.getQueue(guildId);
-      const player = this.bot.lavalink.shoukaku?.getNode()?.getPlayer(guildId);
+      const player = this.bot.lavalink.shoukaku?.players?.get(guildId);
 
       res.json({
         current: status.current ? {

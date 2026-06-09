@@ -31,7 +31,9 @@ module.exports = function setupMusicHandler(bot) {
         try {
           const current = queue.history[queue.history.length - 1];
           if (current && current.info?.identifier) {
-            const result = await bot.lavalink.shoukaku.getNode().rest.resolve(`ytsearch:${current.info.title} ${current.info.author} mix`);
+            const node = bot.lavalink.shoukaku.getIdealNode();
+            if (!node) return;
+            const result = await node.rest.resolve(`ytsearch:${current.info.title} ${current.info.author} mix`);
             if (result && result.tracks.length > 1) {
               const next = result.tracks[1];
               queue.current = next;

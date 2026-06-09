@@ -37,32 +37,36 @@ class LavalinkManager {
 
   getNode() {
     if (!this.shoukaku) return null;
-    const node = this.shoukaku.getNode();
+    const node = this.shoukaku.getIdealNode();
     if (!node || node.state !== 2) return null;
     return node;
   }
 
   async getPlayer(guildId) {
-    const node = this.getNode();
-    if (!node) return null;
-    return node.getPlayer(guildId);
+    return this.shoukaku?.players?.get(guildId) ?? null;
   }
 
   async joinVoiceChannel(guildId, channelId, deaf = true) {
     const node = this.getNode();
     if (!node) throw new Error('No Lavalink node available');
-    const player = await node.joinChannel({
+    const player = await this.shoukaku.joinVoiceChannel({
       guildId,
       channelId,
-      deaf
+      deaf,
+      shardId: 0
     });
     return player;
   }
 
   async leaveVoiceChannel(guildId) {
-    const node = this.getNode();
-    if (!node) return;
-    await node.leaveChannel(guildId);
+    const player = this.shoukaku?.players?.get(guildId);
+    if (player) {
+      await player.destroy();
+    }
+    const connection = this.shoukaku?.connections?.get(guildId);
+    if (connection) {
+      connection.disconnect();
+    }
     this.queues.delete(guildId);
   }
 
@@ -92,7 +96,7 @@ class LavalinkManager {
     }
 
     queue.current = track;
-    await player.playTrack({ track: track.encoded });
+    await player.playTrack({ track: { encoded: track.encoded } });
     return { track, queued: false };
   }
 
@@ -106,7 +110,7 @@ class LavalinkManager {
 
     if (queue.tracks.length > 0) {
       queue.current = queue.tracks.shift();
-      await player.playTrack({ track: queue.current.encoded });
+      await player.playTrack({ track: { encoded: queue.current.encoded } });
       return queue.current;
     }
 
@@ -131,20 +135,20 @@ class LavalinkManager {
   async pause(guildId) {
     const player = await this.getPlayer(guildId);
     if (!player) throw new Error('No active player');
-    await player.pauseTrack();
+    await player.setPaused();
   }
 
   async resume(guildId) {
     const player = await this.getPlayer(guildId);
     if (!player) throw new Error('No active player');
-    await player.resumeTrack();
+    await player.setPaused(false);
   }
 
   async setVolume(guildId, volume) {
     const player = await this.getPlayer(guildId);
     if (!player) throw new Error('No active player');
     const vol = Math.max(10, Math.min(150, volume));
-    await player.setVolume(vol);
+    await player.setGlobalVolume(vol);
     const queue = this.getQueue(guildId);
     queue.volume = vol;
   }
@@ -196,7 +200,7 @@ class LavalinkManager {
     queue.current = prev;
 
     const player = await this.getPlayer(guildId);
-    if (player) await player.playTrack({ track: prev.encoded });
+    if (player) await player.playTrack({ track: { encoded: prev.encoded } });
     return prev;
   }
 
