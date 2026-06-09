@@ -29,7 +29,7 @@ function checkCooldown(bot, command, userId) {
   return null;
 }
 
-async function executeCommand(bot, command, executor, type, context) {
+async function executeCommand(bot, command, type, context) {
   try {
     if (type === 'prefix') {
       const { message, args } = context;
