@@ -98,9 +98,22 @@ class LavalinkManager {
     if (!result || !result.tracks || !result.tracks.length) throw new Error('No results found');
 
     const queue = this.getQueue(guildId);
-    const track = result.tracks[0];
-    track.requester = requester;
+    const tracks = result.tracks.map(t => { t.requester = requester; return t; });
 
+    if (result.playlistInfo) {
+      const total = tracks.length;
+      if (player.playing || player.paused) {
+        queue.tracks.push(...tracks);
+        return { playlist: true, playlistName: result.playlistInfo.name, count: total, queued: true, position: queue.tracks.length - total + 1 };
+      }
+      const first = tracks.shift();
+      queue.current = first;
+      queue.tracks.push(...tracks);
+      await player.playTrack({ track: { encoded: first.encoded } });
+      return { playlist: true, playlistName: result.playlistInfo.name, count: total, queued: false };
+    }
+
+    const track = tracks[0];
     if (player.playing || player.paused) {
       queue.tracks.push(track);
       return { track, queued: true, position: queue.tracks.length };

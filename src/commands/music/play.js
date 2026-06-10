@@ -42,7 +42,13 @@ module.exports = class PlayCommand extends Command {
 
       const result = await bot.lavalink.play(message.guild.id, resolveQuery(query), message.author.id);
       await sendOrUpdatePanel(bot, message.guild.id, message.channel);
-      if (result.queued) {
+      if (result.playlist) {
+        if (result.queued) {
+          await message.reply(`Added playlist **${result.playlistName}** (${result.count} tracks) to queue (position #${result.position})`);
+        } else {
+          await message.reply(`Now playing playlist **${result.playlistName}** (${result.count} tracks)`);
+        }
+      } else if (result.queued) {
         await message.reply(`Added to queue: **${result.track.info.title}** (position #${result.position})`);
       } else {
         await message.reply(`Now playing: **${result.track.info.title}**`);
@@ -72,7 +78,13 @@ module.exports = class PlayCommand extends Command {
 
       const result = await bot.lavalink.play(interaction.guild.id, resolveQuery(query), interaction.user.id);
       await sendOrUpdatePanel(bot, interaction.guild.id, interaction.channel);
-      if (result.queued) {
+      if (result.playlist) {
+        if (result.queued) {
+          await interaction.editReply(`Added playlist **${result.playlistName}** (${result.count} tracks) to queue (position #${result.position})`);
+        } else {
+          await interaction.editReply(`Now playing playlist **${result.playlistName}** (${result.count} tracks)`);
+        }
+      } else if (result.queued) {
         await interaction.editReply(`Added to queue: **${result.track.info.title}** (position #${result.position})`);
       } else {
         await interaction.editReply(`Now playing: **${result.track.info.title}**`);
