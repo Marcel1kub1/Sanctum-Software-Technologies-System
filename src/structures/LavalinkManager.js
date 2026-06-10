@@ -38,7 +38,7 @@ class LavalinkManager {
   getNode() {
     if (!this.shoukaku) return null;
     const node = this.shoukaku.getIdealNode();
-    if (!node || node.state !== 2) return null;
+    if (!node) return null;
     return node;
   }
 
