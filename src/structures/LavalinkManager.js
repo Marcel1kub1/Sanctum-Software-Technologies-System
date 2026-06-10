@@ -84,7 +84,7 @@ class LavalinkManager {
     if (!player) throw new Error('No player for this guild');
 
     const result = await node.rest.resolve(query);
-    if (!result || !result.tracks.length) throw new Error('No results found');
+    if (!result || !result.tracks || !result.tracks.length) throw new Error('No results found');
 
     const queue = this.getQueue(guildId);
     const track = result.tracks[0];

@@ -13,7 +13,7 @@ module.exports = function setupMusicHandler(bot) {
       }
 
       if (queue.loop === 'track' && queue.current) {
-        await player.playTrack({ track: queue.current.encoded });
+        await player.playTrack({ track: { encoded: queue.current.encoded } });
         return;
       }
 
@@ -26,7 +26,7 @@ module.exports = function setupMusicHandler(bot) {
 
       if (queue.tracks.length > 0) {
         queue.current = queue.tracks.shift();
-        await player.playTrack({ track: queue.current.encoded });
+        await player.playTrack({ track: { encoded: queue.current.encoded } });
       } else if (queue.autoplay) {
         try {
           const current = queue.history[queue.history.length - 1];
@@ -34,10 +34,10 @@ module.exports = function setupMusicHandler(bot) {
             const node = bot.lavalink.shoukaku.getIdealNode();
             if (!node) return;
             const result = await node.rest.resolve(`ytsearch:${current.info.title} ${current.info.author} mix`);
-            if (result && result.tracks.length > 1) {
+            if (result && result.tracks && result.tracks.length > 1) {
               const next = result.tracks[1];
               queue.current = next;
-              await player.playTrack({ track: next.encoded });
+              await player.playTrack({ track: { encoded: next.encoded } });
             }
           }
         } catch {
@@ -53,7 +53,7 @@ module.exports = function setupMusicHandler(bot) {
       const queue = bot.lavalink.getQueue(player.guildId);
       if (queue.tracks.length > 0) {
         queue.current = queue.tracks.shift();
-        await player.playTrack({ track: queue.current.encoded });
+        await player.playTrack({ track: { encoded: queue.current.encoded } });
       }
     }
 
@@ -62,7 +62,7 @@ module.exports = function setupMusicHandler(bot) {
       const queue = bot.lavalink.getQueue(player.guildId);
       if (queue.tracks.length > 0) {
         queue.current = queue.tracks.shift();
-        await player.playTrack({ track: queue.current.encoded });
+        await player.playTrack({ track: { encoded: queue.current.encoded } });
       }
     }
 
