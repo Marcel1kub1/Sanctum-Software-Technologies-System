@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const Command = require('../../structures/Command');
+const { sendOrUpdatePanel } = require('../../handlers/musicPanelHandler');
 
 module.exports = class RemoveCommand extends Command {
   constructor(bot) {
@@ -25,6 +26,7 @@ module.exports = class RemoveCommand extends Command {
     }
 
     const removed = bot.lavalink.removeTrack(message.guild.id, index);
+    await sendOrUpdatePanel(bot, message.guild.id);
     if (removed) {
       await message.reply(`Removed track #${index + 1} from the queue.`);
     } else {
@@ -40,6 +42,7 @@ module.exports = class RemoveCommand extends Command {
     const position = interaction.options.getInteger('position') - 1;
 
     const removed = bot.lavalink.removeTrack(interaction.guild.id, position);
+    await sendOrUpdatePanel(bot, interaction.guild.id);
     if (removed) {
       await interaction.reply(`Removed track #${position + 1} from the queue.`);
     } else {

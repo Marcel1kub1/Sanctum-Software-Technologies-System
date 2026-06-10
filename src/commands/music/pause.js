@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const Command = require('../../structures/Command');
+const { sendOrUpdatePanel } = require('../../handlers/musicPanelHandler');
 
 module.exports = class PauseCommand extends Command {
   constructor(bot) {
@@ -19,6 +20,7 @@ module.exports = class PauseCommand extends Command {
     }
     try {
       await bot.lavalink.pause(message.guild.id);
+      await sendOrUpdatePanel(bot, message.guild.id);
       await message.reply('Playback paused.');
     } catch (err) {
       await message.reply(`Error: ${err.message}`);
@@ -33,6 +35,7 @@ module.exports = class PauseCommand extends Command {
     await interaction.deferReply();
     try {
       await bot.lavalink.pause(interaction.guild.id);
+      await sendOrUpdatePanel(bot, interaction.guild.id);
       await interaction.editReply('Playback paused.');
     } catch (err) {
       await interaction.editReply(`Error: ${err.message}`);

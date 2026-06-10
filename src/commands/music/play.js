@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const Command = require('../../structures/Command');
+const { sendOrUpdatePanel } = require('../../handlers/musicPanelHandler');
 
 function resolveQuery(query) {
   if (/^https?:\/\//.test(query)) return query;
@@ -40,6 +41,7 @@ module.exports = class PlayCommand extends Command {
       }
 
       const result = await bot.lavalink.play(message.guild.id, resolveQuery(query), message.author.id);
+      await sendOrUpdatePanel(bot, message.guild.id, message.channel);
       if (result.queued) {
         await message.reply(`Added to queue: **${result.track.info.title}** (position #${result.position})`);
       } else {
@@ -69,6 +71,7 @@ module.exports = class PlayCommand extends Command {
       }
 
       const result = await bot.lavalink.play(interaction.guild.id, resolveQuery(query), interaction.user.id);
+      await sendOrUpdatePanel(bot, interaction.guild.id, interaction.channel);
       if (result.queued) {
         await interaction.editReply(`Added to queue: **${result.track.info.title}** (position #${result.position})`);
       } else {

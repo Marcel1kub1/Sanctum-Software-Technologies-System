@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const Command = require('../../structures/Command');
+const { sendOrUpdatePanel } = require('../../handlers/musicPanelHandler');
 
 module.exports = class ShuffleCommand extends Command {
   constructor(bot) {
@@ -20,6 +21,7 @@ module.exports = class ShuffleCommand extends Command {
     try {
       const status = bot.lavalink.getStatus(message.guild.id);
       bot.lavalink.setShuffle(message.guild.id, !status.shuffled);
+      await sendOrUpdatePanel(bot, message.guild.id);
       await message.reply(`Shuffle ${status.shuffled ? 'disabled' : 'enabled'}.`);
     } catch (err) {
       await message.reply(`Error: ${err.message}`);
@@ -34,6 +36,7 @@ module.exports = class ShuffleCommand extends Command {
     try {
       const status = bot.lavalink.getStatus(interaction.guild.id);
       bot.lavalink.setShuffle(interaction.guild.id, !status.shuffled);
+      await sendOrUpdatePanel(bot, interaction.guild.id);
       await interaction.reply(`Shuffle ${status.shuffled ? 'disabled' : 'enabled'}.`);
     } catch (err) {
       await interaction.reply(`Error: ${err.message}`);

@@ -1,6 +1,7 @@
 const { handleTicketInteraction } = require('../handlers/ticketHandler');
 const { handleGiveawayButton } = require('../handlers/giveawayHandler');
 const { handleRoleButton } = require('../handlers/rolePanelHandler');
+const { handleMusicPanelButton } = require('../handlers/musicPanelHandler');
 const { executeCommand } = require('../handlers/executeHandler');
 
 module.exports = {
@@ -16,6 +17,10 @@ module.exports = {
     if (interaction.isButton()) {
       if (interaction.customId === 'enter_giveaway') {
         return handleGiveawayButton(bot, interaction);
+      }
+
+      if (interaction.customId.startsWith('music_panel_')) {
+        return handleMusicPanelButton(bot, interaction);
       }
 
       const ticketCustomIds = [

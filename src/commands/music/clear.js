@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const Command = require('../../structures/Command');
+const { sendOrUpdatePanel } = require('../../handlers/musicPanelHandler');
 
 module.exports = class ClearCommand extends Command {
   constructor(bot) {
@@ -18,6 +19,7 @@ module.exports = class ClearCommand extends Command {
       return;
     }
     bot.lavalink.clearQueue(message.guild.id);
+    await sendOrUpdatePanel(bot, message.guild.id);
     await message.reply('Queue cleared.');
   }
 
@@ -27,6 +29,7 @@ module.exports = class ClearCommand extends Command {
       return;
     }
     bot.lavalink.clearQueue(interaction.guild.id);
+    await sendOrUpdatePanel(bot, interaction.guild.id);
     await interaction.reply('Queue cleared.');
   }
 };

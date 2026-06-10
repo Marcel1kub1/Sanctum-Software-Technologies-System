@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const Command = require('../../structures/Command');
+const { sendOrUpdatePanel } = require('../../handlers/musicPanelHandler');
 
 module.exports = class StopCommand extends Command {
   constructor(bot) {
@@ -20,6 +21,7 @@ module.exports = class StopCommand extends Command {
     try {
       await bot.lavalink.stop(message.guild.id);
       await bot.lavalink.leaveVoiceChannel(message.guild.id);
+      await sendOrUpdatePanel(bot, message.guild.id);
       await message.reply('Playback stopped and queue cleared.');
     } catch (err) {
       await message.reply(`Error: ${err.message}`);
@@ -35,6 +37,7 @@ module.exports = class StopCommand extends Command {
     try {
       await bot.lavalink.stop(interaction.guild.id);
       await bot.lavalink.leaveVoiceChannel(interaction.guild.id);
+      await sendOrUpdatePanel(bot, interaction.guild.id);
       await interaction.editReply('Playback stopped and queue cleared.');
     } catch (err) {
       await interaction.editReply(`Error: ${err.message}`);

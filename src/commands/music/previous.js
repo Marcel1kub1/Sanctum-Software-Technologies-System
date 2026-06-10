@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const Command = require('../../structures/Command');
+const { sendOrUpdatePanel } = require('../../handlers/musicPanelHandler');
 
 module.exports = class PreviousCommand extends Command {
   constructor(bot) {
@@ -19,6 +20,7 @@ module.exports = class PreviousCommand extends Command {
     }
     try {
       const prev = await bot.lavalink.previous(message.guild.id);
+      await sendOrUpdatePanel(bot, message.guild.id);
       if (prev) {
         await message.reply(`Now playing previous track: **${prev.info.title}**`);
       } else {
@@ -37,6 +39,7 @@ module.exports = class PreviousCommand extends Command {
     await interaction.deferReply();
     try {
       const prev = await bot.lavalink.previous(interaction.guild.id);
+      await sendOrUpdatePanel(bot, interaction.guild.id);
       if (prev) {
         await interaction.editReply(`Now playing previous track: **${prev.info.title}**`);
       } else {

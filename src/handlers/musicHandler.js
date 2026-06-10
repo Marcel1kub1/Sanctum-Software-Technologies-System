@@ -1,6 +1,8 @@
 module.exports = function setupMusicHandler(bot) {
   if (!bot.lavalink || !bot.lavalink.shoukaku) return;
 
+  const { sendOrUpdatePanel } = require('./musicPanelHandler');
+
   function normalizeLavalinkResult(result) {
     if (!result) return null;
     if (result.tracks) return result;
@@ -20,11 +22,13 @@ module.exports = function setupMusicHandler(bot) {
 
       if (event.reason === 'STOPPED') {
         queue.current = null;
+        await sendOrUpdatePanel(bot, player.guildId);
         return;
       }
 
       if (queue.loop === 'track' && queue.current) {
         await player.playTrack({ track: { encoded: queue.current.encoded } });
+        await sendOrUpdatePanel(bot, player.guildId);
         return;
       }
 
@@ -38,6 +42,7 @@ module.exports = function setupMusicHandler(bot) {
       if (queue.tracks.length > 0) {
         queue.current = queue.tracks.shift();
         await player.playTrack({ track: { encoded: queue.current.encoded } });
+        await sendOrUpdatePanel(bot, player.guildId);
       } else if (queue.autoplay) {
         try {
           const current = queue.history[queue.history.length - 1];
@@ -49,6 +54,7 @@ module.exports = function setupMusicHandler(bot) {
               const next = result.tracks[1];
               queue.current = next;
               await player.playTrack({ track: { encoded: next.encoded } });
+              await sendOrUpdatePanel(bot, player.guildId);
             }
           }
         } catch {
@@ -56,6 +62,7 @@ module.exports = function setupMusicHandler(bot) {
         }
       } else {
         queue.current = null;
+        await sendOrUpdatePanel(bot, player.guildId);
       }
     }
 
@@ -66,6 +73,7 @@ module.exports = function setupMusicHandler(bot) {
         queue.current = queue.tracks.shift();
         await player.playTrack({ track: { encoded: queue.current.encoded } });
       }
+      await sendOrUpdatePanel(bot, player.guildId);
     }
 
     if (event.type === 'TrackStuckEvent') {
@@ -75,6 +83,7 @@ module.exports = function setupMusicHandler(bot) {
         queue.current = queue.tracks.shift();
         await player.playTrack({ track: { encoded: queue.current.encoded } });
       }
+      await sendOrUpdatePanel(bot, player.guildId);
     }
 
     if (event.type === 'WebSocketClosedEvent') {

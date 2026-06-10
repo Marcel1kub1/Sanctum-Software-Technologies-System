@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const Command = require('../../structures/Command');
+const { sendOrUpdatePanel } = require('../../handlers/musicPanelHandler');
 
 module.exports = class VolumeCommand extends Command {
   constructor(bot) {
@@ -25,6 +26,7 @@ module.exports = class VolumeCommand extends Command {
     }
     try {
       await bot.lavalink.setVolume(message.guild.id, volume);
+      await sendOrUpdatePanel(bot, message.guild.id);
       await message.reply(`Volume set to ${volume}%.`);
     } catch (err) {
       await message.reply(`Error: ${err.message}`);
@@ -40,6 +42,7 @@ module.exports = class VolumeCommand extends Command {
     await interaction.deferReply();
     try {
       await bot.lavalink.setVolume(interaction.guild.id, volume);
+      await sendOrUpdatePanel(bot, interaction.guild.id);
       await interaction.editReply(`Volume set to ${volume}%.`);
     } catch (err) {
       await interaction.editReply(`Error: ${err.message}`);

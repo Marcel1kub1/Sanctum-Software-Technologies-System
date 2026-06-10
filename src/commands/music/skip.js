@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const Command = require('../../structures/Command');
+const { sendOrUpdatePanel } = require('../../handlers/musicPanelHandler');
 
 module.exports = class SkipCommand extends Command {
   constructor(bot) {
@@ -19,6 +20,7 @@ module.exports = class SkipCommand extends Command {
     }
     try {
       const next = await bot.lavalink.skip(message.guild.id);
+      await sendOrUpdatePanel(bot, message.guild.id);
       if (next) {
         await message.reply(`Skipped. Now playing: **${next.info.title}**`);
       } else {
@@ -37,6 +39,7 @@ module.exports = class SkipCommand extends Command {
     await interaction.deferReply();
     try {
       const next = await bot.lavalink.skip(interaction.guild.id);
+      await sendOrUpdatePanel(bot, interaction.guild.id);
       if (next) {
         await interaction.editReply(`Skipped. Now playing: **${next.info.title}**`);
       } else {

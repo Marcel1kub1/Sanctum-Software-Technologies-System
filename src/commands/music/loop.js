@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const Command = require('../../structures/Command');
+const { sendOrUpdatePanel } = require('../../handlers/musicPanelHandler');
 
 module.exports = class LoopCommand extends Command {
   constructor(bot) {
@@ -38,6 +39,7 @@ module.exports = class LoopCommand extends Command {
         bot.lavalink.setAutoplay(message.guild.id, false);
         bot.lavalink.setLoop(message.guild.id, mode);
       }
+      await sendOrUpdatePanel(bot, message.guild.id);
       await message.reply(`Loop mode set to: ${mode}`);
     } catch (err) {
       await message.reply(`Error: ${err.message}`);
@@ -59,6 +61,7 @@ module.exports = class LoopCommand extends Command {
         bot.lavalink.setAutoplay(interaction.guild.id, false);
         bot.lavalink.setLoop(interaction.guild.id, mode);
       }
+      await sendOrUpdatePanel(bot, interaction.guild.id);
       await interaction.reply(`Loop mode set to: ${mode}`);
     } catch (err) {
       await interaction.reply(`Error: ${err.message}`);
