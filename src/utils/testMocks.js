@@ -25,6 +25,7 @@ function makeMockMessage(overrides = {}) {
       replyCount++;
       return makeMockMessage({ content: typeof content === 'string' ? content : JSON.stringify(content) });
     },
+    delete: async (opts) => true,
     ...overrides
   };
   return msg;
@@ -160,6 +161,7 @@ function makeMockChannel(overrides = {}) {
     name: overrides.name || 'test-channel',
     type: overrides.type ?? ChannelType.GuildText,
     send: async (content) => makeMockMessage({ content: typeof content === 'string' ? content : JSON.stringify(content) }),
+    bulkDelete: async (amount, filterOld) => true,
     ...overrides
   };
 }
