@@ -62,14 +62,9 @@ class LavalinkManager {
     if (!node) throw new Error('No Lavalink node available');
 
     const existingPlayer = this.shoukaku?.players?.get(guildId);
-    if (existingPlayer) {
-      if (existingPlayer.voiceChannelId === channelId) return existingPlayer;
-      await existingPlayer.destroy();
-    }
-    const existingConnection = this.shoukaku?.connections?.get(guildId);
-    if (existingConnection) {
-      existingConnection.disconnect();
-    }
+    if (existingPlayer?.voiceChannelId === channelId) return existingPlayer;
+
+    await this.shoukaku?.leaveVoiceChannel(guildId);
 
     const player = await this.shoukaku.joinVoiceChannel({
       guildId,
@@ -81,14 +76,7 @@ class LavalinkManager {
   }
 
   async leaveVoiceChannel(guildId) {
-    const player = this.shoukaku?.players?.get(guildId);
-    if (player) {
-      await player.destroy();
-    }
-    const connection = this.shoukaku?.connections?.get(guildId);
-    if (connection) {
-      connection.disconnect();
-    }
+    await this.shoukaku?.leaveVoiceChannel(guildId);
     this.queues.delete(guildId);
   }
 
