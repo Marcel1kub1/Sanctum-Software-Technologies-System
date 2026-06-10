@@ -14,22 +14,59 @@ module.exports = function setupMusicHandler(bot) {
     return result;
   }
 
-  bot.lavalink.shoukaku.on('playerEvent', async (name, player, event) => {
-    if (event.type === 'TrackEndEvent') {
-      if (event.reason === 'REPLACED') return;
+  function playNext(player, guildId) {
+    const queue = bot.lavalink.getQueue(guildId);
+    if (queue.tracks.length > 0) {
+      queue.current = queue.tracks.shift();
+      player.playTrack({ track: { encoded: queue.current.encoded } });
+      sendOrUpdatePanel(bot, guildId);
+    } else if (queue.autoplay) {
+      try {
+        const current = queue.history[queue.history.length - 1];
+        if (current && current.info?.identifier) {
+          const node = bot.lavalink.shoukaku.getIdealNode();
+          if (!node) return;
+          node.rest.resolve(`ytsearch:${current.info.title} ${current.info.author} mix`).then(res => {
+            const result = normalizeLavalinkResult(res);
+            if (result && result.tracks && result.tracks.length > 1) {
+              const next = result.tracks[1];
+              queue.current = next;
+              player.playTrack({ track: { encoded: next.encoded } });
+              sendOrUpdatePanel(bot, guildId);
+            }
+          }).catch(() => {});
+        }
+      } catch {}
+    } else {
+      queue.current = null;
+      player.stopTrack();
+      stopLiveUpdater(bot, guildId);
+      sendOrUpdatePanel(bot, guildId);
+    }
+  }
 
-      const queue = bot.lavalink.getQueue(player.guildId);
+  bot.lavalink.shoukaku.on('raw', (name, json) => {
+    if (json.op !== 'event') return;
 
-      if (event.reason === 'STOPPED') {
+    const player = bot.lavalink.shoukaku.players.get(json.guildId);
+    if (!player) return;
+
+    if (json.type === 'TrackEndEvent') {
+      if (json.reason === 'REPLACED') return;
+
+      const guildId = player.guildId;
+      const queue = bot.lavalink.getQueue(guildId);
+
+      if (json.reason === 'STOPPED') {
         queue.current = null;
-        stopLiveUpdater(bot, player.guildId);
-        await sendOrUpdatePanel(bot, player.guildId);
+        stopLiveUpdater(bot, guildId);
+        sendOrUpdatePanel(bot, guildId);
         return;
       }
 
       if (queue.loop === 'track' && queue.current) {
-        await player.playTrack({ track: { encoded: queue.current.encoded } });
-        await sendOrUpdatePanel(bot, player.guildId);
+        player.playTrack({ track: { encoded: queue.current.encoded } });
+        sendOrUpdatePanel(bot, guildId);
         return;
       }
 
@@ -40,58 +77,38 @@ module.exports = function setupMusicHandler(bot) {
         queue.tracks.push(queue.current);
       }
 
-      if (queue.tracks.length > 0) {
-        queue.current = queue.tracks.shift();
-        await player.playTrack({ track: { encoded: queue.current.encoded } });
-        await sendOrUpdatePanel(bot, player.guildId);
-      } else if (queue.autoplay) {
-        try {
-          const current = queue.history[queue.history.length - 1];
-          if (current && current.info?.identifier) {
-            const node = bot.lavalink.shoukaku.getIdealNode();
-            if (!node) return;
-            const result = normalizeLavalinkResult(await node.rest.resolve(`ytsearch:${current.info.title} ${current.info.author} mix`));
-            if (result && result.tracks && result.tracks.length > 1) {
-              const next = result.tracks[1];
-              queue.current = next;
-              await player.playTrack({ track: { encoded: next.encoded } });
-              await sendOrUpdatePanel(bot, player.guildId);
-            }
-          }
-        } catch {
-          queue.current = null;
-        }
-      } else {
-        queue.current = null;
-        stopLiveUpdater(bot, player.guildId);
-        await sendOrUpdatePanel(bot, player.guildId);
-      }
+      playNext(player, guildId);
     }
 
-    if (event.type === 'TrackExceptionEvent') {
-      console.error(`[Lavalink] Track exception in ${player.guildId}:`, event.exception?.message);
-      const queue = bot.lavalink.getQueue(player.guildId);
+    if (json.type === 'TrackExceptionEvent') {
+      console.error(`[Lavalink] Track exception in ${player.guildId}:`, json.exception?.message);
+      const guildId = player.guildId;
+      const queue = bot.lavalink.getQueue(guildId);
       if (queue.tracks.length > 0) {
-        queue.current = queue.tracks.shift();
-        await player.playTrack({ track: { encoded: queue.current.encoded } });
+        playNext(player, guildId);
       }
-      await sendOrUpdatePanel(bot, player.guildId);
+      sendOrUpdatePanel(bot, guildId);
     }
 
-    if (event.type === 'TrackStuckEvent') {
+    if (json.type === 'TrackStuckEvent') {
       console.warn(`[Lavalink] Track stuck in ${player.guildId}, skipping...`);
-      const queue = bot.lavalink.getQueue(player.guildId);
+      const guildId = player.guildId;
+      const queue = bot.lavalink.getQueue(guildId);
       if (queue.tracks.length > 0) {
-        queue.current = queue.tracks.shift();
-        await player.playTrack({ track: { encoded: queue.current.encoded } });
+        playNext(player, guildId);
       }
-      await sendOrUpdatePanel(bot, player.guildId);
+      sendOrUpdatePanel(bot, guildId);
     }
 
-    if (event.type === 'WebSocketClosedEvent') {
-      if (event.code === 4014) {
-        stopLiveUpdater(bot, player.guildId);
-        bot.lavalink.queues.delete(player.guildId);
+    if (json.type === 'TrackStartEvent') {
+      sendOrUpdatePanel(bot, player.guildId);
+    }
+
+    if (json.type === 'WebSocketClosedEvent') {
+      if (json.code === 4014) {
+        const guildId = player.guildId;
+        stopLiveUpdater(bot, guildId);
+        bot.lavalink.queues.delete(guildId);
       }
     }
   });
