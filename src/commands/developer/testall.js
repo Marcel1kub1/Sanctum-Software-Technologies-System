@@ -13,7 +13,7 @@ const {
   makeMockRole,
   makeMockMentions,
   makeMockEmbed
-} = require('./testMocks');
+} = require('../../utils/testMocks');
 
 module.exports = class TestAllCommand extends Command {
   constructor(bot) {
