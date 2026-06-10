@@ -1,6 +1,17 @@
 module.exports = function setupMusicHandler(bot) {
   if (!bot.lavalink || !bot.lavalink.shoukaku) return;
 
+  function normalizeLavalinkResult(result) {
+    if (!result) return null;
+    if (result.tracks) return result;
+    if (!result.loadType) return result;
+    if (result.loadType === 'empty' || result.loadType === 'error') return { tracks: [] };
+    if (result.loadType === 'track') return { tracks: [result.data] };
+    if (result.loadType === 'playlist') return { tracks: result.data.tracks, playlistInfo: result.data.info };
+    if (result.loadType === 'search') return { tracks: result.data };
+    return result;
+  }
+
   bot.lavalink.shoukaku.on('playerEvent', async (name, player, event) => {
     if (event.type === 'TrackEndEvent') {
       if (event.reason === 'REPLACED') return;
@@ -33,7 +44,7 @@ module.exports = function setupMusicHandler(bot) {
           if (current && current.info?.identifier) {
             const node = bot.lavalink.shoukaku.getIdealNode();
             if (!node) return;
-            const result = await node.rest.resolve(`ytsearch:${current.info.title} ${current.info.author} mix`);
+            const result = normalizeLavalinkResult(await node.rest.resolve(`ytsearch:${current.info.title} ${current.info.author} mix`));
             if (result && result.tracks && result.tracks.length > 1) {
               const next = result.tracks[1];
               queue.current = next;

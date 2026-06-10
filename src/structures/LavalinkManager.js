@@ -1,5 +1,16 @@
 const { Connectors } = require('shoukaku');
 
+function normalizeLavalinkResult(result) {
+  if (!result) return null;
+  if (result.tracks) return result;
+  if (!result.loadType) return result;
+  if (result.loadType === 'empty' || result.loadType === 'error') return { tracks: [] };
+  if (result.loadType === 'track') return { tracks: [result.data] };
+  if (result.loadType === 'playlist') return { tracks: result.data.tracks, playlistInfo: result.data.info };
+  if (result.loadType === 'search') return { tracks: result.data };
+  return result;
+}
+
 class LavalinkManager {
   constructor(bot) {
     this.bot = bot;
@@ -83,7 +94,8 @@ class LavalinkManager {
     const player = await this.getPlayer(guildId);
     if (!player) throw new Error('No player for this guild');
 
-    const result = await node.rest.resolve(query);
+    let result = await node.rest.resolve(query);
+    result = normalizeLavalinkResult(result);
     if (!result || !result.tracks || !result.tracks.length) throw new Error('No results found');
 
     const queue = this.getQueue(guildId);
