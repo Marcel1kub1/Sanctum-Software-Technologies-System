@@ -25,6 +25,7 @@ function makeMockMessage(overrides = {}) {
       replyCount++;
       return makeMockMessage({ content: typeof content === 'string' ? content : JSON.stringify(content) });
     },
+    edit: async (content) => makeMockMessage({ content: typeof content === 'string' ? content : JSON.stringify(content) }),
     delete: async (opts) => true,
     ...overrides
   };
@@ -126,6 +127,11 @@ function makeMockGuild(overrides = {}) {
   return {
     id: guildId,
     name: overrides.name || 'Test Guild',
+    iconURL: (opts) => 'https://cdn.discordapp.com/icons/0000/0000.png',
+    ownerId: SAMPLE_USER_ID,
+    memberCount: 42,
+    createdTimestamp: Date.now() - 86400000 * 365,
+    premiumTier: 1,
     channels: { cache: mockChannels },
     roles: { cache: mockRoles },
     members: {
