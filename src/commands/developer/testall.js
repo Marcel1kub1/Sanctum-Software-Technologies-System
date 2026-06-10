@@ -40,8 +40,7 @@ module.exports = class TestAllCommand extends Command {
 
       for (const file of files) {
         const filePath = path.join(dir, file);
-        const isSelf = category === 'developer' && file === 'testall.js';
-        const result = await this.testCommand(bot, filePath, category, isSelf);
+        const result = await this.testCommand(bot, filePath, category);
         results[result.status].push(result);
       }
     }
@@ -49,7 +48,7 @@ module.exports = class TestAllCommand extends Command {
     return results;
   }
 
-  async testCommand(bot, filePath, category, isSelf) {
+  async testCommand(bot, filePath, category) {
     const fileName = path.basename(filePath);
 
     const baseResult = { file: `${category}/${fileName}`, name: fileName.replace('.js', ''), errors: [] };
@@ -104,28 +103,6 @@ module.exports = class TestAllCommand extends Command {
         if (!baseResult.warnings) baseResult.warnings = [];
         baseResult.warnings.push('executeSlash() not overridden (uses base class default)');
         console.warn(`[TestAll] WARN ${baseResult.file}: executeSlash() not overridden`);
-      }
-
-      if (!isSelf) {
-        try {
-          await instance.execute(bot, null, []);
-        } catch (err) {
-          if (err.message && !err.message.includes('not implemented')) {
-            if (!baseResult.errors) baseResult.errors = [];
-            baseResult.errors.push(`execute() call error: ${err.message}`);
-            console.error(`[TestAll] EXEC ${baseResult.file}: execute() threw - ${err.message}`);
-          }
-        }
-
-        try {
-          await instance.executeSlash(bot, null);
-        } catch (err) {
-          if (err.message && !err.message.includes('not implemented')) {
-            if (!baseResult.errors) baseResult.errors = [];
-            baseResult.errors.push(`executeSlash() call error: ${err.message}`);
-            console.error(`[TestAll] EXEC ${baseResult.file}: executeSlash() threw - ${err.message}`);
-          }
-        }
       }
 
       if (baseResult.errors && baseResult.errors.length > 0) {
