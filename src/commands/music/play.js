@@ -1,6 +1,11 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const Command = require('../../structures/Command');
 
+function resolveQuery(query) {
+  if (/^https?:\/\//.test(query)) return query;
+  return `ytsearch:${query}`;
+}
+
 module.exports = class PlayCommand extends Command {
   constructor(bot) {
     super(bot);
@@ -34,7 +39,7 @@ module.exports = class PlayCommand extends Command {
         return;
       }
 
-      const result = await bot.lavalink.play(message.guild.id, query, message.author.id);
+      const result = await bot.lavalink.play(message.guild.id, resolveQuery(query), message.author.id);
       if (result.queued) {
         await message.reply(`Added to queue: **${result.track.info.title}** (position #${result.position})`);
       } else {
@@ -63,7 +68,7 @@ module.exports = class PlayCommand extends Command {
         return;
       }
 
-      const result = await bot.lavalink.play(interaction.guild.id, query, interaction.user.id);
+      const result = await bot.lavalink.play(interaction.guild.id, resolveQuery(query), interaction.user.id);
       if (result.queued) {
         await interaction.editReply(`Added to queue: **${result.track.info.title}** (position #${result.position})`);
       } else {
