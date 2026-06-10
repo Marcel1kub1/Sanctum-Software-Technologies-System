@@ -33,7 +33,7 @@ module.exports = class PlayCommand extends Command {
     try {
       const channelId = message.member.voice.channel.id;
       let player = await bot.lavalink.getPlayer(message.guild.id);
-      if (!player) {
+      if (!player || !player.voiceChannelId) {
         await bot.lavalink.joinVoiceChannel(message.guild.id, channelId);
       } else if (channelId !== player.voiceChannelId) {
         await message.reply('You need to be in my voice channel.');
@@ -63,7 +63,7 @@ module.exports = class PlayCommand extends Command {
     try {
       const channelId = interaction.member.voice.channel.id;
       let player = await bot.lavalink.getPlayer(interaction.guild.id);
-      if (!player) {
+      if (!player || !player.voiceChannelId) {
         await bot.lavalink.joinVoiceChannel(interaction.guild.id, channelId);
       } else if (channelId !== player.voiceChannelId) {
         await interaction.editReply('You need to be in my voice channel.');
