@@ -154,22 +154,23 @@ class LavalinkManager {
     if (!player) throw new Error('No active player');
     const queue = this.getQueue(guildId);
 
+    if (queue.tracks.length === 0) {
+      if (queue.history.length >= 50) queue.history.shift();
+      if (queue.current) queue.history.push(queue.current);
+      queue.current = null;
+      await player.stopTrack();
+      return null;
+    }
+
+    const next = queue.tracks.shift();
+
+    await player.playTrack({ track: { encoded: next.encoded } });
+
     if (queue.history.length >= 50) queue.history.shift();
     if (queue.current) queue.history.push(queue.current);
+    queue.current = next;
 
-    if (queue.tracks.length > 0) {
-      queue.current = queue.tracks.shift();
-      await player.playTrack({ track: { encoded: queue.current.encoded } });
-      return queue.current;
-    }
-
-    if (queue.autoplay) {
-
-    }
-
-    queue.current = null;
-    await player.stopTrack();
-    return null;
+    return queue.current;
   }
 
   async stop(guildId) {
