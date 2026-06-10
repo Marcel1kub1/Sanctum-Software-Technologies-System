@@ -83,7 +83,7 @@ class LavalinkManager {
 
   getQueue(guildId) {
     if (!this.queues.has(guildId)) {
-      this.queues.set(guildId, { tracks: [], history: [], current: null, loop: 'off', shuffled: false, autoplay: false, volume: 50 });
+      this.queues.set(guildId, { tracks: [], history: [], current: null, loop: 'off', shuffled: false, autoplay: false, volume: 50, panelMessageId: null, panelChannelId: null, _liveInterval: null });
     }
     return this.queues.get(guildId);
   }

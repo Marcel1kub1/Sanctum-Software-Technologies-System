@@ -17,7 +17,7 @@ function buildProgressBar(current, total, length = 16) {
   return '█'.repeat(filled) + '░'.repeat(length - filled);
 }
 
-function buildNowPlayingEmbed(bot, guildId) {
+function buildPanelEmbed(bot, guildId) {
   const queue = bot.lavalink.getQueue(guildId);
   const status = bot.lavalink.getStatus(guildId);
   const player = bot.lavalink.shoukaku?.players?.get(guildId);
@@ -26,8 +26,8 @@ function buildNowPlayingEmbed(bot, guildId) {
   const paused = player?.paused || false;
 
   const embed = new EmbedBuilder()
-    .setColor(0x5865F2)
-    .setTitle(track ? 'Now Playing' : 'No Track Playing')
+    .setColor(0x00E5FF)
+    .setTitle('🎵 Music Player')
     .setTimestamp();
 
   if (track) {
@@ -38,50 +38,38 @@ function buildNowPlayingEmbed(bot, guildId) {
 
     const requester = track.requester ? `<@${track.requester}>` : 'Unknown';
     const loopIcon = status.loop === 'track' ? '🔂' : status.loop === 'queue' ? '🔁' : status.autoplay ? '♾️' : '➡️';
+    const loopLabel = status.loop === 'autoplay' ? 'Autoplay' : status.loop === 'track' ? 'Track' : status.loop === 'queue' ? 'Queue' : 'Off';
 
-    embed.setDescription(`**${track.info.title}**\n${track.info.author || ''}`)
-      .addFields(
-        { name: 'Duration', value: duration, inline: false },
-        { name: 'Requester', value: requester, inline: true },
-        { name: 'Volume', value: `${status.volume}%`, inline: true },
-        { name: 'Status', value: paused ? '⏸ Paused' : `${loopIcon} ${status.loop === 'autoplay' ? 'Autoplay' : status.loop === 'track' ? 'Track' : status.loop === 'queue' ? 'Queue' : 'Playing'}`, inline: true },
-        { name: 'Shuffle', value: status.shuffled ? '🔀 On' : '❌ Off', inline: true }
-      );
+    embed.setDescription(
+      `**${track.info.title}**\n${track.info.author || ''}\n\n` +
+      `${paused ? '⏸' : '▶️'} ${duration}`
+    );
 
     if (track.info.uri) embed.setURL(track.info.uri);
     if (track.info.artworkUrl) embed.setThumbnail(track.info.artworkUrl);
+
+    embed.addFields(
+      { name: 'Requester', value: requester, inline: true },
+      { name: 'Volume', value: `${status.volume}%`, inline: true },
+      { name: 'Shuffle', value: status.shuffled ? '🔀 On' : '❌ Off', inline: true },
+      { name: 'Loop', value: `${loopIcon} ${loopLabel}`, inline: true },
+      { name: 'Status', value: paused ? '⏸ Paused' : '▶️ Playing', inline: true }
+    );
+
+    const tracks = queue.tracks;
+    if (tracks.length > 0) {
+      const list = tracks.slice(0, 10).map((t, i) =>
+        `\`${i + 1}.\` **${t.info.title}** — ${t.info.author} \`[${formatTime(t.info.length)}]\``
+      ).join('\n');
+      const value = tracks.length > 10
+        ? `${list}\n\n*… and ${tracks.length - 10} more tracks*`
+        : list;
+      embed.addFields({ name: `Up Next (${tracks.length} tracks)`, value });
+    } else {
+      embed.addFields({ name: 'Up Next', value: 'No more tracks in queue.' });
+    }
   } else {
     embed.setDescription('Add a song to start listening!');
-  }
-
-  return embed;
-}
-
-function buildQueueEmbed(bot, guildId) {
-  const status = bot.lavalink.getStatus(guildId);
-  const tracks = bot.lavalink.getQueue(guildId).tracks;
-
-  const embed = new EmbedBuilder()
-    .setColor(0x9B59B6)
-    .setTitle('Up Next')
-    .setTimestamp();
-
-  if (status.current) {
-    embed.setDescription(`**Now Playing:** ${status.current.info.title} — ${status.current.info.author}`);
-  }
-
-  if (tracks.length > 0) {
-    const list = tracks.slice(0, 10).map((t, i) =>
-      `\`${i + 1}.\` **${t.info.title}** — ${t.info.author} \`[${formatTime(t.info.length)}]\``
-    ).join('\n');
-    const value = tracks.length > 10
-      ? `${list}\n\n*… and ${tracks.length - 10} more tracks*`
-      : list;
-    embed.addFields({ name: `Queue (${tracks.length} tracks)`, value });
-  } else if (!status.current) {
-    embed.setDescription('Queue is empty.');
-  } else {
-    embed.setDescription('No more tracks in queue.');
   }
 
   return embed;
@@ -118,8 +106,7 @@ async function sendOrUpdatePanel(bot, guildId, textChannel) {
   const player = bot.lavalink.shoukaku?.players?.get(guildId);
   const paused = player?.paused || false;
 
-  const embed1 = buildNowPlayingEmbed(bot, guildId);
-  const embed2 = buildQueueEmbed(bot, guildId);
+  const embed = buildPanelEmbed(bot, guildId);
   const rows = buildControlRows(guildId, paused);
 
   if (queue.panelMessageId && queue.panelChannelId) {
@@ -128,7 +115,8 @@ async function sendOrUpdatePanel(bot, guildId, textChannel) {
       if (channel) {
         const msg = await channel.messages.fetch(queue.panelMessageId).catch(() => null);
         if (msg) {
-          await msg.edit({ embeds: [embed1, embed2], components: rows });
+          await msg.edit({ embeds: [embed], components: rows });
+          startLiveUpdater(bot, guildId);
           return;
         }
       }
@@ -139,10 +127,36 @@ async function sendOrUpdatePanel(bot, guildId, textChannel) {
 
   if (textChannel) {
     try {
-      const msg = await textChannel.send({ embeds: [embed1, embed2], components: rows });
+      const msg = await textChannel.send({ embeds: [embed], components: rows });
       queue.panelMessageId = msg.id;
       queue.panelChannelId = msg.channel.id;
+      startLiveUpdater(bot, guildId);
     } catch {}
+  }
+
+  if (!queue.current) stopLiveUpdater(bot, guildId);
+}
+
+function startLiveUpdater(bot, guildId) {
+  const queue = bot.lavalink.getQueue(guildId);
+  if (queue._liveInterval) return;
+
+  queue._liveInterval = setInterval(() => {
+    const q = bot.lavalink.getQueue(guildId);
+    const player = bot.lavalink.shoukaku?.players?.get(guildId);
+    if (!q.current || !player) {
+      stopLiveUpdater(bot, guildId);
+      return;
+    }
+    sendOrUpdatePanel(bot, guildId);
+  }, 5000);
+}
+
+function stopLiveUpdater(bot, guildId) {
+  const queue = bot.lavalink.getQueue(guildId);
+  if (queue._liveInterval) {
+    clearInterval(queue._liveInterval);
+    queue._liveInterval = null;
   }
 }
 
@@ -265,6 +279,6 @@ async function handleMusicPanelButton(bot, interaction) {
 module.exports = {
   sendOrUpdatePanel,
   handleMusicPanelButton,
-  buildNowPlayingEmbed,
-  buildQueueEmbed
+  buildPanelEmbed,
+  stopLiveUpdater
 };

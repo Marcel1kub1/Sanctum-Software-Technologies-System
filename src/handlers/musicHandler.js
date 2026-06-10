@@ -1,7 +1,7 @@
 module.exports = function setupMusicHandler(bot) {
   if (!bot.lavalink || !bot.lavalink.shoukaku) return;
 
-  const { sendOrUpdatePanel } = require('./musicPanelHandler');
+  const { sendOrUpdatePanel, stopLiveUpdater } = require('./musicPanelHandler');
 
   function normalizeLavalinkResult(result) {
     if (!result) return null;
@@ -22,6 +22,7 @@ module.exports = function setupMusicHandler(bot) {
 
       if (event.reason === 'STOPPED') {
         queue.current = null;
+        stopLiveUpdater(bot, player.guildId);
         await sendOrUpdatePanel(bot, player.guildId);
         return;
       }
@@ -62,6 +63,7 @@ module.exports = function setupMusicHandler(bot) {
         }
       } else {
         queue.current = null;
+        stopLiveUpdater(bot, player.guildId);
         await sendOrUpdatePanel(bot, player.guildId);
       }
     }
@@ -88,6 +90,7 @@ module.exports = function setupMusicHandler(bot) {
 
     if (event.type === 'WebSocketClosedEvent') {
       if (event.code === 4014) {
+        stopLiveUpdater(bot, player.guildId);
         bot.lavalink.queues.delete(player.guildId);
       }
     }
