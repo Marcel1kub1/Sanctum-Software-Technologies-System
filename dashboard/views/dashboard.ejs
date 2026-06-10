@@ -416,6 +416,8 @@
         <%- include('modules/games', { config, selectedGuild, guildConfig, gc }) %>
       <% } else if (tab === 'music') { %>
         <%- include('modules/music', { config, selectedGuild, guildConfig, gc }) %>
+      <% } else if (tab === 'prohibited') { %>
+        <%- include('modules/prohibited', { config, selectedGuild, guildConfig, gc }) %>
       <% } else if (tab === 'custom-commands') { %>
         <%- include('modules/custom-commands', { config, selectedGuild, guildConfig, gc }) %>
       <% } else if (tab === 'tickets') { %>

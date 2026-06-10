@@ -319,6 +319,18 @@
     </div>
     <div class="module-card">
       <div class="module-card-top">
+        <div class="module-card-icon">🚫</div>
+        <label class="toggle"><input type="checkbox" <%= gc('overview_module_prohibited', false) ? 'checked' : '' %> name="overview_module_prohibited"><span class="toggle-slider"></span></label>
+      </div>
+      <div class="module-card-title">Prohibited Songs</div>
+      <div class="module-card-desc">Block songs matching prohibited patterns in titles and artist names.</div>
+      <div class="module-card-actions">
+        <span class="module-card-status <%= gc('overview_module_prohibited', false) ? 'on' : 'off' %>"><%= gc('overview_module_prohibited', false) ? '● Enabled' : '● Disabled' %></span>
+        <a href="/dashboard?tab=prohibited" class="btn-configure">Configure</a>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-card-top">
         <div class="module-card-icon">📋</div>
         <label class="toggle"><input type="checkbox" <%= gc('overview_module_logging', true) ? 'checked' : '' %> name="overview_module_logging"><span class="toggle-slider"></span></label>
       </div>

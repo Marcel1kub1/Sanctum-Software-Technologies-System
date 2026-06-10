@@ -44,10 +44,11 @@ module.exports = class PlayCommand extends Command {
       const result = await bot.lavalink.play(message.guild.id, resolveQuery(query), message.author.id);
       await sendOrUpdatePanel(bot, message.guild.id, message.channel);
       if (result.playlist) {
+        const blockedMsg = result.blocked ? ` (${result.blocked} blocked by filter)` : '';
         if (result.queued) {
-          await message.reply(`Added playlist **${result.playlistName}** (${result.count} tracks) to queue (position #${result.position})`);
+          await message.reply(`Added playlist **${result.playlistName}** (${result.count} tracks) to queue (position #${result.position})${blockedMsg}`);
         } else {
-          await message.reply(`Now playing playlist **${result.playlistName}** (${result.count} tracks)`);
+          await message.reply(`Now playing playlist **${result.playlistName}** (${result.count} tracks)${blockedMsg}`);
         }
       } else if (result.queued) {
         await message.reply(`Added to queue: **${result.track.info.title}** (position #${result.position})`);
@@ -81,10 +82,11 @@ module.exports = class PlayCommand extends Command {
       const result = await bot.lavalink.play(interaction.guild.id, resolveQuery(query), interaction.user.id);
       await sendOrUpdatePanel(bot, interaction.guild.id, interaction.channel);
       if (result.playlist) {
+        const blockedMsg = result.blocked ? ` (${result.blocked} blocked by filter)` : '';
         if (result.queued) {
-          await interaction.editReply(`Added playlist **${result.playlistName}** (${result.count} tracks) to queue (position #${result.position})`);
+          await interaction.editReply(`Added playlist **${result.playlistName}** (${result.count} tracks) to queue (position #${result.position})${blockedMsg}`);
         } else {
-          await interaction.editReply(`Now playing playlist **${result.playlistName}** (${result.count} tracks)`);
+          await interaction.editReply(`Now playing playlist **${result.playlistName}** (${result.count} tracks)${blockedMsg}`);
         }
       } else if (result.queued) {
         await interaction.editReply(`Added to queue: **${result.track.info.title}** (position #${result.position})`);

@@ -208,7 +208,11 @@ async function handleMusicPanelButton(bot, interaction) {
     return;
   }
 
-  await interaction.deferUpdate();
+  try {
+    await interaction.deferUpdate();
+  } catch {
+    return;
+  }
 
   try {
     const player = bot.lavalink.shoukaku?.players?.get(guildId);

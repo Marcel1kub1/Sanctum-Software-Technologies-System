@@ -66,9 +66,9 @@ async function executeCommand(bot, command, type, context) {
     } else {
       const { interaction } = context;
       if (interaction.replied || interaction.deferred) {
-        await interaction.followUp({ content: 'An error occurred while executing that command.', ephemeral: true });
+        await interaction.followUp({ content: 'An error occurred while executing that command.', ephemeral: true }).catch(() => {});
       } else {
-        await interaction.reply({ content: 'An error occurred while executing that command.', ephemeral: true });
+        await interaction.reply({ content: 'An error occurred while executing that command.', ephemeral: true }).catch(() => {});
       }
     }
   }

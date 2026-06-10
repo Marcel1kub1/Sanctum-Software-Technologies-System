@@ -1,4 +1,6 @@
 const { Connectors } = require('shoukaku');
+const { isProhibited } = require('../utils/prohibitedSongs');
+const { getConfig } = require('../database/guildConfig');
 
 function normalizeLavalinkResult(result) {
   if (!result) return null;
@@ -103,20 +105,40 @@ class LavalinkManager {
     const queue = this.getQueue(guildId);
     const tracks = result.tracks.map(t => { t.requester = requester; return t; });
 
+    const guildConfig = await getConfig(guildId);
+    const filterEnabled = guildConfig.prohibited_enabled === true;
+    let blocked = 0;
+    let allowed;
+    if (filterEnabled) {
+      allowed = [];
+      for (const track of tracks) {
+        if (!(await isProhibited(guildId, track))) {
+          allowed.push(track);
+        }
+      }
+      blocked = tracks.length - allowed.length;
+    } else {
+      allowed = tracks;
+    }
+
+    if (allowed.length === 0) throw new Error(
+      blocked === 1 ? 'That song is prohibited and cannot be played.' : 'All songs in that request are prohibited.'
+    );
+
     if (result.playlistInfo) {
       const total = tracks.length;
       if (queue.current) {
-        queue.tracks.push(...tracks);
-        return { playlist: true, playlistName: result.playlistInfo.name, count: total, queued: true, position: queue.tracks.length - total + 1 };
+        queue.tracks.push(...allowed);
+        return { playlist: true, playlistName: result.playlistInfo.name, count: total, queued: true, position: queue.tracks.length - allowed.length + 1, blocked };
       }
-      const first = tracks.shift();
+      const first = allowed.shift();
       queue.current = first;
-      queue.tracks.push(...tracks);
+      queue.tracks.push(...allowed);
       await player.playTrack({ track: { encoded: first.encoded } });
-      return { playlist: true, playlistName: result.playlistInfo.name, count: total, queued: false };
+      return { playlist: true, playlistName: result.playlistInfo.name, count: total, queued: false, blocked };
     }
 
-    const track = tracks[0];
+    const track = allowed[0];
     if (queue.current) {
       queue.tracks.push(track);
       return { track, queued: true, position: queue.tracks.length };

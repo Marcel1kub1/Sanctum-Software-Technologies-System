@@ -1,0 +1,36 @@
+<div class="page-header">
+  <h1 class="page-title">Prohibited Songs</h1>
+  <p class="page-desc">Block songs by matching patterns in song titles and artist names. When a pattern matches, the track is silently skipped.</p>
+</div>
+
+<form method="POST" action="/dashboard/config?guild=<%= selectedGuild ? selectedGuild.id : '' %>">
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <div class="card-title">Prohibited Songs Filter</div>
+      <div class="card-desc">Enable the prohibited songs filter</div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox" name="prohibited_enabled" <%= gc('prohibited_enabled', false) ? 'checked' : '' %>>
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <span class="card-title">Pattern List</span>
+  </div>
+  <div class="form-group">
+    <label class="form-label">Prohibited Patterns</label>
+    <textarea class="form-input" name="prohibited_patterns" rows="10" placeholder="hitler&#10;nazi&#10;ss"><%= (() => { var p = gc('prohibited_patterns', []); return Array.isArray(p) ? p.join('\n') : (typeof p === 'string' ? p : ''); })() %></textarea>
+    <div class="form-hint">One pattern per line. Patterns are case-insensitive and match against both song title and artist name. Any track containing a matching pattern will be blocked.</div>
+  </div>
+</div>
+
+<div class="flex gap-2">
+  <button class="btn btn-primary">Save Changes</button>
+</div>
+
+</form>
