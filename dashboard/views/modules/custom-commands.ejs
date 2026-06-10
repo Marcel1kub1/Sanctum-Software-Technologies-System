@@ -24,49 +24,56 @@
       <span class="card-title">All Custom Commands</span>
       <div class="card-desc">Manage your server's custom commands</div>
     </div>
-    <button class="btn btn-primary btn-sm">+ New Command</button>
+    <button type="button" class="btn btn-primary btn-sm" onclick="addCommand()">+ New Command</button>
   </div>
-  <div class="empty-state" style="padding:20px;">
-    <div class="empty-state-icon">⌨</div>
-    <div class="empty-state-text">No custom commands yet</div>
-    <p style="font-size:12px;color:var(--text-muted);margin-top:4px;">Create custom text or embed responses triggered by commands.</p>
-  </div>
-  <div style="margin-top:16px;">
+  <div id="commandList"></div>
+</div>
+
+<script>
+  let cmdIndex = 0;
+
+  function addCommand(name, response, type, aliases, enabled) {
+    const i = cmdIndex++;
+    const div = document.createElement('div');
+    div.style.cssText = 'margin-top:16px;';
+    div.innerHTML = `
     <div class="card" style="padding:16px;">
       <div class="card-header" style="margin-bottom:8px;">
         <div class="flex items-center gap-2">
           <span class="badge badge-blue">/</span>
-          <span class="card-title">example</span>
+          <span class="card-title">${name || 'new-command'}</span>
         </div>
         <div class="flex items-center gap-2">
-          <label class="toggle"><input type="checkbox" <%= gc('customcommands_example_enabled', true) ? 'checked' : '' %> name="customcommands_example_enabled"><span class="toggle-slider"></span></label>
-          <button class="btn btn-outline btn-sm">✕</button>
+          <label class="toggle"><input type="checkbox" ${enabled !== false ? 'checked' : ''} name="customcommands_${i}_enabled"><span class="toggle-slider"></span></label>
+          <button type="button" class="btn btn-outline btn-sm" onclick="this.closest('.card').parentElement.remove()">✕</button>
         </div>
       </div>
       <div class="grid-2">
         <div class="form-group">
           <label class="form-label">Command Name</label>
-          <input class="form-input" value="<%= gc('customcommands_example_name', 'example') %>" name="customcommands_example_name">
+          <input class="form-input" value="${name || ''}" name="customcommands_${i}_name" oninput="this.closest('.card').querySelector('.card-title').textContent = this.value || 'new-command'">
         </div>
         <div class="form-group">
           <label class="form-label">Response Type</label>
-          <select class="form-select" name="customcommands_example_type">
-            <option value="text" <%= gc('customcommands_example_type', 'text') === 'text' ? 'selected' : '' %>>Text</option>
-            <option value="embed" <%= gc('customcommands_example_type', 'text') === 'embed' ? 'selected' : '' %>>Embed</option>
+          <select class="form-select" name="customcommands_${i}_type">
+            <option value="text" ${type !== 'embed' ? 'selected' : ''}>Text</option>
+            <option value="embed" ${type === 'embed' ? 'selected' : ''}>Embed</option>
           </select>
         </div>
       </div>
       <div class="form-group">
         <label class="form-label">Response</label>
-        <textarea class="form-textarea" rows="2" name="customcommands_example_response"><%= gc('customcommands_example_response', 'This is an example custom command response!') %></textarea>
+        <textarea class="form-textarea" rows="2" name="customcommands_${i}_response">${response || ''}</textarea>
       </div>
       <div class="form-group">
         <label class="form-label">Aliases</label>
-        <input class="form-input" value="<%= gc('customcommands_example_aliases', 'eg, ex') %>" name="customcommands_example_aliases">
+        <input class="form-input" value="${aliases || ''}" name="customcommands_${i}_aliases">
         <div class="form-hint">Comma-separated alternative trigger names</div>
       </div>
-    </div>
-  </div>
+    </div>`;
+    document.getElementById('commandList').appendChild(div);
+  }
+</script>
 </div>
 
 <div class="card">

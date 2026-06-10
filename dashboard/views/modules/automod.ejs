@@ -90,12 +90,12 @@
       <span class="card-title">Word Blacklist</span>
       <div class="card-desc">Automatically remove messages containing blacklisted words</div>
     </div>
-    <button class="btn btn-primary btn-sm">+ Add Word</button>
+    <button type="button" class="btn btn-primary btn-sm" onclick="addBlacklistWord()">+ Add Word</button>
   </div>
-  <div class="flex flex-wrap gap-2" style="margin-top:8px;">
-    <span class="badge badge-red" style="padding:6px 12px;font-size:12px;cursor:pointer;">word1 ✕</span>
-    <span class="badge badge-red" style="padding:6px 12px;font-size:12px;cursor:pointer;">badword ✕</span>
-    <span class="badge badge-red" style="padding:6px 12px;font-size:12px;cursor:pointer;">spamterm ✕</span>
+  <div class="flex flex-wrap gap-2" style="margin-top:8px;" id="blacklistWords">
+    <span class="badge badge-red" style="padding:6px 12px;font-size:12px;">word1 <span style="cursor:pointer;margin-left:4px;" onclick="this.parentElement.remove()">✕</span></span>
+    <span class="badge badge-red" style="padding:6px 12px;font-size:12px;">badword <span style="cursor:pointer;margin-left:4px;" onclick="this.parentElement.remove()">✕</span></span>
+    <span class="badge badge-red" style="padding:6px 12px;font-size:12px;">spamterm <span style="cursor:pointer;margin-left:4px;" onclick="this.parentElement.remove()">✕</span></span>
   </div>
   <div class="form-group" style="margin-top:12px;">
     <label class="form-label">Action on Blacklist Match</label>
@@ -112,10 +112,24 @@
     <span class="card-title">Whitelisted Channels</span>
   </div>
   <div class="form-hint" style="margin-bottom:12px;">Auto mod will not act in these channels</div>
-  <div class="flex flex-wrap gap-2">
-    <span class="badge badge-green" style="padding:6px 12px;font-size:12px;cursor:pointer;">#admin ✕</span>
-    <span class="badge badge-green" style="padding:6px 12px;font-size:12px;cursor:pointer;">#mod-only ✕</span>
+  <div class="flex flex-wrap gap-2" id="whitelistChannels">
+    <span class="badge badge-green" style="padding:6px 12px;font-size:12px;">#admin <span style="cursor:pointer;margin-left:4px;" onclick="this.parentElement.remove()">✕</span></span>
+    <span class="badge badge-green" style="padding:6px 12px;font-size:12px;">#mod-only <span style="cursor:pointer;margin-left:4px;" onclick="this.parentElement.remove()">✕</span></span>
   </div>
+</div>
+
+<script>
+  function addBlacklistWord() {
+    const word = prompt('Enter word to blacklist:');
+    if (word && word.trim()) {
+      const el = document.createElement('span');
+      el.className = 'badge badge-red';
+      el.style.cssText = 'padding:6px 12px;font-size:12px;';
+      el.innerHTML = word.trim() + ' <span style="cursor:pointer;margin-left:4px;" onclick="this.parentElement.remove()">✕</span>';
+      document.getElementById('blacklistWords').appendChild(el);
+    }
+  }
+</script>
 </div>
 
 <div class="flex gap-2">

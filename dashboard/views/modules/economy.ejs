@@ -79,7 +79,7 @@
       <span class="card-title">Shop Items</span>
       <div class="card-desc">Items members can purchase from the shop</div>
     </div>
-    <button class="btn btn-primary btn-sm">+ Add Item</button>
+    <button type="button" class="btn btn-primary btn-sm" onclick="addShopItem()">+ Add Item</button>
   </div>
   <div class="empty-state" style="padding:16px;">
     <div class="empty-state-text" style="font-size:13px;">No shop items configured</div>
@@ -142,5 +142,24 @@
   <button class="btn btn-primary">Save Changes</button>
   <button class="btn btn-outline">Reset to Default</button>
 </div>
-
 </form>
+
+<script>
+function addShopItem() {
+  const name = prompt('Enter item name:');
+  if (!name) return;
+  const price = prompt('Enter item price:');
+  if (!price) return;
+  const desc = prompt('Enter item description (optional):');
+  const container = document.querySelector('.empty-state')?.parentElement;
+  if (container) {
+    const empty = container.querySelector('.empty-state');
+    if (empty) empty.remove();
+    const row = document.createElement('div');
+    row.className = 'level-row';
+    row.style.cssText = 'display:flex;align-items:center;gap:12px;padding:8px 0;';
+    row.innerHTML = '<div class="level-badge" style="background:var(--bg-hover);">🛒</div><div class="level-info"><div class="level-name">' + name + '</div><div class="level-role">' + price + ' coins' + (desc ? ' \u00B7 ' + desc : '') + '</div></div><span style="color:var(--red);cursor:pointer;font-size:14px;" onclick="this.closest(\'.level-row\').remove()">✕</span>';
+    container.appendChild(row);
+  }
+}
+</script>

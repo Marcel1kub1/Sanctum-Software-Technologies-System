@@ -94,7 +94,7 @@
       <span class="card-title">Report Reasons</span>
       <div class="card-desc">Predefined report reasons members can select from</div>
     </div>
-    <button class="btn btn-primary btn-sm">+ Add Reason</button>
+    <button type="button" class="btn btn-primary btn-sm" onclick="addReportReason()">+ Add Reason</button>
   </div>
   <div class="flex flex-wrap gap-2" style="margin-top:8px;">
     <span class="badge badge-blue" style="padding:6px 12px;font-size:12px;">Spam ✕</span>
@@ -132,7 +132,7 @@
       <input class="form-input" name="reports_blockedusers" value="<%= gc('reports_blockedusers', '') %>" placeholder="@User1 @User2">
       <div class="form-hint">Mention or enter user IDs separated by spaces</div>
     </div>
-    <button class="btn btn-outline btn-sm">+ Add Blocked User</button>
+    <button type="button" class="btn btn-outline btn-sm" onclick="addBlockedUser()">+ Add Blocked User</button>
     <div class="empty-state" style="padding:12px;margin-top:8px;">
       <div class="empty-state-text" style="font-size:12px;">No blocked users</div>
     </div>
@@ -144,3 +144,26 @@
   <button class="btn btn-outline">Reset to Default</button>
 </div>
 </form>
+
+<script>
+function addReportReason() {
+  const reason = prompt('Enter a report reason:');
+  if (!reason) return;
+  const container = document.querySelector('.card .flex.flex-wrap.gap-2');
+  if (!container) return;
+  const span = document.createElement('span');
+  span.className = 'badge badge-blue';
+  span.style.cssText = 'padding:6px 12px;font-size:12px;cursor:pointer;';
+  span.innerHTML = reason + ' <span style="color:var(--red);" onclick="this.parentElement.remove()">✕</span>';
+  container.appendChild(span);
+}
+function addBlockedUser() {
+  const user = prompt('Enter user ID or mention to block:');
+  if (!user) return;
+  const input = document.querySelector('input[name="reports_blockedusers"]');
+  if (input) {
+    const existing = input.value.trim();
+    input.value = existing ? existing + ' ' + user : user;
+  }
+}
+</script>

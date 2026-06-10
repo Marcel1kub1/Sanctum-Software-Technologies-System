@@ -151,14 +151,26 @@
       <span class="card-title">Infraction Reasons</span>
       <div class="card-desc">Predefined reasons for common infractions</div>
     </div>
-    <button class="btn btn-primary btn-sm">+ Add Reason</button>
+    <button type="button" class="btn btn-primary btn-sm" onclick="addReason()">+ Add Reason</button>
   </div>
-  <div class="flex flex-wrap gap-2" style="margin-top:8px;">
-    <span class="badge badge-blue" style="padding:6px 12px;font-size:12px;">Spam ✕</span>
-    <span class="badge badge-blue" style="padding:6px 12px;font-size:12px;">Harassment ✕</span>
-    <span class="badge badge-blue" style="padding:6px 12px;font-size:12px;">NSFW Content ✕</span>
-    <span class="badge badge-blue" style="padding:6px 12px;font-size:12px;">Advertising ✕</span>
+  <div class="flex flex-wrap gap-2" style="margin-top:8px;" id="reasonList">
+    <span class="badge badge-blue" style="padding:6px 12px;font-size:12px;">Spam <span style="cursor:pointer;margin-left:4px;" onclick="this.parentElement.remove()">✕</span></span>
+    <span class="badge badge-blue" style="padding:6px 12px;font-size:12px;">Harassment <span style="cursor:pointer;margin-left:4px;" onclick="this.parentElement.remove()">✕</span></span>
+    <span class="badge badge-blue" style="padding:6px 12px;font-size:12px;">NSFW Content <span style="cursor:pointer;margin-left:4px;" onclick="this.parentElement.remove()">✕</span></span>
+    <span class="badge badge-blue" style="padding:6px 12px;font-size:12px;">Advertising <span style="cursor:pointer;margin-left:4px;" onclick="this.parentElement.remove()">✕</span></span>
   </div>
+  <script>
+    function addReason() {
+      const reason = prompt('Enter infraction reason:');
+      if (reason && reason.trim()) {
+        const el = document.createElement('span');
+        el.className = 'badge badge-blue';
+        el.style.cssText = 'padding:6px 12px;font-size:12px;';
+        el.innerHTML = reason.trim() + ' <span style="cursor:pointer;margin-left:4px;" onclick="this.parentElement.remove()">✕</span>';
+        document.getElementById('reasonList').appendChild(el);
+      }
+    }
+  </script>
 </div>
 
 <div class="flex gap-2">

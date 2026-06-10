@@ -83,7 +83,7 @@
       <span class="card-title">Permission Override Bypass</span>
       <div class="card-desc">Roles that can bypass role/channel/voice restrictions</div>
     </div>
-    <button class="btn btn-primary btn-sm">+ Add Role</button>
+    <button type="button" class="btn btn-primary btn-sm" onclick="addBypassRole()">+ Add Role</button>
   </div>
   <div class="empty-state" style="padding:16px;">
     <div class="empty-state-text" style="font-size:13px;">No bypass roles configured</div>
@@ -95,3 +95,18 @@
   <button class="btn btn-outline">Reset to Default</button>
 </div>
 </form>
+
+<script>
+function addBypassRole() {
+  const role = prompt('Enter role name or ID to add as bypass:');
+  if (!role) return;
+  const container = document.querySelector('.card .empty-state')?.parentElement;
+  if (!container) return;
+  const empty = container.querySelector('.empty-state');
+  if (empty) empty.remove();
+  const div = document.createElement('div');
+  div.style.cssText = 'display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:8px;margin-top:8px;font-size:13px;';
+  div.innerHTML = '<span style="font-weight:600;">' + role + '</span><span style="margin-left:auto;color:var(--red);cursor:pointer;" onclick="this.parentElement.remove()">✕</span>';
+  container.appendChild(div);
+}
+</script>

@@ -78,7 +78,7 @@
       <span class="card-title">Whitelisted Users/Roles</span>
       <div class="card-desc">Users and roles exempt from raid detection</div>
     </div>
-    <button class="btn btn-primary btn-sm">+ Add</button>
+    <button type="button" class="btn btn-primary btn-sm" onclick="addWhitelistEntry()">+ Add</button>
   </div>
   <div class="empty-state" style="padding:16px;">
     <div class="empty-state-text" style="font-size:13px;">No whitelisted entries</div>
@@ -90,3 +90,18 @@
   <button class="btn btn-outline">Reset to Default</button>
 </div>
 </form>
+
+<script>
+function addWhitelistEntry() {
+  const val = prompt('Enter user ID or role ID to whitelist:');
+  if (!val) return;
+  const container = document.querySelector('.card .empty-state + .empty-state')?.parentElement || document.querySelector('.card .empty-state')?.parentElement;
+  const empty = container?.querySelector('.empty-state');
+  if (empty) empty.remove();
+  const div = document.createElement('div');
+  div.style.cssText = 'display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:8px;margin-top:8px;font-size:13px;';
+  div.innerHTML = '<span>' + val + '</span><span style="margin-left:auto;color:var(--red);cursor:pointer;" onclick="this.parentElement.remove()">✕</span>';
+  const target = container?.querySelector('.empty-state')?.nextElementSibling || container;
+  if (container) container.appendChild(div);
+}
+</script>

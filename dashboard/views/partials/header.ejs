@@ -7,20 +7,33 @@
       <span class="brand-badge">DASHBOARD</span>
     </div>
   </div>
+  <div class="header-stats">
+    <div class="header-stat">
+      <span class="stat-icon">🖥</span>
+      <span class="stat-value"><%= stats.guilds || 0 %></span>
+      <span>servers</span>
+    </div>
+    <div class="header-stat">
+      <span class="stat-icon">👥</span>
+      <span class="stat-value"><%= stats.users || 0 %></span>
+      <span>users</span>
+    </div>
+    <div class="header-stat">
+      <span class="stat-icon">⚡</span>
+      <span class="stat-value"><%= stats.ping || 0 %>ms</span>
+      <span>latency</span>
+    </div>
+    <div class="header-stat">
+      <span class="stat-dot green"></span>
+      <span class="stat-value"><%= Math.floor((stats.uptime || 0) / 86400) %>d</span>
+      <span>uptime</span>
+    </div>
+  </div>
   <div class="header-right">
     <% if (selectedGuild) { %>
-    <div class="header-status">
-      <span class="status-dot"></span>
+    <div class="header-stat" style="border-color:var(--accent);">
+      <span class="status-dot green"></span>
       <span><%= selectedGuild.name %></span>
-      <span style="color:var(--text-muted);">·</span>
-      <span style="color:var(--text-muted);"><%= selectedGuild.memberCount %> members</span>
-      <span style="color:var(--text-muted);">·</span>
-      <span style="color:var(--text-muted);"><%= stats.ping || 0 %>ms</span>
-    </div>
-    <% } else { %>
-    <div class="header-status">
-      <span class="status-dot"></span>
-      <span><%= stats.guilds %> servers</span>
     </div>
     <% } %>
     <div class="header-user">

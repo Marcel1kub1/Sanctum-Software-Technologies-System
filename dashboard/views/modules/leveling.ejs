@@ -87,7 +87,7 @@
       <div class="card-title">Level Rewards</div>
       <div class="card-desc">Auto-assign roles when members reach certain levels</div>
     </div>
-    <button class="btn btn-primary btn-sm">+ Add Reward</button>
+    <button type="button" class="btn btn-primary btn-sm" onclick="addLevelReward()">+ Add Reward</button>
   </div>
   <div class="level-row">
     <div class="level-badge">10</div>
@@ -135,5 +135,19 @@
   <button class="btn btn-primary">Save Changes</button>
   <button class="btn btn-outline">Reset to Default</button>
 </div>
-
 </form>
+
+<script>
+function addLevelReward() {
+  const level = prompt('Enter level:');
+  if (!level) return;
+  const role = prompt('Enter role name or ID:');
+  if (!role) return;
+  const container = document.querySelector('.card .level-row')?.parentElement || document.querySelector('.card:nth-child(3)');
+  if (!container) return;
+  const row = document.createElement('div');
+  row.className = 'level-row';
+  row.innerHTML = '<div class="level-badge">' + level + '</div><div class="level-info"><div class="level-name">Level ' + level + ' Reward</div><div class="level-role">' + role + '</div></div><label class="toggle"><input type="checkbox" name="leveling_reward_' + level + '_enabled" checked><span class="toggle-slider"></span></label>';
+  container.appendChild(row);
+}
+</script>

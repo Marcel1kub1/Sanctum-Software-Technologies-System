@@ -25,7 +25,7 @@
         <span class="card-title">Join Roles</span>
         <div class="card-desc">Roles automatically assigned when a member joins</div>
       </div>
-      <button class="btn btn-primary btn-sm">+ Add Role</button>
+      <button type="button" class="btn btn-primary btn-sm" onclick="addJoinRole()">+ Add Role</button>
     </div>
     <div style="margin-top:4px;">
       <div class="level-row">
@@ -79,7 +79,7 @@
       <span class="card-title">Role Groups (Pick One)</span>
       <div class="card-desc">Members can only receive one role from each group</div>
     </div>
-    <button class="btn btn-primary btn-sm" style="flex-shrink:0;">+ Add Group</button>
+    <button type="button" class="btn btn-primary btn-sm" style="flex-shrink:0;" onclick="addRoleGroup()">+ Add Group</button>
   </div>
   <div class="card">
     <div class="card-header">
@@ -146,3 +146,23 @@
 </div>
 
 </form>
+
+<script>
+function addJoinRole() {
+  const role = prompt('Enter role name or ID to auto-assign:');
+  if (!role) return;
+  const container = document.querySelector('.card .level-row')?.parentElement;
+  if (!container) return;
+  const row = document.createElement('div');
+  row.className = 'level-row';
+  row.innerHTML = '<div class="level-badge" style="background:var(--bg-hover);color:var(--text-secondary);">R</div><div class="level-info"><div class="level-name">@' + role + '</div><div class="level-role">Auto-assigned role</div></div><span style="color:var(--red);cursor:pointer;" onclick="this.closest(\'.level-row\').remove()">✕</span>';
+  container.appendChild(row);
+}
+function addRoleGroup() {
+  const name = prompt('Enter group name:');
+  if (!name) return;
+  const container = document.querySelector('.grid-2 .card:first-child .card-header + button')?.closest('.card')?.parentElement;
+  // just alert for now
+  alert('Role group "' + name + '" added. Configure roles via Discord.');
+}
+</script>

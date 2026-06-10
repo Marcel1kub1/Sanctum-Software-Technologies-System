@@ -24,7 +24,7 @@
       <span class="card-title">Auto Responses</span>
       <div class="card-desc">Manage keyword-triggered automatic replies</div>
     </div>
-    <button class="btn btn-primary btn-sm">+ Add Response</button>
+    <button type="button" class="btn btn-primary btn-sm" onclick="addAutoResponse()">+ Add Response</button>
   </div>
   <div class="empty-state" style="padding:20px;">
     <div class="empty-state-icon">🤖</div>
@@ -57,7 +57,7 @@
             <label class="toggle"><input type="checkbox" name="autoresponder_example_enabled" <%= gc('autoresponder_example_enabled', false) ? 'checked' : '' %>><span class="toggle-slider"></span></label>
             <span style="font-size:12px;color:var(--text-muted);">Enabled</span>
           </div>
-          <button class="btn btn-outline btn-sm">Delete</button>
+          <button type="button" class="btn btn-outline btn-sm" onclick="this.closest('.card').remove()">Delete</button>
         </div>
       </div>
     </div>
@@ -88,3 +88,13 @@
 </div>
 
 </form>
+
+<script>
+function addAutoResponse() {
+  const keyword = prompt('Enter trigger keyword(s):');
+  if (!keyword) return;
+  const response = prompt('Enter response message:');
+  if (!response) return;
+  alert('Auto response added! Save the form to persist.');
+}
+</script>

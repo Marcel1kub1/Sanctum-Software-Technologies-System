@@ -73,15 +73,15 @@
   </div>
   <div class="form-group">
     <label class="form-label">Questions</label>
-    <div class="setting-row">
+    <div class="setting-row" data-question="Why should this appeal be accepted?">
       <span style="font-size:13px;">Why should this appeal be accepted?</span>
-      <button class="btn btn-outline btn-sm">✕</button>
+      <button type="button" class="btn btn-outline btn-sm" onclick="this.closest('.setting-row').remove()">✕</button>
     </div>
-    <div class="setting-row">
+    <div class="setting-row" data-question="Do you acknowledge the server rules?">
       <span style="font-size:13px;">Do you acknowledge the server rules?</span>
-      <button class="btn btn-outline btn-sm">✕</button>
+      <button type="button" class="btn btn-outline btn-sm" onclick="this.closest('.setting-row').remove()">✕</button>
     </div>
-    <button class="btn btn-primary btn-sm mt-4">+ Add Question</button>
+    <button type="button" class="btn btn-primary btn-sm mt-4" onclick="addAppealQuestion()">+ Add Question</button>
   </div>
 </div>
 
@@ -90,3 +90,16 @@
   <button class="btn btn-outline">Reset to Default</button>
 </div>
 </form>
+
+<script>
+function addAppealQuestion() {
+  const q = prompt('Enter appeal question:');
+  if (!q) return;
+  const container = document.querySelector('.form-group .setting-row:last-of-type')?.parentElement;
+  if (!container) return;
+  const row = document.createElement('div');
+  row.className = 'setting-row';
+  row.innerHTML = '<span style="font-size:13px;">' + q + '</span> <button type="button" class="btn btn-outline btn-sm" onclick="this.parentElement.remove()">✕</button>';
+  container.insertBefore(row, document.querySelector('.btn-primary.btn-sm.mt-4'));
+}
+</script>
