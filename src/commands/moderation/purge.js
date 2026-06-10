@@ -29,6 +29,6 @@ module.exports = class PurgeCommand extends Command {
     const amount = interaction.options.getInteger('amount');
     await interaction.channel.bulkDelete(amount, true);
     const msg = await interaction.reply({ content: `Deleted ${amount} messages.`, fetchReply: true });
-    setTimeout(() => msg.delete().catch(() => {}), 3000);
+    if (msg?.delete) setTimeout(() => msg.delete().catch(() => {}), 3000);
   }
 };
