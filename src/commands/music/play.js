@@ -32,10 +32,11 @@ module.exports = class PlayCommand extends Command {
 
     try {
       const channelId = message.member.voice.channel.id;
-      let player = await bot.lavalink.getPlayer(message.guild.id);
-      if (!player || !player.voiceChannelId) {
+      const connection = bot.lavalink.shoukaku?.connections?.get(message.guild.id);
+      const botChannelId = connection?.channelId;
+      if (!botChannelId) {
         await bot.lavalink.joinVoiceChannel(message.guild.id, channelId);
-      } else if (channelId !== player.voiceChannelId) {
+      } else if (channelId !== botChannelId) {
         await message.reply('You need to be in my voice channel.');
         return;
       }
@@ -68,10 +69,11 @@ module.exports = class PlayCommand extends Command {
     await interaction.deferReply();
     try {
       const channelId = interaction.member.voice.channel.id;
-      let player = await bot.lavalink.getPlayer(interaction.guild.id);
-      if (!player || !player.voiceChannelId) {
+      const connection = bot.lavalink.shoukaku?.connections?.get(interaction.guild.id);
+      const botChannelId = connection?.channelId;
+      if (!botChannelId) {
         await bot.lavalink.joinVoiceChannel(interaction.guild.id, channelId);
-      } else if (channelId !== player.voiceChannelId) {
+      } else if (channelId !== botChannelId) {
         await interaction.editReply('You need to be in my voice channel.');
         return;
       }

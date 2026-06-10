@@ -61,8 +61,11 @@ class LavalinkManager {
     const node = this.getNode();
     if (!node) throw new Error('No Lavalink node available');
 
-    const existingPlayer = this.shoukaku?.players?.get(guildId);
-    if (existingPlayer?.voiceChannelId === channelId) return existingPlayer;
+    const existingConnection = this.shoukaku?.connections?.get(guildId);
+    if (existingConnection?.channelId === channelId) {
+      const p = this.shoukaku?.players?.get(guildId);
+      if (p) return p;
+    }
 
     await this.shoukaku?.leaveVoiceChannel(guildId);
 
@@ -102,7 +105,7 @@ class LavalinkManager {
 
     if (result.playlistInfo) {
       const total = tracks.length;
-      if (queue.current && (player.track || player.paused)) {
+      if (queue.current) {
         queue.tracks.push(...tracks);
         return { playlist: true, playlistName: result.playlistInfo.name, count: total, queued: true, position: queue.tracks.length - total + 1 };
       }
@@ -114,7 +117,7 @@ class LavalinkManager {
     }
 
     const track = tracks[0];
-    if (queue.current && (player.track || player.paused)) {
+    if (queue.current) {
       queue.tracks.push(track);
       return { track, queued: true, position: queue.tracks.length };
     }
