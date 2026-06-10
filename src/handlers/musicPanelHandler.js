@@ -17,7 +17,7 @@ function buildProgressBar(current, total, length = 16) {
   return '█'.repeat(filled) + '░'.repeat(length - filled);
 }
 
-function buildPanelEmbed(bot, guildId) {
+function buildNowPlayingEmbed(bot, guildId) {
   const queue = bot.lavalink.getQueue(guildId);
   const status = bot.lavalink.getStatus(guildId);
   const player = bot.lavalink.shoukaku?.players?.get(guildId);
@@ -55,21 +55,35 @@ function buildPanelEmbed(bot, guildId) {
       { name: 'Loop', value: `${loopIcon} ${loopLabel}`, inline: true },
       { name: 'Status', value: paused ? '⏸ Paused' : '▶️ Playing', inline: true }
     );
-
-    const tracks = queue.tracks;
-    if (tracks.length > 0) {
-      const list = tracks.slice(0, 10).map((t, i) =>
-        `\`${i + 1}.\` **${t.info.title}** — ${t.info.author} \`[${formatTime(t.info.length)}]\``
-      ).join('\n');
-      const value = tracks.length > 10
-        ? `${list}\n\n*… and ${tracks.length - 10} more tracks*`
-        : list;
-      embed.addFields({ name: `Up Next (${tracks.length} tracks)`, value });
-    } else {
-      embed.addFields({ name: 'Up Next', value: 'No more tracks in queue.' });
-    }
   } else {
     embed.setDescription('Add a song to start listening!');
+  }
+
+  return embed;
+}
+
+function buildQueueEmbed(bot, guildId) {
+  const queue = bot.lavalink.getQueue(guildId);
+  const status = bot.lavalink.getStatus(guildId);
+  const tracks = queue.tracks;
+
+  const embed = new EmbedBuilder()
+    .setColor(0x9B59B6)
+    .setTitle('Up Next')
+    .setTimestamp();
+
+  if (tracks.length > 0) {
+    const list = tracks.slice(0, 10).map((t, i) =>
+      `\`${i + 1}.\` **${t.info.title}** — ${t.info.author} \`[${formatTime(t.info.length)}]\``
+    ).join('\n');
+    const value = tracks.length > 10
+      ? `${list}\n\n*… and ${tracks.length - 10} more tracks*`
+      : list;
+    embed.setDescription(value);
+  } else if (status.current) {
+    embed.setDescription('No more tracks in queue.');
+  } else {
+    embed.setDescription('Queue is empty.');
   }
 
   return embed;
@@ -106,7 +120,8 @@ async function sendOrUpdatePanel(bot, guildId, textChannel) {
   const player = bot.lavalink.shoukaku?.players?.get(guildId);
   const paused = player?.paused || false;
 
-  const embed = buildPanelEmbed(bot, guildId);
+  const nowPlayingEmbed = buildNowPlayingEmbed(bot, guildId);
+  const queueEmbed = buildQueueEmbed(bot, guildId);
   const rows = buildControlRows(guildId, paused);
 
   if (queue.panelMessageId && queue.panelChannelId) {
@@ -115,26 +130,48 @@ async function sendOrUpdatePanel(bot, guildId, textChannel) {
       if (channel) {
         const msg = await channel.messages.fetch(queue.panelMessageId).catch(() => null);
         if (msg) {
-          await msg.edit({ embeds: [embed], components: rows });
-          startLiveUpdater(bot, guildId);
-          return;
+          await msg.edit({ embeds: [nowPlayingEmbed], components: rows });
         }
       }
     } catch {
-      // message deleted or channel gone — send new one below
+      // panel message gone — reset IDs so we re-send below
+      queue.panelMessageId = null;
+      queue.panelChannelId = null;
     }
   }
 
-  if (textChannel) {
+  if (queue.queueMessageId && queue.panelChannelId) {
     try {
-      const msg = await textChannel.send({ embeds: [embed], components: rows });
+      const channel = bot.channels.cache.get(queue.panelChannelId);
+      if (channel) {
+        const msg2 = await channel.messages.fetch(queue.queueMessageId).catch(() => null);
+        if (msg2) {
+          await msg2.edit({ embeds: [queueEmbed], components: [] });
+        } else {
+          queue.queueMessageId = null;
+        }
+      }
+    } catch {
+      queue.queueMessageId = null;
+    }
+  }
+
+  if (textChannel && !queue.panelMessageId) {
+    try {
+      const msg = await textChannel.send({ embeds: [nowPlayingEmbed], components: rows });
       queue.panelMessageId = msg.id;
       queue.panelChannelId = msg.channel.id;
-      startLiveUpdater(bot, guildId);
+
+      const msg2 = await textChannel.send({ embeds: [queueEmbed], components: [] });
+      queue.queueMessageId = msg2.id;
     } catch {}
   }
 
-  if (!queue.current) stopLiveUpdater(bot, guildId);
+  if (queue.current) {
+    startLiveUpdater(bot, guildId);
+  } else {
+    stopLiveUpdater(bot, guildId);
+  }
 }
 
 function startLiveUpdater(bot, guildId) {
@@ -279,6 +316,7 @@ async function handleMusicPanelButton(bot, interaction) {
 module.exports = {
   sendOrUpdatePanel,
   handleMusicPanelButton,
-  buildPanelEmbed,
+  buildNowPlayingEmbed,
+  buildQueueEmbed,
   stopLiveUpdater
 };
