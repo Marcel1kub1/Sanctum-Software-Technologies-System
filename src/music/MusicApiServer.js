@@ -61,7 +61,7 @@ class MusicApiServer {
           volume: status.volume
         },
         player: player ? {
-          playing: player.playing,
+          playing: !!player.track,
           paused: player.paused,
           position: player.position,
           ping: player.ping

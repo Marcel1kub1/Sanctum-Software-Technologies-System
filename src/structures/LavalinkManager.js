@@ -102,7 +102,7 @@ class LavalinkManager {
 
     if (result.playlistInfo) {
       const total = tracks.length;
-      if (player.playing || player.paused) {
+      if (player.track || player.paused) {
         queue.tracks.push(...tracks);
         return { playlist: true, playlistName: result.playlistInfo.name, count: total, queued: true, position: queue.tracks.length - total + 1 };
       }
@@ -114,7 +114,7 @@ class LavalinkManager {
     }
 
     const track = tracks[0];
-    if (player.playing || player.paused) {
+    if (player.track || player.paused) {
       queue.tracks.push(track);
       return { track, queued: true, position: queue.tracks.length };
     }
