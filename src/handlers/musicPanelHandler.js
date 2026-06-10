@@ -1,4 +1,5 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const axios = require('axios');
 
 function formatTime(ms) {
   if (!ms || isNaN(ms)) return '0:00';
@@ -275,13 +276,20 @@ async function handleMusicPanelButton(bot, interaction) {
           await interaction.editReply({ content: 'Nothing is playing.' });
           return setTimeout(() => sendOrUpdatePanel(bot, guildId), 1000);
         }
+
+        const guildCfg = await bot.guildConfig(guildId);
+        const lyricsEnabled = guildCfg.music_lyrics_enabled !== undefined ? guildCfg.music_lyrics_enabled : bot.config.music.lyrics.enabled;
+        if (!lyricsEnabled) {
+          await interaction.editReply({ content: 'Lyrics are disabled for this server.' });
+          return setTimeout(() => sendOrUpdatePanel(bot, guildId), 5000);
+        }
+
         await interaction.editReply({ content: 'Fetching lyrics...' });
-        const fetch = require('axios');
         try {
           const a = status.current.info.author.replace(/ \(.*?\)|\[.*?\]/g, '').trim();
           const t = status.current.info.title.replace(/ \(.*?\)|\[.*?\]/g, '').trim();
           if (a && t) {
-            const res = await fetch.get(`https://api.lyrics.ovh/v1/${encodeURIComponent(a)}/${encodeURIComponent(t)}`);
+            const res = await axios.get(`https://api.lyrics.ovh/v1/${encodeURIComponent(a)}/${encodeURIComponent(t)}`);
             if (res.data?.lyrics) {
               const embed = new EmbedBuilder()
                 .setColor(0x00E5FF)
