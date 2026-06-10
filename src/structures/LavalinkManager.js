@@ -60,6 +60,17 @@ class LavalinkManager {
   async joinVoiceChannel(guildId, channelId, deaf = true) {
     const node = this.getNode();
     if (!node) throw new Error('No Lavalink node available');
+
+    const existingPlayer = this.shoukaku?.players?.get(guildId);
+    if (existingPlayer) {
+      if (existingPlayer.voiceChannelId === channelId) return existingPlayer;
+      await existingPlayer.destroy();
+    }
+    const existingConnection = this.shoukaku?.connections?.get(guildId);
+    if (existingConnection) {
+      existingConnection.disconnect();
+    }
+
     const player = await this.shoukaku.joinVoiceChannel({
       guildId,
       channelId,
