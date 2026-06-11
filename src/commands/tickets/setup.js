@@ -82,16 +82,21 @@ module.exports = class TicketSetupCommand extends Command {
     const ticketEmbed = new EmbedBuilder()
       .setColor(Colors.Blue)
       .setTitle('🎫 Support Tickets')
-      .setDescription('Click the button below to open a support ticket. Staff will assist you as soon as possible.')
+      .setDescription('Select a category below to open a ticket. Our team will respond as quickly as possible.')
       .addFields(
-        { name: 'Ticket Limit', value: `${ticketLimit} open tickets per user`, inline: true },
-        { name: 'Support Team', value: `${supportRole}`, inline: true }
+        { name: 'General Support', value: 'General questions and support inquiries.', inline: true },
+        { name: 'Technical Support', value: 'Technical issues, bugs, and troubleshooting.', inline: true },
+        { name: 'Report Issue', value: 'Report violations, abuse, or security issues.', inline: true },
+        { name: 'Other', value: 'Other inquiries not covered above.', inline: true }
       )
       .setFooter({ text: 'Sanctum Ticket System' })
       .setTimestamp();
 
     const row = new ActionRowBuilder().addComponents(
-      new ButtonBuilder().setCustomId('ticket_create').setLabel('Create Ticket').setStyle(ButtonStyle.Primary).setEmoji('🎫')
+      new ButtonBuilder().setCustomId('ticket_panel_general').setLabel('General Support').setStyle(ButtonStyle.Primary).setEmoji('💬'),
+      new ButtonBuilder().setCustomId('ticket_panel_technical').setLabel('Technical Support').setStyle(ButtonStyle.Success).setEmoji('🛠️'),
+      new ButtonBuilder().setCustomId('ticket_panel_report').setLabel('Report Issue').setStyle(ButtonStyle.Danger).setEmoji('❗'),
+      new ButtonBuilder().setCustomId('ticket_panel_other').setLabel('Other').setStyle(ButtonStyle.Secondary).setEmoji('📝')
     );
 
     await panelChannel.send({ embeds: [ticketEmbed], components: [row] });
@@ -146,16 +151,21 @@ module.exports = class TicketSetupCommand extends Command {
     const ticketEmbed = new EmbedBuilder()
       .setColor(Colors.Blue)
       .setTitle('🎫 Support Tickets')
-      .setDescription('Click the button below to open a support ticket. Staff will assist you as soon as possible.')
+      .setDescription('Select a category below to open a ticket. Our team will respond as quickly as possible.')
       .addFields(
-        { name: 'Ticket Limit', value: `${ticketLimit} open tickets per user`, inline: true },
-        { name: 'Support Team', value: `${supportRole}`, inline: true }
+        { name: 'General Support', value: 'General questions and support inquiries.', inline: true },
+        { name: 'Technical Support', value: 'Technical issues, bugs, and troubleshooting.', inline: true },
+        { name: 'Report Issue', value: 'Report violations, abuse, or security issues.', inline: true },
+        { name: 'Other', value: 'Other inquiries not covered above.', inline: true }
       )
       .setFooter({ text: 'Sanctum Ticket System' })
       .setTimestamp();
 
     const row = new ActionRowBuilder().addComponents(
-      new ButtonBuilder().setCustomId('ticket_create').setLabel('Create Ticket').setStyle(ButtonStyle.Primary).setEmoji('🎫')
+      new ButtonBuilder().setCustomId('ticket_panel_general').setLabel('General Support').setStyle(ButtonStyle.Primary).setEmoji('💬'),
+      new ButtonBuilder().setCustomId('ticket_panel_technical').setLabel('Technical Support').setStyle(ButtonStyle.Success).setEmoji('🛠️'),
+      new ButtonBuilder().setCustomId('ticket_panel_report').setLabel('Report Issue').setStyle(ButtonStyle.Danger).setEmoji('❗'),
+      new ButtonBuilder().setCustomId('ticket_panel_other').setLabel('Other').setStyle(ButtonStyle.Secondary).setEmoji('📝')
     );
 
     await panelChannel.send({ embeds: [ticketEmbed], components: [row] });

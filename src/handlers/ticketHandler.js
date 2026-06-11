@@ -56,7 +56,15 @@ async function generateTranscript(channel) {
   return lines.join('\n') || 'No messages.';
 }
 
-async function handleTicketCreateButton(bot, interaction, guildData) {
+const TICKET_TYPE_MAP = {
+  general: 'General Support',
+  technical: 'Technical Support',
+  report: 'Report Issue',
+  other: 'Other'
+};
+
+async function handleTicketCreateButton(bot, interaction, guildData, ticketTypeKey = 'general') {
+  const ticketType = TICKET_TYPE_MAP[ticketTypeKey] || TICKET_TYPE_MAP.general;
   if (!guildData.ticket_category) {
     return interaction.reply({ content: 'Ticket system is not fully configured. No ticket category set.', ephemeral: true });
   }
@@ -71,8 +79,8 @@ async function handleTicketCreateButton(bot, interaction, guildData) {
   }
 
   const modal = new ModalBuilder()
-    .setCustomId('ticket_subject_modal')
-    .setTitle('Create a Ticket');
+    .setCustomId(`ticket_subject_modal_${ticketTypeKey}`)
+    .setTitle(`Create a ${ticketType}`);
 
   const subjectInput = new TextInputBuilder()
     .setCustomId('ticket_subject')
@@ -88,6 +96,8 @@ async function handleTicketCreateButton(bot, interaction, guildData) {
 async function handleTicketSubjectModal(bot, interaction, guildData) {
   await interaction.deferReply({ ephemeral: true });
   const subject = interaction.fields.getTextInputValue('ticket_subject');
+  const ticketTypeKey = interaction.customId.replace('ticket_subject_modal_', '') || 'general';
+  const ticketType = TICKET_TYPE_MAP[ticketTypeKey] || TICKET_TYPE_MAP.general;
   const guild = interaction.guild;
   const ticketId = generateTicketId();
   const categoryId = guildData.ticket_category;
@@ -121,18 +131,19 @@ async function handleTicketSubjectModal(bot, interaction, guildData) {
     type: ChannelType.GuildText,
     parent: categoryId,
     permissionOverwrites,
-    topic: `Ticket ${ticketId} — ${interaction.user.tag} — ${subject}`
+    topic: `Ticket ${ticketId} — ${interaction.user.tag} — ${ticketType}`
   });
 
+  const storedSubject = `[${ticketType}] ${subject}`;
   await db.query(
     'INSERT INTO tickets (ticket_id, channel_id, guild_id, creator_id, subject, status) VALUES (?, ?, ?, ?, ?, ?)',
-    [ticketId, channel.id, guild.id, interaction.user.id, subject, 'open']
+    [ticketId, channel.id, guild.id, interaction.user.id, storedSubject, 'open']
   );
 
   const welcomeEmbed = new EmbedBuilder()
     .setColor(Colors.Blue)
     .setTitle(`Ticket ${ticketId}`)
-    .setDescription(`**Subject:** ${subject}\n**Created by:** ${interaction.user}\n**Created:** ${formatTimestamp(new Date())}`)
+    .setDescription(`**Category:** ${ticketType}\n**Subject:** ${subject}\n**Created by:** ${interaction.user}\n**Created:** ${formatTimestamp(new Date())}`)
     .addFields({ name: 'Creator', value: `${interaction.user.tag} (${interaction.user.id})`, inline: true })
     .setFooter({ text: 'Staff: click Claim to handle this ticket' });
 
@@ -153,6 +164,7 @@ async function handleTicketSubjectModal(bot, interaction, guildData) {
     .addFields(
       { name: 'Ticket', value: ticketId, inline: true },
       { name: 'Creator', value: `${interaction.user.tag} (${interaction.user.id})`, inline: true },
+      { name: 'Category', value: ticketType, inline: true },
       { name: 'Subject', value: subject, inline: false },
       { name: 'Channel', value: `${channel}`, inline: true }
     )
@@ -356,17 +368,16 @@ async function handleTicketInteraction(bot, interaction) {
   if (interaction.isButton() || interaction.isModalSubmit()) {
     const guildData = await db.getGuild(interaction.guild.id);
 
-    const customId = interaction.isButton() ? interaction.customId : interaction.customId;
+    const customId = interaction.customId;
 
     switch (customId) {
       case 'ticket_create':
-        return handleTicketCreateButton(bot, interaction, guildData);
-      default:
-        if (typeof customId === 'string' && customId.startsWith('ticket_panel_')) {
-          return handleTicketCreateButton(bot, interaction, guildData);
-        }
-        break;
+        return handleTicketCreateButton(bot, interaction, guildData, 'general');
       case 'ticket_subject_modal':
+      case 'ticket_subject_modal_general':
+      case 'ticket_subject_modal_technical':
+      case 'ticket_subject_modal_report':
+      case 'ticket_subject_modal_other':
         return handleTicketSubjectModal(bot, interaction, guildData);
       case 'ticket_claim':
         return handleTicketClaim(bot, interaction, guildData);
@@ -380,6 +391,12 @@ async function handleTicketInteraction(bot, interaction) {
         return handleTicketConfirmDelete(bot, interaction, guildData);
       case 'ticket_cancel_delete':
         return interaction.update({ content: 'Deletion cancelled.', components: [], ephemeral: true });
+      default:
+        if (typeof customId === 'string' && customId.startsWith('ticket_panel_')) {
+          const ticketTypeKey = customId.substring('ticket_panel_'.length);
+          return handleTicketCreateButton(bot, interaction, guildData, ticketTypeKey);
+        }
+        break;
     }
   }
 }

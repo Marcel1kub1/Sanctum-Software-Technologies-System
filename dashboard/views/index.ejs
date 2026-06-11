@@ -27,6 +27,14 @@
     .btn-primary:hover { box-shadow: 0 0 24px rgba(255,0,128,0.4); transform: translateY(-1px); }
     .btn-outline { border: 1px solid var(--border); color: var(--text-secondary); }
     .btn-outline:hover { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 12px rgba(255,0,128,0.15); }
+    .community-panel { width: min(100%, 1140px); background: linear-gradient(180deg, rgba(255,0,128,0.08), rgba(0,204,255,0.06)); border: 1px solid rgba(255,255,255,0.08); border-radius: 28px; padding: 30px; margin-top: 40px; box-shadow: 0 24px 60px rgba(0,0,0,0.22); }
+    .panel-header { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 18px; align-items: center; margin-bottom: 22px; }
+    .panel-title { font-size: 24px; font-weight: 800; letter-spacing: 0.6px; }
+    .panel-subtitle { color: var(--text-secondary); max-width: 720px; margin-top: 6px; }
+    .btn-small { padding: 10px 20px; border-radius: 999px; font-size: 13px; }
+    .widget-shell { position: relative; border-radius: 22px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); background: rgba(6,6,12,0.95); min-height: 460px; }
+    .widget-shell iframe { width: 100%; min-height: 460px; border: 0; }
+    .widget-empty { padding: 40px; text-align: center; color: var(--text-secondary); border: 1px dashed rgba(255,255,255,0.14); border-radius: 20px; background: rgba(255,255,255,0.02); }
     .footer { margin-top: 64px; font-size: 12px; color: var(--text-muted, #555570); }
   </style>
 </head>
@@ -47,6 +55,22 @@
     <% } %>
     <a href="<%= config.botInvite %>" target="_blank" class="btn btn-outline">Invite Bot</a>
     <a href="<%= config.supportServer %>" target="_blank" class="btn btn-outline">Support Server</a>
+  </div>
+  <div class="community-panel">
+    <div class="panel-header">
+      <div>
+        <div class="panel-title">Live Discord Community</div>
+        <div class="panel-subtitle">Live voice channels, online members, and active channels right from your server widget.</div>
+      </div>
+      <a href="<%= config.supportServer %>" target="_blank" class="btn btn-primary btn-small">Support Server</a>
+    </div>
+    <% if (config.discordServerId) { %>
+      <div class="widget-shell">
+        <iframe src="https://discord.com/widget?id=<%= config.discordServerId %>&theme=<%= config.discordWidgetTheme %>" allowtransparency="true" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
+      </div>
+    <% } else { %>
+      <div class="widget-empty">Discord server widget not configured yet. Set <strong>DASHBOARD_DISCORD_SERVER_ID</strong> and restart the dashboard to enable the live widget.</div>
+    <% } %>
   </div>
   <div class="footer">Sanctum Technologies &copy; 2026</div>
 </body>
