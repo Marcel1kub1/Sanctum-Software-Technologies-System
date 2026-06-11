@@ -279,15 +279,19 @@ module.exports = (client) => {
 
       const title = guildCfg.tickets_panel_title || 'Create a Ticket';
       const desc = guildCfg.tickets_panel_description || 'Click the button below to open a ticket and our team will assist you.';
-      const b1 = guildCfg.tickets_button_1_label || 'Commission';
-      const b2 = guildCfg.tickets_button_2_label || 'Apply';
-      const b3 = guildCfg.tickets_button_3_label || 'Support';
+      const imageUrl = guildCfg.tickets_panel_image_url || '';
+      const b1 = guildCfg.tickets_button_1_label || 'General Support';
+      const b2 = guildCfg.tickets_button_2_label || 'Technical Support';
+      const b3 = guildCfg.tickets_button_3_label || 'Report Issue';
+      const b4 = guildCfg.tickets_button_4_label || 'Other';
 
       const embed = new EmbedBuilder().setTitle(title).setDescription(desc).setColor(0x11111);
+      if (imageUrl) embed.setImage(imageUrl);
       const row = new ActionRowBuilder().addComponents(
-        new ButtonBuilder().setCustomId(`ticket_panel_${guild}_1`).setLabel(b1).setStyle(ButtonStyle.Primary),
-        new ButtonBuilder().setCustomId(`ticket_panel_${guild}_2`).setLabel(b2).setStyle(ButtonStyle.Secondary),
-        new ButtonBuilder().setCustomId(`ticket_panel_${guild}_3`).setLabel(b3).setStyle(ButtonStyle.Secondary)
+        new ButtonBuilder().setCustomId('ticket_panel_general').setLabel(b1).setStyle(ButtonStyle.Primary),
+        new ButtonBuilder().setCustomId('ticket_panel_technical').setLabel(b2).setStyle(ButtonStyle.Secondary),
+        new ButtonBuilder().setCustomId('ticket_panel_report').setLabel(b3).setStyle(ButtonStyle.Danger),
+        new ButtonBuilder().setCustomId('ticket_panel_other').setLabel(b4).setStyle(ButtonStyle.Secondary)
       );
 
       await ch.send({ embeds: [embed], components: [row] });

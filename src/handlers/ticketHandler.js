@@ -393,7 +393,13 @@ async function handleTicketInteraction(bot, interaction) {
         return interaction.update({ content: 'Deletion cancelled.', components: [], ephemeral: true });
       default:
         if (typeof customId === 'string' && customId.startsWith('ticket_panel_')) {
-          const ticketTypeKey = customId.substring('ticket_panel_'.length);
+          let ticketTypeKey = customId.substring('ticket_panel_'.length);
+          const legacyMatch = ticketTypeKey.match(/^[^_]+_(\d+)$/);
+          if (legacyMatch) {
+            const index = parseInt(legacyMatch[1], 10);
+            const legacyMap = { 1: 'general', 2: 'technical', 3: 'report', 4: 'other' };
+            ticketTypeKey = legacyMap[index] || 'general';
+          }
           return handleTicketCreateButton(bot, interaction, guildData, ticketTypeKey);
         }
         break;

@@ -71,6 +71,21 @@ const MODULE_SCHEMAS = {
         group: 'Panel Buttons'
       },
       {
+        key: 'tickets_button_4_label',
+        label: 'Button 4 Label',
+        type: 'text',
+        default: 'Other',
+        group: 'Panel Buttons'
+      },
+      {
+        key: 'tickets_panel_image_url',
+        label: 'Embed Image URL',
+        type: 'text',
+        default: '',
+        group: 'Panel',
+        hint: 'Optional image displayed at the top of the ticket panel embed'
+      },
+      {
         key: 'tickets_limit',
         label: 'Ticket Limit per User',
         type: 'number',
@@ -108,7 +123,7 @@ const MODULE_SCHEMAS = {
         id: 'ticket_panel',
         label: 'Ticket Creation Panel',
         type: 'embed_buttons',
-        configKeys: ['tickets_panel_title', 'tickets_panel_description', 'tickets_button_1_label', 'tickets_button_2_label', 'tickets_button_3_label'],
+        configKeys: ['tickets_panel_title', 'tickets_panel_description', 'tickets_panel_image_url', 'tickets_button_1_label', 'tickets_button_2_label', 'tickets_button_3_label', 'tickets_button_4_label'],
         endpoint: '/dashboard/tickets/send'
       }
     ]

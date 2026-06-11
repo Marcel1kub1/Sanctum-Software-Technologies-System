@@ -39,12 +39,19 @@
           <% if (panel.type === 'embed_buttons') { %>
             <div style="padding:18px;">
               <div style="background: linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.5)); border:1px solid rgba(255,255,255,0.03); border-radius:12px; padding:18px; display:flex; flex-direction:column; gap:12px;">
+                <% const imageUrl = guildConfig.tickets_panel_image_url || schema.fields.find(f => f.key === 'tickets_panel_image_url')?.default; %>
+                <% if (imageUrl) { %>
+                  <div style="border-radius: 16px; overflow: hidden;">
+                    <img src="<%= imageUrl %>" alt="Panel image" style="width:100%; height:auto; display:block; object-fit:cover;">
+                  </div>
+                <% } %>
                 <div style="font-weight:800; color:var(--text-primary);"> <%= guildConfig[panel.configKeys[0]] || schema.fields.find(f => f.key === panel.configKeys[0])?.default %> </div>
                 <div style="color:var(--text-secondary); font-size:13px;"> <%= guildConfig[panel.configKeys[1]] || schema.fields.find(f => f.key === panel.configKeys[1])?.default %> </div>
                 <div style="display:flex; gap:12px; margin-top:8px; flex-wrap:wrap;">
-                  <button type="button" class="btn btn-outline" style="background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02)); padding:14px 20px; border-radius:10px; font-weight:700; flex:1;"> <%= guildConfig[panel.configKeys[2]] || schema.fields.find(f => f.key === panel.configKeys[2])?.default %> </button>
                   <button type="button" class="btn btn-outline" style="background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02)); padding:14px 20px; border-radius:10px; font-weight:700; flex:1;"> <%= guildConfig[panel.configKeys[3]] || schema.fields.find(f => f.key === panel.configKeys[3])?.default %> </button>
                   <button type="button" class="btn btn-outline" style="background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02)); padding:14px 20px; border-radius:10px; font-weight:700; flex:1;"> <%= guildConfig[panel.configKeys[4]] || schema.fields.find(f => f.key === panel.configKeys[4])?.default %> </button>
+                  <button type="button" class="btn btn-outline" style="background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02)); padding:14px 20px; border-radius:10px; font-weight:700; flex:1;"> <%= guildConfig[panel.configKeys[5]] || schema.fields.find(f => f.key === panel.configKeys[5])?.default %> </button>
+                  <button type="button" class="btn btn-outline" style="background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02)); padding:14px 20px; border-radius:10px; font-weight:700; flex:1;"> <%= guildConfig[panel.configKeys[6]] || schema.fields.find(f => f.key === panel.configKeys[6])?.default %> </button>
                 </div>
               </div>
             </div>
