@@ -1,6 +1,10 @@
 const mysql = require('mysql2/promise');
 const config = require('../../config');
 
+const migrationAlters = [
+  `ALTER TABLE economy ADD COLUMN IF NOT EXISTS last_weekly_time BIGINT DEFAULT 0`
+];
+
 const schemas = [
   `CREATE TABLE IF NOT EXISTS guilds (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -185,6 +189,27 @@ const schemas = [
     INDEX idx_message_id (message_id)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
 
+  `CREATE TABLE IF NOT EXISTS leveling_xp (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    guild_id VARCHAR(255) NOT NULL,
+    user_id VARCHAR(255) NOT NULL,
+    xp BIGINT DEFAULT 0,
+    voice_xp BIGINT DEFAULT 0,
+    total_xp BIGINT DEFAULT 0,
+    last_message_time BIGINT DEFAULT 0,
+    UNIQUE KEY unique_user_guild (guild_id, user_id),
+    INDEX idx_user_guild (guild_id, user_id)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+
+  `CREATE TABLE IF NOT EXISTS economy_inventory (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    guild_id VARCHAR(255) NOT NULL,
+    user_id VARCHAR(255) NOT NULL,
+    item_id VARCHAR(255) NOT NULL,
+    purchased_at BIGINT NOT NULL,
+    INDEX idx_user (guild_id, user_id)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+
   `CREATE TABLE IF NOT EXISTS role_panel_roles (
     id INT AUTO_INCREMENT PRIMARY KEY,
     panel_id INT NOT NULL,
@@ -218,6 +243,10 @@ async function runMigrations() {
 
     for (const sql of schemas) {
       await connection.execute(sql);
+    }
+
+    for (const sql of migrationAlters) {
+      try { await connection.execute(sql); } catch {}
     }
 
     const missingColumns = [

@@ -2,6 +2,7 @@ const config = require('../../config');
 const { executeCommand } = require('../handlers/executeHandler');
 const { sendLog } = require('../handlers/loggingHandler');
 const { getConfig } = require('../database/guildConfig');
+const { addMessageXP } = require('../handlers/levelingHandler');
 
 const processedMessages = new Set();
 setInterval(() => processedMessages.clear(), 10000);
@@ -111,6 +112,23 @@ module.exports = {
           }
         }
       }
+    }
+
+    if (guildConfig && message.guild) {
+      try {
+        const leveledUp = await addMessageXP(bot, message, guildConfig);
+        if (leveledUp) {
+          const msgTemplate = guildConfig.leveling_level_up_message || '🎉 {user} reached level {level}!';
+          const msg = msgTemplate.replace(/\{user\}/g, `<@${message.author.id}>`).replace(/\{level\}/g, leveledUp.newLevel).replace(/\{xp\}/g, leveledUp.xp);
+          const lvlChannelId = guildConfig.leveling_level_up_channel;
+          if (lvlChannelId) {
+            const lvlCh = message.guild.channels.cache.get(lvlChannelId);
+            if (lvlCh) try { await lvlCh.send(msg); } catch {}
+          } else {
+            try { await message.channel.send(msg); } catch {}
+          }
+        }
+      } catch {}
     }
 
     const prefix = config.bot.prefix;

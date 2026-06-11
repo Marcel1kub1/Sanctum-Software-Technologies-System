@@ -227,9 +227,101 @@ const MODULE_SCHEMAS = {
     ]
   },
 
+  fun: {
+    name: 'Fun Commands',
+    description: 'Entertainment commands for your server',
+    icon: '🎮',
+    category: 'engagement',
+    enabled: true,
+    fields: [
+      {
+        key: 'fun_enabled',
+        label: 'Enable Fun Commands',
+        type: 'toggle',
+        default: true,
+        group: 'General'
+      }
+    ]
+  },
+
+  ai: {
+    name: 'AI Assistant',
+    description: 'Chat with AI models (Groq, OpenAI, Claude, Gemini)',
+    icon: '🤖',
+    category: 'utility',
+    enabled: true,
+    fields: [
+      {
+        key: 'ai_enabled',
+        label: 'Enable AI Assistant',
+        type: 'toggle',
+        default: true,
+        group: 'General'
+      },
+      {
+        key: 'ai_default_provider',
+        label: 'Default AI Provider',
+        type: 'select',
+        default: 'groq',
+        options: [
+          { label: 'Groq (Free)', value: 'groq' },
+          { label: 'OpenAI', value: 'openai' },
+          { label: 'Claude (Anthropic)', value: 'claude' },
+          { label: 'Gemini (Google)', value: 'gemini' }
+        ],
+        group: 'General'
+      },
+      {
+        key: 'ai_groq_key',
+        label: 'Groq API Key',
+        type: 'password',
+        default: '',
+        group: 'API Keys',
+        hint: 'Get a free key at console.groq.com'
+      },
+      {
+        key: 'ai_openai_key',
+        label: 'OpenAI API Key',
+        type: 'password',
+        default: '',
+        group: 'API Keys'
+      },
+      {
+        key: 'ai_claude_key',
+        label: 'Claude API Key',
+        type: 'password',
+        default: '',
+        group: 'API Keys'
+      },
+      {
+        key: 'ai_gemini_key',
+        label: 'Gemini API Key',
+        type: 'password',
+        default: '',
+        group: 'API Keys'
+      },
+      {
+        key: 'ai_channel_allowlist',
+        label: 'Allowed Channels',
+        type: 'text',
+        default: '',
+        group: 'Restrictions',
+        hint: 'Comma-separated channel IDs. Leave empty to allow all channels.'
+      },
+      {
+        key: 'ai_daily_limit',
+        label: 'Daily Questions per User',
+        type: 'number',
+        default: 20,
+        min: 1,
+        group: 'Restrictions'
+      }
+    ]
+  },
+
   leveling: {
     name: 'Leveling System',
-    description: 'XP and level progression',
+    description: 'XP, levels, and role rewards',
     icon: '📈',
     category: 'engagement',
     enabled: true,
@@ -247,36 +339,78 @@ const MODULE_SCHEMAS = {
         type: 'number',
         default: 15,
         min: 1,
-        group: 'XP'
+        group: 'Chat XP'
       },
       {
         key: 'leveling_xp_cooldown',
-        label: 'XP Cooldown (ms)',
+        label: 'XP Cooldown (seconds)',
         type: 'number',
-        default: 60000,
-        group: 'XP'
+        default: 60,
+        min: 1,
+        group: 'Chat XP'
+      },
+      {
+        key: 'leveling_xp_multiplier',
+        label: 'XP Multiplier',
+        type: 'number',
+        default: 1.0,
+        min: 0.1,
+        step: 0.1,
+        group: 'Chat XP'
+      },
+      {
+        key: 'leveling_channel_blacklist',
+        label: 'Blacklisted Channels',
+        type: 'text',
+        default: '',
+        group: 'Chat XP',
+        hint: 'Comma-separated channel IDs. No XP earned in these channels.'
+      },
+      {
+        key: 'leveling_voice_xp_enabled',
+        label: 'Enable Voice XP',
+        type: 'toggle',
+        default: true,
+        group: 'Voice XP'
+      },
+      {
+        key: 'leveling_xp_per_voice_minute',
+        label: 'XP per Voice Minute',
+        type: 'number',
+        default: 10,
+        min: 1,
+        group: 'Voice XP'
       },
       {
         key: 'leveling_base_xp',
         label: 'Base XP per Level',
         type: 'number',
         default: 100,
-        group: 'XP'
+        min: 1,
+        group: 'Levels'
       },
       {
-        key: 'leveling_xp_multiplier',
-        label: 'XP Multiplier',
-        type: 'number',
-        default: 1.5,
-        step: 0.1,
-        group: 'XP'
+        key: 'leveling_level_up_message',
+        label: 'Level Up Message',
+        type: 'text',
+        default: '🎉 {user} reached level {level}!',
+        group: 'Levels',
+        hint: 'Variables: {user}, {level}, {xp}'
+      },
+      {
+        key: 'leveling_level_up_channel',
+        label: 'Level Up Channel',
+        type: 'channel',
+        default: '',
+        group: 'Levels',
+        hint: 'Leave empty to send in the current channel'
       }
     ]
   },
 
   economy: {
     name: 'Economy System',
-    description: 'Currency, jobs, and transactions',
+    description: 'Currency, shops, and transactions',
     icon: '💰',
     category: 'engagement',
     enabled: true,
@@ -290,17 +424,31 @@ const MODULE_SCHEMAS = {
       },
       {
         key: 'economy_currency',
-        label: 'Currency Symbol',
+        label: 'Currency Name/Symbol',
         type: 'text',
         default: '💰',
         group: 'General'
       },
       {
+        key: 'economy_starting_balance',
+        label: 'Starting Balance',
+        type: 'number',
+        default: 500,
+        group: 'General'
+      },
+      {
         key: 'economy_daily_amount',
-        label: 'Daily Claim Amount',
+        label: 'Daily Reward',
         type: 'number',
         default: 100,
-        group: 'Daily'
+        group: 'Rewards'
+      },
+      {
+        key: 'economy_weekly_amount',
+        label: 'Weekly Reward',
+        type: 'number',
+        default: 500,
+        group: 'Rewards'
       },
       {
         key: 'economy_work_min',
@@ -317,11 +465,49 @@ const MODULE_SCHEMAS = {
         group: 'Work'
       },
       {
-        key: 'economy_starting_balance',
-        label: 'Starting Balance',
+        key: 'economy_rob_enabled',
+        label: 'Enable Rob Command',
+        type: 'toggle',
+        default: true,
+        group: 'Rob'
+      },
+      {
+        key: 'economy_rob_success_rate',
+        label: 'Rob Success Rate (%)',
         type: 'number',
-        default: 500,
-        group: 'Settings'
+        default: 30,
+        min: 1,
+        max: 100,
+        group: 'Rob'
+      },
+      {
+        key: 'economy_rob_fine',
+        label: 'Rob Fail Fine',
+        type: 'number',
+        default: 50,
+        group: 'Rob'
+      },
+      {
+        key: 'economy_rob_cooldown',
+        label: 'Rob Cooldown (minutes)',
+        type: 'number',
+        default: 5,
+        min: 1,
+        group: 'Rob'
+      },
+      {
+        key: 'economy_coinflip_enabled',
+        label: 'Enable Coinflip',
+        type: 'toggle',
+        default: true,
+        group: 'Gambling'
+      },
+      {
+        key: 'economy_shop_enabled',
+        label: 'Enable Shop',
+        type: 'toggle',
+        default: true,
+        group: 'Shop'
       }
     ]
   },

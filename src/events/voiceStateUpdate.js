@@ -1,6 +1,7 @@
 const { ChannelType, PermissionsBitField } = require('discord.js');
 const { getConfig } = require('../database/guildConfig');
 const { buildControlPanel } = require('../handlers/tempVoiceHandler');
+const { handleVoiceState } = require('../handlers/levelingHandler');
 
 module.exports = {
   name: 'voiceStateUpdate',
@@ -96,6 +97,12 @@ module.exports = {
           console.error(`[TempVoice] Failed to delete empty channel ${leftChannel}:`, err.message);
         }
       }
+    }
+
+    try {
+      await handleVoiceState(bot, oldState, newState);
+    } catch (err) {
+      console.error('[VoiceXP] Error:', err.message);
     }
   }
 };
