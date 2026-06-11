@@ -164,6 +164,10 @@ module.exports = (client) => {
     res.render('impressum', { config: config.dashboard });
   });
 
+  app.get('/privacy', (req, res) => {
+    res.render('privacy', { config: config.dashboard });
+  });
+
   app.get('/auth', passport.authenticate('discord'));
   app.get('/auth/callback', passport.authenticate('discord', { failureRedirect: '/' }), async (req, res) => {
     const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip || req.connection?.remoteAddress || 'Unknown';
