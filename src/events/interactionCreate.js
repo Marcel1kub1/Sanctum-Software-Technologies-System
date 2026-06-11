@@ -24,11 +24,10 @@ module.exports = {
       }
 
       const ticketCustomIds = [
-        'ticket_create', 'ticket_subject_modal',
-        'ticket_claim', 'ticket_close', 'ticket_reopen',
+        'ticket_create', 'ticket_claim', 'ticket_close', 'ticket_reopen',
         'ticket_delete', 'ticket_confirm_delete', 'ticket_cancel_delete'
       ];
-      if (ticketCustomIds.includes(interaction.customId)) {
+      if (interaction.customId.startsWith('ticket_panel_') || ticketCustomIds.includes(interaction.customId)) {
         return handleTicketInteraction(bot, interaction);
       }
 
@@ -38,12 +37,7 @@ module.exports = {
     }
 
     if (interaction.isModalSubmit()) {
-      const ticketCustomIds = [
-        'ticket_create', 'ticket_subject_modal',
-        'ticket_claim', 'ticket_close', 'ticket_reopen',
-        'ticket_delete', 'ticket_confirm_delete', 'ticket_cancel_delete'
-      ];
-      if (ticketCustomIds.includes(interaction.customId)) {
+      if (interaction.customId.startsWith('ticket_subject_modal_')) {
         return handleTicketInteraction(bot, interaction);
       }
     }
