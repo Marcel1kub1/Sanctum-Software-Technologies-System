@@ -380,8 +380,6 @@ async function handleTicketInteraction(bot, interaction) {
         return handleTicketConfirmDelete(bot, interaction, guildData);
       case 'ticket_cancel_delete':
         return interaction.update({ content: 'Deletion cancelled.', components: [], ephemeral: true });
-      default:
-        break;
     }
   }
 }
