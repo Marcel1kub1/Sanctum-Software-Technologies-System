@@ -1,0 +1,82 @@
+<% 
+  const schema = moduleSchema;
+  if (!schema) {
+%>
+  <div class="page-header">
+    <h1 class="page-title">Module Not Found</h1>
+    <p class="page-desc">The requested module does not exist.</p>
+  </div>
+  <div class="card">
+    <a href="/dashboard?tab=modules&guild=<%= selectedGuild ? selectedGuild.id : '' %>" class="btn btn-primary">Back to Modules</a>
+  </div>
+<% } else { %>
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+    <div class="page-header" style="margin-bottom:0;">
+      <h1 class="page-title"><%= schema.icon %> <%= schema.name %></h1>
+      <p class="page-desc"><%= schema.description %></p>
+    </div>
+    <a href="/dashboard?tab=modules&guild=<%= selectedGuild ? selectedGuild.id : '' %>" class="btn btn-outline">← Back to Modules</a>
+  </div>
+
+  <%- include('partials/modules-config', { module: moduleName, schema: schema, config: guildConfig, selectedGuild }) %>
+
+  <% if (schema.panels && schema.panels.length > 0) { %>
+    <div style="margin-top:32px;">
+      <div class="page-header">
+        <h1 class="page-title" style="font-size:18px;">Discord Panels</h1>
+        <p class="page-desc">Configure and publish panels to your server</p>
+      </div>
+
+      <% schema.panels.forEach(panel => { %>
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title"><%= panel.label %></div>
+              <div class="card-desc">Preview and publish this panel to your server</div>
+            </div>
+          </div>
+
+          <% if (panel.type === 'embed_buttons') { %>
+            <div style="padding:18px;">
+              <div style="background: linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.5)); border:1px solid rgba(255,255,255,0.03); border-radius:12px; padding:18px; display:flex; flex-direction:column; gap:12px;">
+                <div style="font-weight:800; color:var(--text-primary);"> <%= guildConfig[panel.configKeys[0]] || schema.fields.find(f => f.key === panel.configKeys[0])?.default %> </div>
+                <div style="color:var(--text-secondary); font-size:13px;"> <%= guildConfig[panel.configKeys[1]] || schema.fields.find(f => f.key === panel.configKeys[1])?.default %> </div>
+                <div style="display:flex; gap:12px; margin-top:8px; flex-wrap:wrap;">
+                  <button type="button" class="btn btn-outline" style="background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02)); padding:14px 20px; border-radius:10px; font-weight:700; flex:1;"> <%= guildConfig[panel.configKeys[2]] || schema.fields.find(f => f.key === panel.configKeys[2])?.default %> </button>
+                  <button type="button" class="btn btn-outline" style="background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02)); padding:14px 20px; border-radius:10px; font-weight:700; flex:1;"> <%= guildConfig[panel.configKeys[3]] || schema.fields.find(f => f.key === panel.configKeys[3])?.default %> </button>
+                  <button type="button" class="btn btn-outline" style="background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02)); padding:14px 20px; border-radius:10px; font-weight:700; flex:1;"> <%= guildConfig[panel.configKeys[4]] || schema.fields.find(f => f.key === panel.configKeys[4])?.default %> </button>
+                </div>
+              </div>
+            </div>
+
+            <div style="padding:18px; border-top:1px solid var(--border);">
+              <button type="button" class="btn btn-success" onclick="sendPanel('<%= panel.id %>', '<%= panel.endpoint %>')">Send Panel to Discord</button>
+            </div>
+          <% } %>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+
+  <script>
+    async function sendPanel(panelId, endpoint) {
+      const guild = '<%= selectedGuild ? selectedGuild.id : '' %>';
+      if (!guild) {
+        alert('No guild selected');
+        return;
+      }
+      
+      try {
+        const res = await fetch(endpoint + '?guild=' + guild, { method: 'POST' });
+        if (res.ok) {
+          alert('Panel sent successfully!');
+        } else {
+          const err = await res.text();
+          alert('Failed to send panel: ' + err);
+        }
+      } catch (e) {
+        alert('Error sending panel: ' + e.message);
+      }
+    }
+  </script>
+<% } %>

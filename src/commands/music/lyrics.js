@@ -44,7 +44,8 @@ module.exports = class LyricsCommand extends Command {
         provider: guildCfg.music_lyrics_provider || bot.config.music.lyrics.provider,
         geniusToken: guildCfg.music_lyrics_genius_token || bot.config.music.lyrics.geniusToken
       };
-      const lyrics = await this.fetchLyrics(artist, title, lyricsConfig);
+      const { fetchLyrics } = require('../../utils/lyrics');
+      const lyrics = await fetchLyrics(artist, title, lyricsConfig);
       if (!lyrics) {
         await message.reply('No lyrics found for that song.');
         return;
@@ -93,7 +94,8 @@ module.exports = class LyricsCommand extends Command {
         provider: guildCfg.music_lyrics_provider || bot.config.music.lyrics.provider,
         geniusToken: guildCfg.music_lyrics_genius_token || bot.config.music.lyrics.geniusToken
       };
-      const lyrics = await this.fetchLyrics(artist, title, lyricsConfig);
+      const { fetchLyrics } = require('../../utils/lyrics');
+      const lyrics = await fetchLyrics(artist, title, lyricsConfig);
       if (!lyrics) {
         await interaction.editReply('No lyrics found for that song.');
         return;

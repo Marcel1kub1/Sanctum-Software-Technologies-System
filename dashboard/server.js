@@ -5,15 +5,18 @@ const DiscordStrategy = require('passport-discord').Strategy;
 const path = require('path');
 const config = require('../config');
 const { getConfig, updateConfig } = require('../src/database/guildConfig');
-const { ChannelType } = require('discord.js');
+const { ChannelType, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js');
 const db = require('../src/database/connection');
 const { sendPanel } = require('../src/handlers/rolePanelHandler');
+const { getAllModules, getModuleSchema } = require('../src/utils/moduleSchema');
+const { getAllCommands, getCommandSchema } = require('../src/utils/commandSchema');
 
 module.exports = (client) => {
   const app = express();
 
   app.set('view engine', 'ejs');
   app.set('views', path.join(__dirname, 'views'));
+  app.use(express.static(path.join(__dirname, 'public')));
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
@@ -84,6 +87,8 @@ module.exports = (client) => {
   app.get('/dashboard', checkAuth, async (req, res) => {
     const tab = req.query.tab || 'overview';
     const guildId = req.query.guild;
+    const moduleName = req.query.module;
+    const commandName = req.query.command;
     const guilds = client ? client.guilds.cache.map(g => ({
       id: g.id,
       name: g.name,
@@ -103,6 +108,9 @@ module.exports = (client) => {
 
     let guildConfig = {};
     let rolePanels = [];
+    let moduleSchema = null;
+    let commandSchema = null;
+    
     if (selectedGuild) {
       try {
         guildConfig = await getConfig(selectedGuild.id);
@@ -127,6 +135,14 @@ module.exports = (client) => {
       }
     }
 
+    if (tab === 'module' && moduleName) {
+      moduleSchema = getModuleSchema(moduleName);
+    }
+
+    if (tab === 'command' && commandName) {
+      commandSchema = getCommandSchema(commandName);
+    }
+
     const stats = {
       guilds: client ? client.guilds.cache.size : 0,
       users: client ? client.users.cache.size : 0,
@@ -142,7 +158,11 @@ module.exports = (client) => {
       guilds,
       selectedGuild,
       tab,
-      guildConfig
+      guildConfig,
+      moduleSchema,
+      moduleName,
+      commandSchema,
+      commandName
     });
   });
 
@@ -245,8 +265,171 @@ module.exports = (client) => {
     }
   });
 
+  app.post('/dashboard/tickets/send', checkAuth, async (req, res) => {
+    const guild = req.query.guild;
+    if (!guild) return res.status(400).send('Missing guild');
+    try {
+      const guildCfg = await getConfig(guild);
+      const channelId = guildCfg.tickets_panel_channel;
+      if (!channelId) return res.status(400).send('No panel channel configured');
+      const g = client ? client.guilds.cache.get(guild) : null;
+      if (!g) return res.status(404).send('Guild not found');
+      const ch = g.channels.cache.get(channelId);
+      if (!ch) return res.status(404).send('Channel not found');
+
+      const title = guildCfg.tickets_panel_title || 'Create a Ticket';
+      const desc = guildCfg.tickets_panel_description || 'Click the button below to open a ticket and our team will assist you.';
+      const b1 = guildCfg.tickets_button_1_label || 'Commission';
+      const b2 = guildCfg.tickets_button_2_label || 'Apply';
+      const b3 = guildCfg.tickets_button_3_label || 'Support';
+
+      const embed = new EmbedBuilder().setTitle(title).setDescription(desc).setColor(0x11111);
+      const row = new ActionRowBuilder().addComponents(
+        new ButtonBuilder().setCustomId(`ticket_panel_${guild}_1`).setLabel(b1).setStyle(ButtonStyle.Primary),
+        new ButtonBuilder().setCustomId(`ticket_panel_${guild}_2`).setLabel(b2).setStyle(ButtonStyle.Secondary),
+        new ButtonBuilder().setCustomId(`ticket_panel_${guild}_3`).setLabel(b3).setStyle(ButtonStyle.Secondary)
+      );
+
+      await ch.send({ embeds: [embed], components: [row] });
+      res.redirect(`/dashboard?tab=tickets&guild=${guild}`);
+    } catch (e) {
+      console.error('[Dashboard] Send tickets panel error:', e);
+      res.status(500).send('Failed to send panel');
+    }
+  });
+
   app.get('/logout', (req, res) => {
     req.logout(() => res.redirect('/'));
+  });
+
+  // Module Configuration API
+  app.get('/api/modules', (req, res) => {
+    res.json(getAllModules());
+  });
+
+  app.get('/api/modules/:moduleName/schema', (req, res) => {
+    const schema = getModuleSchema(req.params.moduleName);
+    if (!schema) return res.status(404).json({ error: 'Module not found' });
+    res.json(schema);
+  });
+
+  app.get('/api/modules/:moduleName/config', async (req, res) => {
+    const guildId = req.query.guild;
+    if (!guildId) return res.status(400).json({ error: 'Missing guild parameter' });
+    
+    try {
+      const guildConfig = await getConfig(guildId);
+      const schema = getModuleSchema(req.params.moduleName);
+      if (!schema) return res.status(404).json({ error: 'Module not found' });
+      
+      const moduleConfig = {};
+      schema.fields.forEach(field => {
+        moduleConfig[field.key] = guildConfig[field.key] !== undefined ? guildConfig[field.key] : field.default;
+      });
+      res.json({ config: moduleConfig, schema });
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  });
+
+  app.post('/api/modules/:moduleName/config', checkAuth, async (req, res) => {
+    const guildId = req.query.guild;
+    if (!guildId) return res.status(400).json({ error: 'Missing guild parameter' });
+
+    try {
+      const schema = getModuleSchema(req.params.moduleName);
+      if (!schema) return res.status(404).json({ error: 'Module not found' });
+
+      // Validate and sanitize incoming config
+      const updates = {};
+      schema.fields.forEach(field => {
+        if (req.body[field.key] !== undefined) {
+          let value = req.body[field.key];
+          
+          if (field.type === 'toggle') {
+            value = value === 'on' || value === 'true' || value === true;
+          } else if (field.type === 'number') {
+            value = parseInt(value, 10);
+            if (field.min !== undefined) value = Math.max(value, field.min);
+            if (field.max !== undefined) value = Math.min(value, field.max);
+          }
+          
+          updates[field.key] = value;
+        }
+      });
+
+      await updateConfig(guildId, updates);
+      if (client && client._guildConfigCache) client._guildConfigCache.delete(`guild_${guildId}`);
+      
+      res.json({ success: true, config: updates });
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  });
+
+  // Command Configuration API
+  app.get('/api/commands', (req, res) => {
+    res.json(getAllCommands());
+  });
+
+  app.get('/api/commands/:commandName/schema', (req, res) => {
+    const schema = getCommandSchema(req.params.commandName);
+    if (!schema) return res.status(404).json({ error: 'Command not found' });
+    res.json(schema);
+  });
+
+  app.get('/api/commands/:commandName/config', async (req, res) => {
+    const guildId = req.query.guild;
+    if (!guildId) return res.status(400).json({ error: 'Missing guild parameter' });
+    
+    try {
+      const guildConfig = await getConfig(guildId);
+      const schema = getCommandSchema(req.params.commandName);
+      if (!schema) return res.status(404).json({ error: 'Command not found' });
+      
+      const cmdConfig = {};
+      schema.fields.forEach(field => {
+        cmdConfig[field.key] = guildConfig[field.key] !== undefined ? guildConfig[field.key] : field.default;
+      });
+      res.json({ config: cmdConfig, schema });
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  });
+
+  app.post('/api/commands/:commandName/config', checkAuth, async (req, res) => {
+    const guildId = req.query.guild;
+    if (!guildId) return res.status(400).json({ error: 'Missing guild parameter' });
+
+    try {
+      const schema = getCommandSchema(req.params.commandName);
+      if (!schema) return res.status(404).json({ error: 'Command not found' });
+
+      // Validate and sanitize incoming config
+      const updates = {};
+      schema.fields.forEach(field => {
+        if (req.body[field.key] !== undefined) {
+          let value = req.body[field.key];
+          
+          if (field.type === 'toggle') {
+            value = value === 'on' || value === 'true' || value === true;
+          } else if (field.type === 'number') {
+            value = parseInt(value, 10);
+            if (field.min !== undefined) value = Math.max(value, field.min);
+            if (field.max !== undefined) value = Math.min(value, field.max);
+          }
+          
+          updates[field.key] = value;
+        }
+      });
+
+      await updateConfig(guildId, updates);
+      if (client && client._guildConfigCache) client._guildConfigCache.delete(`guild_${guildId}`);
+      
+      res.json({ success: true, config: updates });
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
   });
 
   app.get('/api/stats', (req, res) => {

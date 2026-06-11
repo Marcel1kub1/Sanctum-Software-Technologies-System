@@ -361,6 +361,11 @@ async function handleTicketInteraction(bot, interaction) {
     switch (customId) {
       case 'ticket_create':
         return handleTicketCreateButton(bot, interaction, guildData);
+      default:
+        if (typeof customId === 'string' && customId.startsWith('ticket_panel_')) {
+          return handleTicketCreateButton(bot, interaction, guildData);
+        }
+        break;
       case 'ticket_subject_modal':
         return handleTicketSubjectModal(bot, interaction, guildData);
       case 'ticket_claim':

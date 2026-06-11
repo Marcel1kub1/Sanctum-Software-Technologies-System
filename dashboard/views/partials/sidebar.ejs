@@ -20,6 +20,14 @@
       <span class="nav-icon">⚙</span>
       <span>Settings</span>
     </a>
+    <a href="/dashboard?tab=modules" class="nav-item <%= tab === 'modules' || tab === 'module' ? 'active' : '' %>">
+      <span class="nav-icon">🧩</span>
+      <span>All Modules</span>
+    </a>
+    <a href="/dashboard?tab=commands" class="nav-item <%= tab === 'commands' || tab === 'command' ? 'active' : '' %>">
+      <span class="nav-icon">⚡</span>
+      <span>Commands</span>
+    </a>
 
     <div class="nav-category">Logs & Cases</div>
     <a href="/dashboard?tab=logging" class="nav-item <%= tab === 'logging' ? 'active' : '' %>">

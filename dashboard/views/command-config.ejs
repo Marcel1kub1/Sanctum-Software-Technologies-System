@@ -1,0 +1,230 @@
+<div class="page-header">
+  <div style="display:flex; align-items:center; gap:12px; margin-bottom:24px;">
+    <a href="/dashboard?tab=commands&guild=<%= selectedGuild ? selectedGuild.id : '' %>" class="back-btn">← All Commands</a>
+    <h1 class="page-title">/<%= commandName %></h1>
+  </div>
+  <p class="page-desc" id="cmdDesc"></p>
+</div>
+
+<div class="module-config-card">
+  <form id="commandConfigForm">
+    <!-- Rendered by JavaScript -->
+  </form>
+</div>
+
+<script>
+  const commandName = '<%= commandName %>';
+  const guildId = '<%= selectedGuild ? selectedGuild.id : "" %>';
+
+  async function loadCommandConfig() {
+    try {
+      const schemaRes = await fetch(`/api/commands/${commandName}/schema`);
+      if (!schemaRes.ok) {
+        document.getElementById('commandConfigForm').innerHTML = '<p style="color:var(--red);">Command not found</p>';
+        return;
+      }
+      const schema = await schemaRes.json();
+      
+      const configRes = await fetch(`/api/commands/${commandName}/config?guild=${guildId}`);
+      const { config } = await configRes.json();
+      
+      document.getElementById('cmdDesc').textContent = schema.description;
+      renderCommandForm(schema, config);
+    } catch (e) {
+      console.error('Failed to load command config:', e);
+    }
+  }
+
+  function renderCommandForm(schema, config) {
+    const form = document.getElementById('commandConfigForm');
+    const grouped = {};
+    
+    schema.fields.forEach(field => {
+      const group = field.group || 'General';
+      if (!grouped[group]) grouped[group] = [];
+      grouped[group].push(field);
+    });
+
+    let html = '';
+    Object.entries(grouped).forEach(([group, fields]) => {
+      html += `<div class="form-group-section">
+        <h3 class="form-group-title">${group}</h3>`;
+      
+      fields.forEach(field => {
+        const value = config[field.key] !== undefined ? config[field.key] : field.default;
+        const fieldHtml = renderFormField(field, value);
+        html += fieldHtml;
+      });
+      
+      html += '</div>';
+    });
+
+    html += `<button type="submit" class="btn-primary">Save Configuration</button>`;
+    form.innerHTML = html;
+    form.addEventListener('submit', submitCommandConfig);
+  }
+
+  function renderFormField(field, value) {
+    let input = '';
+    
+    if (field.type === 'toggle') {
+      input = `<input type="checkbox" name="${field.key}" id="${field.key}" ${value ? 'checked' : ''} class="form-toggle">`;
+    } else if (field.type === 'number') {
+      input = `<input type="number" name="${field.key}" id="${field.key}" value="${value}" class="form-input" 
+        ${field.min !== undefined ? `min="${field.min}"` : ''} 
+        ${field.max !== undefined ? `max="${field.max}"` : ''}>`;
+    } else if (field.type === 'text') {
+      input = `<input type="text" name="${field.key}" id="${field.key}" value="${value || ''}" class="form-input" placeholder="${field.hint || ''}">`;
+    } else if (field.type === 'textarea') {
+      input = `<textarea name="${field.key}" id="${field.key}" class="form-input" placeholder="${field.hint || ''}">${value || ''}</textarea>`;
+    } else if (field.type === 'select') {
+      input = `<select name="${field.key}" id="${field.key}" class="form-select">`;
+      field.options.forEach(opt => {
+        input += `<option value="${opt.value}" ${opt.value === value ? 'selected' : ''}>${opt.label}</option>`;
+      });
+      input += `</select>`;
+    } else if (field.type === 'channel' || field.type === 'roles') {
+      input = `<input type="text" name="${field.key}" id="${field.key}" value="${value || ''}" class="form-input" placeholder="Select channel or role ID...">`;
+    }
+
+    return `<div class="form-field">
+      <label for="${field.key}" class="form-label">${field.label}</label>
+      ${input}
+      ${field.hint ? `<small class="form-hint">${field.hint}</small>` : ''}
+    </div>`;
+  }
+
+  async function submitCommandConfig(e) {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
+
+    try {
+      const res = await fetch(`/api/commands/${commandName}/config?guild=${guildId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      if (!res.ok) {
+        alert('Failed to save configuration');
+        return;
+      }
+
+      alert('Configuration saved successfully!');
+    } catch (e) {
+      alert('Error: ' + e.message);
+    }
+  }
+
+  loadCommandConfig();
+</script>
+
+<style>
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--blue);
+    text-decoration: none;
+    border: 1px solid var(--blue-subtle);
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: 0.2s;
+  }
+
+  .back-btn:hover {
+    background: var(--blue-subtle);
+    box-shadow: 0 0 8px var(--blue-glow);
+  }
+
+  .module-config-card {
+    background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.02));
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 24px;
+  }
+
+  .form-group-section {
+    margin-bottom: 28px;
+  }
+
+  .form-group-section:last-of-type {
+    margin-bottom: 24px;
+  }
+
+  .form-group-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255,42,166,0.1);
+  }
+
+  .form-field {
+    margin-bottom: 16px;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--text-primary);
+  }
+
+  .form-input,
+  .form-select {
+    width: 100%;
+    padding: 9px 12px;
+    font-size: 12px;
+    background: rgba(255,255,255,0.01);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-primary);
+    transition: 0.2s;
+  }
+
+  .form-input:focus,
+  .form-select:focus {
+    outline: none;
+    border-color: var(--blue);
+    box-shadow: 0 0 12px var(--blue-glow);
+  }
+
+  .form-toggle {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+  }
+
+  .form-hint {
+    display: block;
+    margin-top: 4px;
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-style: italic;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), var(--blue));
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px var(--accent-glow);
+  }
+</style>

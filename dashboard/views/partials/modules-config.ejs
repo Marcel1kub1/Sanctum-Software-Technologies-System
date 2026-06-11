@@ -1,0 +1,131 @@
+<!-- Generic Module Configuration Form -->
+<!-- Usage: <%- include('modules-config', { module: 'tickets', schema, config, selectedGuild }) %>  -->
+
+<% 
+  const groupedFields = {};
+  (schema.fields || []).forEach(field => {
+    const group = field.group || 'Other';
+    if (!groupedFields[group]) groupedFields[group] = [];
+    groupedFields[group].push(field);
+  });
+  const groups = Object.keys(groupedFields).sort();
+%>
+
+<form method="POST" action="/dashboard/config?guild=<%= selectedGuild ? selectedGuild.id : '' %>" class="module-config-form" data-module="<%= schema.key || module %>">
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title" style="font-size:18px;"><%= schema.icon || '⚙️' %> <%= schema.name %></div>
+        <div class="card-desc"><%= schema.description %></div>
+      </div>
+    </div>
+  </div>
+
+  <% groups.forEach(group => { %>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title" style="font-size:14px; text-transform:uppercase; letter-spacing:0.5px;"><%= group %></span>
+      </div>
+
+      <% groupedFields[group].forEach(field => { %>
+        <div class="form-group">
+          <label class="form-label"><%= field.label %></label>
+
+          <% if (field.type === 'toggle') { %>
+            <label class="toggle">
+              <input type="checkbox" <%= config[field.key] ? 'checked' : '' %> name="<%= field.key %>">
+              <span class="toggle-slider"></span>
+            </label>
+
+          <% } else if (field.type === 'channel') { %>
+            <select class="form-select" name="<%= field.key %>" <%= field.required ? 'required' : '' %>>
+              <option value="">Select a channel...</option>
+              <% (selectedGuild.textChannels || []).forEach(ch => { %>
+                <option value="<%= ch.id %>" <%= config[field.key] === ch.id ? 'selected' : '' %>><%= ch.name %></option>
+              <% }) %>
+            </select>
+
+          <% } else if (field.type === 'roles') { %>
+            <select class="form-select" name="<%= field.key %>" multiple>
+              <% (selectedGuild.roles || []).forEach(role => { %>
+                <option value="<%= role.id %>" <%= config[field.key] && config[field.key].includes(role.id) ? 'selected' : '' %>><%= role.name %></option>
+              <% }) %>
+            </select>
+
+          <% } else if (field.type === 'select') { %>
+            <select class="form-select" name="<%= field.key %>">
+              <% (field.options || []).forEach(opt => { %>
+                <option value="<%= opt.value %>" <%= config[field.key] === opt.value ? 'selected' : '' %>><%= opt.label %></option>
+              <% }) %>
+            </select>
+
+          <% } else if (field.type === 'number') { %>
+            <input class="form-input" type="number" 
+              value="<%= config[field.key] !== undefined ? config[field.key] : field.default %>" 
+              <%= field.min !== undefined ? `min="${field.min}"` : '' %>
+              <%= field.max !== undefined ? `max="${field.max}"` : '' %>
+              <%= field.step !== undefined ? `step="${field.step}"` : '' %>
+              name="<%= field.key %>">
+
+          <% } else if (field.type === 'password') { %>
+            <input class="form-input" type="password" 
+              value="<%= config[field.key] || '' %>" 
+              placeholder="••••••••"
+              name="<%= field.key %>">
+
+          <% } else if (field.type === 'textarea') { %>
+            <textarea class="form-textarea" rows="3" name="<%= field.key %>"><%= config[field.key] || '' %></textarea>
+
+          <% } else { /* text */ %>
+            <input class="form-input" type="text" 
+              value="<%= config[field.key] || '' %>" 
+              placeholder="<%= field.hint || '' %>"
+              <%= field.required ? 'required' : '' %>
+              name="<%= field.key %>">
+          <% } %>
+
+          <% if (field.hint) { %>
+            <div class="form-hint"><%= field.hint %></div>
+          <% } %>
+        </div>
+      <% }) %>
+    </div>
+  <% }) %>
+
+  <div class="flex gap-2" style="margin-top:24px;">
+    <button class="btn btn-primary" type="submit">Save Changes</button>
+    <button class="btn btn-outline" type="reset">Reset</button>
+  </div>
+
+</form>
+
+<script>
+  // Panel management for modules with panels
+  <% if (schema.panels && schema.panels.length > 0) { %>
+    const modulePanels = <%= JSON.stringify(schema.panels) %>;
+    modulePanels.forEach(panel => {
+      const btn = document.querySelector(`[data-panel-id="${panel.id}"]`);
+      if (btn) {
+        btn.addEventListener('click', async () => {
+          const formData = new FormData(document.querySelector('form.module-config-form'));
+          const payload = Object.fromEntries(formData);
+          try {
+            const res = await fetch(panel.endpoint + '?guild=<%= selectedGuild ? selectedGuild.id : '' %>', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            });
+            if (res.ok) {
+              alert('Panel sent successfully!');
+            } else {
+              alert('Failed to send panel');
+            }
+          } catch (e) {
+            alert('Error sending panel');
+          }
+        });
+      }
+    });
+  <% } %>
+</script>

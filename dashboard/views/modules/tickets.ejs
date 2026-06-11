@@ -61,21 +61,22 @@
         <div class="card-desc">Currently open support tickets</div>
       </div>
     </div>
-    <div class="level-row">
-      <span class="badge badge-green" style="font-size:10px;">OPEN</span>
-      <div class="level-info">
-        <div class="level-name">#ticket-001</div>
-        <div class="level-role">General support request</div>
+    <div class="card-header" style="margin-top:8px;">
+      <div>
+        <span class="card-title">Panel Preview</span>
+        <div class="card-desc">How the ticket panel will look in Discord</div>
       </div>
-      <span style="font-size:11px;color:var(--text-muted);">2m ago</span>
     </div>
-    <div class="level-row">
-      <span class="badge badge-yellow" style="font-size:10px;">PENDING</span>
-      <div class="level-info">
-        <div class="level-name">#ticket-002</div>
-        <div class="level-role">Role request</div>
+    <div style="padding:18px;">
+      <div style="background: linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.5)); border:1px solid rgba(255,255,255,0.03); border-radius:12px; padding:18px; display:flex; flex-direction:column; gap:12px;">
+        <div style="font-weight:800; color:var(--text-primary);"> <%= gc('tickets_panel_title', 'Create a Ticket') %> </div>
+        <div style="color:var(--text-secondary); font-size:13px;"> <%= gc('tickets_panel_description', 'Click the button below to open a ticket and our team will assist you.') %> </div>
+        <div style="display:flex; gap:12px; margin-top:8px; flex-wrap:wrap;">
+          <button class="btn btn-outline" style="background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02)); padding:14px 20px; border-radius:10px; font-weight:700;"> <%= gc('tickets_button_1_label', 'Commission') %> </button>
+          <button class="btn btn-outline" style="background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02)); padding:14px 20px; border-radius:10px; font-weight:700;"> <%= gc('tickets_button_2_label', 'Apply') %> </button>
+          <button class="btn btn-outline" style="background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02)); padding:14px 20px; border-radius:10px; font-weight:700;"> <%= gc('tickets_button_3_label', 'Support') %> </button>
+        </div>
       </div>
-      <span style="font-size:11px;color:var(--text-muted);">1h ago</span>
     </div>
   </div>
 </div>
@@ -105,6 +106,18 @@
     <div class="form-group">
       <label class="form-label">Button Label</label>
       <input class="form-input" value="<%= gc('tickets_button_label', 'Open Ticket') %>" name="tickets_button_label">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Panel Button 1 Label</label>
+      <input class="form-input" value="<%= gc('tickets_button_1_label', 'Commission') %>" name="tickets_button_1_label">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Panel Button 2 Label</label>
+      <input class="form-input" value="<%= gc('tickets_button_2_label', 'Apply') %>" name="tickets_button_2_label">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Panel Button 3 Label</label>
+      <input class="form-input" value="<%= gc('tickets_button_3_label', 'Support') %>" name="tickets_button_3_label">
     </div>
     <div class="form-group">
       <label class="form-label">Ticket Name Format</label>
@@ -144,8 +157,28 @@
 </div>
 
 <div class="flex gap-2">
-  <button class="btn btn-primary">Save Changes</button>
-  <button class="btn btn-outline">Reset to Default</button>
+  <button class="btn btn-primary" type="submit">Save Changes</button>
+  <button class="btn btn-success" type="button" id="sendPanelBtn">Send Panel</button>
+  <button class="btn btn-outline" type="reset">Reset to Default</button>
 </div>
+
+<script>
+  document.getElementById('sendPanelBtn').addEventListener('click', async () => {
+    const guild = '<%= selectedGuild ? selectedGuild.id : '' %>';
+    if (!guild) return alert('No guild selected');
+    try {
+      const res = await fetch(`/dashboard/tickets/send?guild=${guild}`, { method: 'POST' });
+      if (res.ok) {
+        alert('Panel sent successfully');
+        window.location.reload();
+      } else {
+        const txt = await res.text();
+        alert('Failed to send panel: ' + txt);
+      }
+    } catch (e) {
+      alert('Network error while sending panel');
+    }
+  });
+</script>
 
 </form>

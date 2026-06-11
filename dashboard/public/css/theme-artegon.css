@@ -1,0 +1,36 @@
+/* Artegon-like theme overrides */
+:root{
+  --accent: #ff2aa6;
+  --blue: #6dd3ff;
+  --green: #00ffb3;
+  --bg-primary: linear-gradient(180deg,#07060a 0%, #0b0610 60%);
+  --glass: rgba(255,255,255,0.03);
+  --glass-2: rgba(255,255,255,0.02);
+  --card-border: rgba(255,42,166,0.08);
+}
+body{
+  background: var(--bg-primary);
+  background-image: radial-gradient(circle at 10% 10%, rgba(255,42,166,0.06), transparent 8%), radial-gradient(circle at 90% 90%, rgba(109,211,255,0.03), transparent 10%);
+  color: #f3f3f7;
+}
+.header{backdrop-filter: blur(6px); border-bottom-color: rgba(255,255,255,0.02);}
+.brand-name{font-family: 'Inter', sans-serif; font-size:18px; letter-spacing:3px;}
+.brand-icon{font-size:26px; color:var(--accent); text-shadow:0 6px 30px rgba(255,42,166,0.12);}
+.server-header{background: linear-gradient(135deg, rgba(255,42,166,0.04), rgba(109,211,255,0.02)); border:1px solid var(--card-border); box-shadow: 0 6px 40px rgba(0,0,0,0.6);}
+.stat-card{background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.02);}
+.btn-primary{background: linear-gradient(90deg, var(--accent), #cc0066); box-shadow:0 8px 30px rgba(255,42,166,0.12);}
+.module-card{border:1px solid rgba(255,255,255,0.02); background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.02));}
+.module-card:hover{transform: translateY(-6px); box-shadow: 0 20px 60px rgba(0,0,0,0.6);}
+.sidebar{background: linear-gradient(180deg, rgba(10,6,12,0.9), rgba(8,6,10,0.95)); border-right:1px solid rgba(255,255,255,0.02);}
+.nav-item.active{box-shadow: inset 6px 0 0 var(--accent); color:var(--accent); background: linear-gradient(90deg, rgba(255,42,166,0.02), transparent);}
+.btn-configure{border:1px solid rgba(109,211,255,0.08);}
+.embed-preview{border-left-color: var(--accent);}
+.notification-panel{border:1px solid rgba(255,255,255,0.02);}
+/* Hero accent decorations */
+.server-header::after{content:''; position:absolute; right:-120px; bottom:-60px; width:380px; height:380px; background: radial-gradient(circle at 30% 30%, rgba(255,42,166,0.06), transparent 20%), radial-gradient(circle at 70% 70%, rgba(109,211,255,0.03), transparent 30%); transform: rotate(12deg); opacity:0.9; pointer-events:none;}
+
+/* Smaller screens tweaks */
+@media (max-width: 768px){
+  .brand-name{display:none;} 
+  .server-header::after{display:none}
+}

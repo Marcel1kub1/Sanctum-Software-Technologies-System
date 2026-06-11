@@ -153,7 +153,6 @@ class LavalinkManager {
     const player = await this.getPlayer(guildId);
     if (!player) throw new Error('No active player');
     const queue = this.getQueue(guildId);
-
     if (queue.tracks.length === 0) {
       if (queue.history.length >= 50) queue.history.shift();
       if (queue.current) queue.history.push(queue.current);
@@ -164,11 +163,16 @@ class LavalinkManager {
 
     const next = queue.tracks.shift();
 
-    await player.playTrack({ track: { encoded: next.encoded } });
+    // Ensure current track is stopped before starting the next to avoid race conditions
+    try {
+      await player.stopTrack();
+    } catch {}
 
     if (queue.history.length >= 50) queue.history.shift();
     if (queue.current) queue.history.push(queue.current);
     queue.current = next;
+
+    await player.playTrack({ track: { encoded: next.encoded } });
 
     return queue.current;
   }

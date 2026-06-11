@@ -369,6 +369,7 @@
     .text-center { text-align: center; }
     .w-full { width: 100%; }
   </style>
+  <link rel="stylesheet" href="/css/theme-artegon.css">
 </head>
 <body>
   <%- include('partials/header', { config, stats, user, selectedGuild }) %>
@@ -376,7 +377,15 @@
     <%- include('partials/sidebar', { config, guilds, selectedGuild, tab }) %>
     <main class="main">
       <% var gc = function(key, def) { var v = guildConfig && guildConfig[key]; return (v !== undefined && v !== null && v !== '') ? v : def; }; %>
-      <% if (tab === 'overview') { %>
+      <% if (tab === 'modules') { %>
+        <%- include('modules-list', { config, selectedGuild, guildConfig, gc }) %>
+      <% } else if (tab === 'module') { %>
+        <%- include('module-config', { config, selectedGuild, guildConfig, gc, req }) %>
+      <% } else if (tab === 'commands') { %>
+        <%- include('commands-list', { config, selectedGuild, guildConfig, gc }) %>
+      <% } else if (tab === 'command') { %>
+        <%- include('command-config', { config, selectedGuild, guildConfig, gc, req }) %>
+      <% } else if (tab === 'overview') { %>
         <%- include('modules/overview', { config, stats, user, selectedGuild, guildConfig, gc }) %>
       <% } else if (tab === 'settings') { %>
         <%- include('modules/settings', { config, selectedGuild, guildConfig, gc }) %>

@@ -293,12 +293,19 @@ async function handleMusicPanelButton(bot, interaction) {
           const a = status.current.info.author.replace(/ \(.*?\)|\[.*?\]/g, '').trim();
           const t = status.current.info.title.replace(/ \(.*?\)|\[.*?\]/g, '').trim();
           if (a && t) {
-            const res = await axios.get(`https://api.lyrics.ovh/v1/${encodeURIComponent(a)}/${encodeURIComponent(t)}`);
-            if (res.data?.lyrics) {
+            const guildCfg = await bot.guildConfig(guildId);
+            const lyricsConfig = {
+              enabled: guildCfg.music_lyrics_enabled !== undefined ? guildCfg.music_lyrics_enabled : bot.config.music.lyrics.enabled,
+              provider: guildCfg.music_lyrics_provider || bot.config.music.lyrics.provider,
+              geniusToken: guildCfg.music_lyrics_genius_token || bot.config.music.lyrics.geniusToken
+            };
+            const { fetchLyrics } = require('../utils/lyrics');
+            const text = await fetchLyrics(a, t, lyricsConfig);
+            if (text) {
               const embed = new EmbedBuilder()
                 .setColor(0x00E5FF)
                 .setTitle(`Lyrics - ${status.current.info.title}`)
-                .setDescription(res.data.lyrics.length > 4096 ? res.data.lyrics.substring(0, 4093) + '...' : res.data.lyrics);
+                .setDescription(text.length > 4096 ? text.substring(0, 4093) + '...' : text);
               await interaction.editReply({ content: null, embeds: [embed] });
               return setTimeout(() => sendOrUpdatePanel(bot, guildId), 120000);
             }
