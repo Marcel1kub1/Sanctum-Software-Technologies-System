@@ -341,39 +341,89 @@ const MODULE_SCHEMAS = {
         group: 'General'
       },
       {
+        key: 'automod_max_messages',
+        label: 'Max Messages in Interval',
+        type: 'number',
+        default: 5,
+        group: 'Anti-Spam'
+      },
+      {
+        key: 'automod_interval',
+        label: 'Spam Interval (seconds)',
+        type: 'number',
+        default: 3,
+        group: 'Anti-Spam'
+      },
+      {
+        key: 'automod_action',
+        label: 'Spam Action',
+        type: 'select',
+        default: 'warn',
+        options: [{ value: 'warn', label: 'Warn' }, { value: 'mute', label: 'Mute' }, { value: 'kick', label: 'Kick' }],
+        group: 'Anti-Spam'
+      },
+      {
+        key: 'automod_mute_duration',
+        label: 'Mute Duration (seconds)',
+        type: 'number',
+        default: 60,
+        group: 'Anti-Spam'
+      },
+      {
+        key: 'automod_log_channel',
+        label: 'AutoMod Log Channel',
+        type: 'channel',
+        default: '',
+        group: 'General'
+      },
+      {
         key: 'automod_max_mentions',
         label: 'Max Mentions per Message',
         type: 'number',
         default: 5,
-        group: 'Spam'
+        group: 'Content Filtering'
       },
       {
         key: 'automod_max_links',
         label: 'Max Links per Message',
         type: 'number',
         default: 3,
-        group: 'Spam'
+        group: 'Content Filtering'
       },
       {
-        key: 'automod_anti_spam_enabled',
-        label: 'Enable Anti-Spam',
+        key: 'automod_max_lines',
+        label: 'Max Lines per Message',
+        type: 'number',
+        default: 10,
+        group: 'Content Filtering'
+      },
+      {
+        key: 'automod_max_caps',
+        label: 'Max Caps %',
+        type: 'number',
+        default: 70,
+        group: 'Content Filtering'
+      },
+      {
+        key: 'automod_block_invites',
+        label: 'Block Discord Invites',
         type: 'toggle',
         default: true,
-        group: 'Spam'
+        group: 'Content Filtering'
       },
       {
-        key: 'automod_anti_spam_max_messages',
-        label: 'Max Messages in Interval',
-        type: 'number',
-        default: 5,
-        group: 'Spam'
+        key: 'automod_block_spoilers',
+        label: 'Block Excessive Spoilers',
+        type: 'toggle',
+        default: false,
+        group: 'Content Filtering'
       },
       {
-        key: 'automod_anti_spam_interval',
-        label: 'Spam Interval (ms)',
-        type: 'number',
-        default: 3000,
-        group: 'Spam'
+        key: 'automod_block_mass_mentions',
+        label: 'Block Mass Mentions',
+        type: 'toggle',
+        default: true,
+        group: 'Content Filtering'
       }
     ]
   },
@@ -394,25 +444,81 @@ const MODULE_SCHEMAS = {
       },
       {
         key: 'logging_channel',
-        label: 'Log Channel',
+        label: 'Main Log Channel',
         type: 'channel',
         default: '',
-        group: 'General',
-        hint: 'Channel for all server logs'
+        group: 'Channels',
+        hint: 'Fallback channel for all logs'
       },
       {
-        key: 'logging_mod_channel',
-        label: 'Moderation Log Channel',
+        key: 'logging_messagelogs',
+        label: 'Message Logs Channel',
         type: 'channel',
         default: '',
         group: 'Channels'
       },
       {
-        key: 'logging_member_channel',
-        label: 'Member Log Channel',
+        key: 'logging_memberlogs',
+        label: 'Member Logs Channel',
         type: 'channel',
         default: '',
         group: 'Channels'
+      },
+      {
+        key: 'logging_modlogs',
+        label: 'Mod Logs Channel',
+        type: 'channel',
+        default: '',
+        group: 'Channels'
+      },
+      {
+        key: 'logging_messageedit',
+        label: 'Log Message Edits',
+        type: 'toggle',
+        default: true,
+        group: 'Events'
+      },
+      {
+        key: 'logging_messagedelete',
+        label: 'Log Message Deletes',
+        type: 'toggle',
+        default: true,
+        group: 'Events'
+      },
+      {
+        key: 'logging_memberjoin',
+        label: 'Log Member Joins',
+        type: 'toggle',
+        default: true,
+        group: 'Events'
+      },
+      {
+        key: 'logging_memberleave',
+        label: 'Log Member Leaves',
+        type: 'toggle',
+        default: true,
+        group: 'Events'
+      },
+      {
+        key: 'logging_channelchanges',
+        label: 'Log Channel Changes',
+        type: 'toggle',
+        default: false,
+        group: 'Events'
+      },
+      {
+        key: 'logging_rolechanges',
+        label: 'Log Role Changes',
+        type: 'toggle',
+        default: false,
+        group: 'Events'
+      },
+      {
+        key: 'logging_voiceevents',
+        label: 'Log Voice Events',
+        type: 'toggle',
+        default: false,
+        group: 'Events'
       }
     ]
   },

@@ -2,6 +2,7 @@ const { handleTicketInteraction } = require('../handlers/ticketHandler');
 const { handleGiveawayButton } = require('../handlers/giveawayHandler');
 const { handleRoleButton } = require('../handlers/rolePanelHandler');
 const { handleMusicPanelButton } = require('../handlers/musicPanelHandler');
+const { handleTempVoiceButton, handleTempVoiceModal, handleTempVoiceSelect } = require('../handlers/tempVoiceHandler');
 const { executeCommand } = require('../handlers/executeHandler');
 
 module.exports = {
@@ -34,12 +35,23 @@ module.exports = {
       if (interaction.customId.startsWith('role_panel_')) {
         return handleRoleButton(bot, interaction);
       }
+
+      if (interaction.customId.startsWith('tempvoice_')) {
+        return handleTempVoiceButton(bot, interaction);
+      }
     }
 
     if (interaction.isModalSubmit()) {
       if (interaction.customId.startsWith('ticket_subject_modal_')) {
         return handleTicketInteraction(bot, interaction);
       }
+      if (interaction.customId.startsWith('tempvoice_modal_')) {
+        return handleTempVoiceModal(bot, interaction);
+      }
+    }
+
+    if (interaction.isStringSelectMenu() && interaction.customId.startsWith('tempvoice_select_')) {
+      return handleTempVoiceSelect(bot, interaction);
     }
   }
 };

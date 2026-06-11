@@ -47,6 +47,7 @@ class Bot extends Client {
     this.tempBans = new Collection();
     this.lavalink = new LavalinkManager(this);
     this._guildConfigCache = new Map();
+    this.tempVoiceChannels = new Map();
 
     loadCommands(this);
     loadEvents(this);
