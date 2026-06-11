@@ -1082,6 +1082,200 @@ const MODULE_SCHEMAS = {
         group: 'Limits'
       }
     ]
+  },
+
+  tempVoice: {
+    name: 'Temp Voice',
+    description: 'Dynamic temporary voice channels for members',
+    icon: '🔊',
+    category: 'utility',
+    enabled: true,
+    fields: [
+      {
+        key: 'tempvoice_enabled',
+        label: 'Enable Temp Voice',
+        type: 'toggle',
+        default: true,
+        group: 'General'
+      },
+      {
+        key: 'tempvoice_interface_channel',
+        label: 'Interface Channel',
+        type: 'channel',
+        default: '',
+        group: 'General',
+        hint: 'Users join this channel to create their own temporary channel'
+      },
+      {
+        key: 'tempvoice_category',
+        label: 'Category',
+        type: 'channel',
+        default: '',
+        group: 'General',
+        hint: 'Category where temporary channels are created'
+      },
+      {
+        key: 'tempvoice_channel_name_format',
+        label: 'Channel Name Format',
+        type: 'text',
+        default: "{user}'s Channel",
+        group: 'Channel Settings',
+        hint: 'Variables: {user}, {count}'
+      },
+      {
+        key: 'tempvoice_user_limit',
+        label: 'Default User Limit',
+        type: 'number',
+        default: 0,
+        min: 0,
+        group: 'Channel Settings',
+        hint: '0 for unlimited'
+      },
+      {
+        key: 'tempvoice_bitrate',
+        label: 'Default Bitrate (kbps)',
+        type: 'number',
+        default: 64,
+        min: 8,
+        max: 384,
+        group: 'Channel Settings',
+        hint: 'Audio quality in kbps (8-384)'
+      },
+      {
+        key: 'tempvoice_region',
+        label: 'Voice Region',
+        type: 'select',
+        default: 'automatic',
+        options: [
+          { label: 'Automatic', value: 'automatic' },
+          { label: 'Brazil', value: 'brazil' },
+          { label: 'Europe', value: 'europe' },
+          { label: 'India', value: 'india' },
+          { label: 'Japan', value: 'japan' },
+          { label: 'Russia', value: 'russia' },
+          { label: 'Singapore', value: 'singapore' },
+          { label: 'South Africa', value: 'southafrica' },
+          { label: 'Sydney', value: 'sydney' },
+          { label: 'US Central', value: 'us-central' },
+          { label: 'US East', value: 'us-east' },
+          { label: 'US South', value: 'us-south' },
+          { label: 'US West', value: 'us-west' }
+        ],
+        group: 'Channel Settings',
+        hint: 'Voice region for new channels'
+      },
+      {
+        key: 'tempvoice_auto_delete_empty',
+        label: 'Auto-Delete on Empty',
+        type: 'toggle',
+        default: true,
+        group: 'Cleanup'
+      },
+      {
+        key: 'tempvoice_auto_delete_delay',
+        label: 'Empty Delete Delay (seconds)',
+        type: 'number',
+        default: 0,
+        min: 0,
+        max: 300,
+        group: 'Cleanup',
+        hint: 'Wait time before deleting an empty channel (0 = instant)'
+      },
+      {
+        key: 'tempvoice_max_channels_per_user',
+        label: 'Max Channels per User',
+        type: 'number',
+        default: 1,
+        min: 1,
+        max: 10,
+        group: 'Limits'
+      },
+      {
+        key: 'tempvoice_max_channels_total',
+        label: 'Max Total Temp Channels',
+        type: 'number',
+        default: 25,
+        min: 1,
+        max: 100,
+        group: 'Limits'
+      },
+      {
+        key: 'tempvoice_allow_rename',
+        label: 'Allow Rename',
+        type: 'toggle',
+        default: true,
+        group: 'Owner Permissions'
+      },
+      {
+        key: 'tempvoice_allow_user_limit',
+        label: 'Allow User Limit Change',
+        type: 'toggle',
+        default: true,
+        group: 'Owner Permissions'
+      },
+      {
+        key: 'tempvoice_allow_bitrate',
+        label: 'Allow Bitrate Change',
+        type: 'toggle',
+        default: false,
+        group: 'Owner Permissions'
+      },
+      {
+        key: 'tempvoice_allow_kick',
+        label: 'Allow Kick Users',
+        type: 'toggle',
+        default: true,
+        group: 'Owner Permissions'
+      },
+      {
+        key: 'tempvoice_allow_claim',
+        label: 'Allow Claim Ownership',
+        type: 'toggle',
+        default: true,
+        group: 'Owner Permissions',
+        hint: 'Let users claim ownership if the owner leaves'
+      },
+      {
+        key: 'tempvoice_allow_invite',
+        label: 'Allow Invite Users',
+        type: 'toggle',
+        default: true,
+        group: 'Owner Permissions',
+        hint: 'Let owners invite specific users to their channel'
+      },
+      {
+        key: 'tempvoice_allow_block',
+        label: 'Allow Block Users',
+        type: 'toggle',
+        default: true,
+        group: 'Owner Permissions',
+        hint: 'Let owners block specific users from their channel'
+      },
+      {
+        key: 'tempvoice_allow_permit',
+        label: 'Allow Permit Users',
+        type: 'toggle',
+        default: false,
+        group: 'Owner Permissions',
+        hint: 'Let owners permit blocked users to join'
+      },
+      {
+        key: 'tempvoice_send_owner_on_create',
+        label: 'DM Owner on Channel Create',
+        type: 'toggle',
+        default: false,
+        group: 'Notifications',
+        hint: 'Send the channel owner a DM when their channel is created'
+      },
+      {
+        key: 'tempvoice_owner_role',
+        label: 'Bypass Role',
+        type: 'roles',
+        default: '',
+        group: 'Permissions',
+        hint: 'Users with this role bypass channel limits'
+      }
+    ]
   }
 };
 

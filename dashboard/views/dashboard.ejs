@@ -421,7 +421,7 @@
 <body>
   <%- include('partials/header', { config, stats, user, selectedGuild }) %>
   <div class="layout">
-    <%- include('partials/sidebar', { config, guilds, selectedGuild, tab }) %>
+    <%- include('partials/sidebar', { config, guilds, selectedGuild, tab, moduleName }) %>
     <main class="main">
       <% var gc = function(key, def) { var v = guildConfig && guildConfig[key]; return (v !== undefined && v !== null && v !== '') ? v : def; }; %>
       <% if (tab === 'modules') { %>

@@ -95,6 +95,16 @@
       <span>Auto Responder</span>
     </a>
 
+    <div class="nav-category">AI & Fun</div>
+    <a href="/dashboard?tab=module&module=ai" class="nav-item <%= tab === 'module' && (typeof moduleName !== 'undefined' && moduleName === 'ai') ? 'active' : '' %>">
+      <span class="nav-icon">🤖</span>
+      <span>AI Assistant</span>
+    </a>
+    <a href="/dashboard?tab=module&module=fun" class="nav-item <%= tab === 'module' && (typeof moduleName !== 'undefined' && moduleName === 'fun') ? 'active' : '' %>">
+      <span class="nav-icon">🎮</span>
+      <span>Fun Commands</span>
+    </a>
+
     <div class="nav-category">Economy & Games</div>
     <a href="/dashboard?tab=economy" class="nav-item <%= tab === 'economy' ? 'active' : '' %>">
       <span class="nav-icon">💰</span>
