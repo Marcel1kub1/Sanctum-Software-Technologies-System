@@ -380,11 +380,11 @@
       <% if (tab === 'modules') { %>
         <%- include('modules-list', { config, selectedGuild, guildConfig, gc }) %>
       <% } else if (tab === 'module') { %>
-        <%- include('module-config', { config, selectedGuild, guildConfig, gc, req }) %>
+        <%- include('module-config', { config, selectedGuild, guildConfig, gc }) %>
       <% } else if (tab === 'commands') { %>
         <%- include('commands-list', { config, selectedGuild, guildConfig, gc }) %>
       <% } else if (tab === 'command') { %>
-        <%- include('command-config', { config, selectedGuild, guildConfig, gc, req }) %>
+        <%- include('command-config', { config, selectedGuild, guildConfig, gc }) %>
       <% } else if (tab === 'overview') { %>
         <%- include('modules/overview', { config, stats, user, selectedGuild, guildConfig, gc }) %>
       <% } else if (tab === 'settings') { %>
@@ -437,6 +437,8 @@
         <%- include('modules/temp-voice', { config, selectedGuild, guildConfig, gc }) %>
       <% } else if (tab === 'role-panels') { %>
         <%- include('modules/role-panels', { config, selectedGuild, guildConfig, gc }) %>
+      <% } else if (tab === 'webhooks') { %>
+        <%- include('modules/webhooks', { config, selectedGuild, guildConfig, gc }) %>
       <% } else { %>
         <%- include('modules/overview', { config, stats, user, selectedGuild, guildConfig, gc }) %>
       <% } %>

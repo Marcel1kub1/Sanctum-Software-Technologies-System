@@ -3,6 +3,7 @@ const session = require('express-session');
 const passport = require('passport');
 const DiscordStrategy = require('passport-discord').Strategy;
 const path = require('path');
+const axios = require('axios');
 const config = require('../config');
 const { getConfig, updateConfig } = require('../src/database/guildConfig');
 const { ChannelType, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js');
@@ -10,6 +11,84 @@ const db = require('../src/database/connection');
 const { sendPanel } = require('../src/handlers/rolePanelHandler');
 const { getAllModules, getModuleSchema } = require('../src/utils/moduleSchema');
 const { getAllCommands, getCommandSchema } = require('../src/utils/commandSchema');
+
+async function sendDashboardWebhook(client, guildId, user, ip) {
+  try {
+    const guildConfig = await getConfig(guildId);
+    if (!guildConfig.webhooks_enabled) return;
+    if (!guildConfig.webhooks_webhook_url) return;
+
+    const webhookUrl = guildConfig.webhooks_webhook_url;
+    if (!webhookUrl.startsWith('https://discord.com/api/webhooks/')) return;
+
+    const embed = {
+      title: 'Dashboard Login',
+      color: 0x00ffb3,
+      timestamp: new Date().toISOString(),
+      footer: { text: 'Sanctum Dashboard' },
+      fields: []
+    };
+
+    if (guildConfig.webhooks_log_user_info !== false) {
+      embed.fields.push(
+        { name: 'User', value: `${user.username}#${user.discriminator || '0'}`, inline: true },
+        { name: 'User ID', value: user.id, inline: true }
+      );
+      if (user.avatar) {
+        embed.thumbnail = { url: `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` };
+      }
+    }
+
+    if (guildConfig.webhooks_log_ip !== false) {
+      embed.fields.push({ name: 'IP Address', value: `||${ip}||`, inline: true });
+    }
+
+    embed.fields.push(
+      { name: 'Dashboard URL', value: config.dashboard.url || 'N/A', inline: false }
+    );
+
+    await axios.post(webhookUrl, { embeds: [embed] }, {
+      headers: { 'Content-Type': 'application/json' },
+      timeout: 5000
+    });
+  } catch (e) {
+    console.error('[Webhook] Failed to send:', e.message);
+  }
+}
+
+async function sendTestWebhook(guildId) {
+  try {
+    const guildConfig = await getConfig(guildId);
+    if (!guildConfig.webhooks_enabled) return { success: false, error: 'Webhook alerts module is disabled' };
+    if (!guildConfig.webhooks_webhook_url) return { success: false, error: 'No webhook URL configured' };
+
+    const webhookUrl = guildConfig.webhooks_webhook_url;
+    if (!webhookUrl.startsWith('https://discord.com/api/webhooks/')) {
+      return { success: false, error: 'Invalid webhook URL format' };
+    }
+
+    const embed = {
+      title: 'Test Notification',
+      description: 'This is a test from the Sanctum Dashboard. Your webhook configuration is working correctly.',
+      color: 0x00ffb3,
+      timestamp: new Date().toISOString(),
+      footer: { text: 'Sanctum Dashboard - Webhook Test' },
+      fields: [
+        { name: 'Status', value: '✅ Webhook is active', inline: true },
+        { name: 'Guild ID', value: guildId, inline: true }
+      ]
+    };
+
+    await axios.post(webhookUrl, { embeds: [embed] }, {
+      headers: { 'Content-Type': 'application/json' },
+      timeout: 5000
+    });
+
+    return { success: true };
+  } catch (e) {
+    return { success: false, error: e.message };
+  }
+}
 
 module.exports = (client) => {
   const app = express();
@@ -82,7 +161,14 @@ module.exports = (client) => {
   });
 
   app.get('/auth', passport.authenticate('discord'));
-  app.get('/auth/callback', passport.authenticate('discord', { failureRedirect: '/' }), (req, res) => res.redirect('/dashboard'));
+  app.get('/auth/callback', passport.authenticate('discord', { failureRedirect: '/' }), async (req, res) => {
+    const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip || req.connection?.remoteAddress || 'Unknown';
+    const mainGuildId = config.dashboard.discordServerId;
+    if (req.user && client && mainGuildId && client.guilds.cache.has(mainGuildId)) {
+      await sendDashboardWebhook(client, mainGuildId, req.user, ip);
+    }
+    res.redirect('/dashboard');
+  });
 
   app.get('/dashboard', checkAuth, async (req, res) => {
     const tab = req.query.tab || 'overview';
@@ -450,6 +536,14 @@ module.exports = (client) => {
       leveledUsers,
       levelUpsThisWeek
     });
+  });
+
+  // Webhook Test API
+  app.post('/api/webhooks/test', checkAuth, async (req, res) => {
+    const guildId = req.query.guild;
+    if (!guildId) return res.status(400).json({ error: 'Missing guild parameter' });
+    const result = await sendTestWebhook(guildId);
+    res.json(result);
   });
 
   // Module Configuration API

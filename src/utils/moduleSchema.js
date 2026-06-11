@@ -720,6 +720,54 @@ const MODULE_SCHEMAS = {
     ]
   },
 
+  webhooks: {
+    name: 'Webhook Alerts',
+    description: 'Receive Discord alerts when users access the dashboard',
+    icon: '🔔',
+    category: 'utility',
+    enabled: true,
+    fields: [
+      {
+        key: 'webhooks_enabled',
+        label: 'Enable Webhook Alerts',
+        type: 'toggle',
+        default: false,
+        group: 'General'
+      },
+      {
+        key: 'webhooks_webhook_url',
+        label: 'Discord Webhook URL',
+        type: 'text',
+        default: '',
+        group: 'Webhook',
+        hint: 'Paste a Discord channel webhook URL (Discord > Channel Settings > Integrations > Webhooks)'
+      },
+      {
+        key: 'webhooks_alert_on_login',
+        label: 'Alert on Dashboard Login',
+        type: 'toggle',
+        default: true,
+        group: 'Alerts',
+        hint: 'Send a notification when a user logs into the dashboard'
+      },
+      {
+        key: 'webhooks_log_ip',
+        label: 'Include IP Address',
+        type: 'toggle',
+        default: true,
+        group: 'Alerts'
+      },
+      {
+        key: 'webhooks_log_user_info',
+        label: 'Include User Info',
+        type: 'toggle',
+        default: true,
+        group: 'Alerts',
+        hint: 'Include Discord username, ID, and avatar'
+      }
+    ]
+  },
+
   customCommands: {
     name: 'Custom Commands',
     description: 'Create custom commands',

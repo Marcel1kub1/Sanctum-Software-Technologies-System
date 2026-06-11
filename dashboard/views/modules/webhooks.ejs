@@ -1,0 +1,128 @@
+<div class="page-header">
+  <h1 class="page-title">Webhook Alerts</h1>
+  <p class="page-desc">Send real-time Discord webhook notifications when users access the dashboard</p>
+</div>
+
+<form method="POST" action="/dashboard/config?guild=<%= selectedGuild ? selectedGuild.id : '' %>">
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <div class="card-title">Webhook Alerts Module</div>
+      <div class="card-desc">Enable or disable webhook-based dashboard alerts</div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox" <%= gc('webhooks_enabled', false) ? 'checked' : '' %> name="webhooks_enabled">
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <span class="card-title">Webhook Configuration</span>
+  </div>
+  <div class="form-group">
+    <label class="form-label">Discord Webhook URL</label>
+    <input class="form-input" type="url" value="<%= gc('webhooks_webhook_url', '') %>" placeholder="https://discord.com/api/webhooks/..." name="webhooks_webhook_url">
+    <div class="form-hint">Create a webhook in your Discord channel: Channel Settings → Integrations → Webhooks → New Webhook. Paste the URL here.</div>
+  </div>
+  <div style="background:var(--bg-input);border-radius:8px;padding:12px;margin-top:4px;">
+    <div style="font-size:12px;color:var(--text-muted);font-weight:600;margin-bottom:8px;">How to create a webhook:</div>
+    <ol style="font-size:12px;color:var(--text-secondary);margin-left:16px;line-height:1.6;">
+      <li>Go to your Discord server</li>
+      <li>Open Channel Settings for the channel you want alerts in</li>
+      <li>Navigate to Integrations → Webhooks</li>
+      <li>Click "New Webhook", give it a name (e.g. "Dashboard Alerts")</li>
+      <li>Copy the Webhook URL and paste it above</li>
+      <li>Save this configuration</li>
+    </ol>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <span class="card-title">Alert Triggers</span>
+  </div>
+  <div class="setting-row">
+    <div>
+      <div class="setting-label">Alert on Dashboard Login</div>
+      <div class="setting-desc">Send a notification when a user logs into the dashboard</div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox" <%= gc('webhooks_alert_on_login', true) ? 'checked' : '' %> name="webhooks_alert_on_login">
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+  <div class="setting-row">
+    <div>
+      <div class="setting-label">Include IP Address</div>
+      <div class="setting-desc">Log the IP address of the user accessing the dashboard</div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox" <%= gc('webhooks_log_ip', true) ? 'checked' : '' %> name="webhooks_log_ip">
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+  <div class="setting-row">
+    <div>
+      <div class="setting-label">Include User Info</div>
+      <div class="setting-desc">Include Discord username, ID, and avatar in the notification</div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox" <%= gc('webhooks_log_user_info', true) ? 'checked' : '' %> name="webhooks_log_user_info">
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <span class="card-title">Test Webhook</span>
+      <div class="card-desc">Send a test notification to verify your configuration</div>
+    </div>
+  </div>
+  <div style="padding:8px 0;">
+    <button type="button" class="btn btn-success" id="testWebhookBtn">Send Test Notification</button>
+    <span id="testWebhookResult" style="margin-left:12px;font-size:13px;"></span>
+  </div>
+</div>
+
+<div class="flex gap-2">
+  <button class="btn btn-primary">Save Changes</button>
+  <button class="btn btn-outline" type="reset">Reset</button>
+</div>
+
+</form>
+
+<script>
+document.getElementById('testWebhookBtn').addEventListener('click', async function() {
+  const btn = this;
+  const result = document.getElementById('testWebhookResult');
+  const guildId = '<%= selectedGuild ? selectedGuild.id : '' %>';
+  if (!guildId) { result.textContent = 'No guild selected'; result.style.color = 'var(--red)'; return; }
+
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+  result.textContent = '';
+
+  try {
+    const res = await fetch('/api/webhooks/test?guild=' + guildId, { method: 'POST' });
+    const data = await res.json();
+    if (data.success) {
+      result.textContent = '✓ Test sent successfully!';
+      result.style.color = 'var(--green)';
+    } else {
+      result.textContent = '✗ ' + (data.error || 'Failed to send');
+      result.style.color = 'var(--red)';
+    }
+  } catch (e) {
+    result.textContent = '✗ Network error';
+    result.style.color = 'var(--red)';
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Send Test Notification';
+});
+</script>
