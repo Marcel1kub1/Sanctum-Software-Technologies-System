@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Impressum — Sanctum Technologies</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg-primary: #08080e;
+      --bg-secondary: rgba(12, 12, 20, 0.75);
+      --bg-card: rgba(16, 16, 26, 0.55);
+      --border: rgba(30, 30, 48, 0.5);
+      --text-primary: #eeeef8;
+      --text-secondary: #8888aa;
+      --text-muted: #555570;
+      --accent: #ff00aa;
+      --accent-glow: rgba(255, 0, 170, 0.4);
+      --blue: #00ccff;
+    }
+    html, body { height: 100%; font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-primary); color: var(--text-primary); }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-shadow: 0 0 8px var(--accent-glow); }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .page {
+      max-width: 720px; margin: 0 auto; padding: 60px 24px;
+      animation: fadeInUp 0.5s ease-out;
+    }
+
+    .header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 48px; animation: fadeIn 0.4s ease-out;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand-icon { font-size: 22px; color: var(--accent); font-weight: 900; text-shadow: 0 0 12px var(--accent-glow); }
+    .brand-name { font-size: 16px; font-weight: 800; letter-spacing: 2px; background: linear-gradient(135deg, var(--accent), var(--blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .back-link { font-size: 13px; color: var(--text-secondary); padding: 8px 16px; border: 1px solid var(--border); border-radius: 8px; transition: all 0.2s; }
+    .back-link:hover { border-color: var(--accent); color: var(--accent); }
+
+    .card {
+      background: rgba(16, 16, 26, 0.45); backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.04); border-radius: 16px;
+      padding: 36px; animation: fadeInUp 0.4s ease-out 0.1s both;
+    }
+    .card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--blue));
+      border-radius: 16px 16px 0 0;
+    }
+    .card { position: relative; }
+
+    h1 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+    .subtitle { font-size: 13px; color: var(--text-secondary); margin-bottom: 32px; }
+
+    .section { margin-bottom: 28px; }
+    .section:last-child { margin-bottom: 0; }
+    .section-title { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+    .section-content { font-size: 14px; line-height: 1.7; color: var(--text-secondary); }
+    .section-content strong { color: var(--text-primary); font-weight: 600; }
+
+    .divider { height: 1px; background: rgba(255,255,255,0.04); margin: 28px 0; }
+
+    .footer-text { font-size: 12px; color: var(--text-muted); text-align: center; margin-top: 32px; animation: fadeIn 0.5s ease-out 0.3s both; }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="page">
+    <div class="header">
+      <div class="brand">
+        <span class="brand-icon">✦</span>
+        <span class="brand-name">SANCTUM TECHNOLOGIES</span>
+      </div>
+      <a href="/" class="back-link">← Zurück</a>
+    </div>
+
+    <div class="card">
+      <h1>Impressum</h1>
+      <p class="subtitle">Angaben gemäß § 5 TMG</p>
+
+      <div class="section">
+        <div class="section-title">Betreiber</div>
+        <div class="section-content">
+          <strong>Marcel Bender</strong><br>
+          Finkenweg 18<br>
+          57548 Elkenroth<br>
+          Deutschland
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Kontakt</div>
+        <div class="section-content">
+          E-Mail: <a href="mailto:mail&#64;sanctum-technologies.de">mail&#64;sanctum-technologies.de</a><br>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="section">
+        <div class="section-title">Haftungsausschluss</div>
+        <div class="section-content">
+          <strong>Haftung für Inhalte</strong><br>
+          Die Inhalte unserer Dienste wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen.<br><br>
+          <strong>Haftung für Links</strong><br>
+          Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte wir keinen Einfluss haben. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber verantwortlich.<br><br>
+          <strong>Urheberrecht</strong><br>
+          Die durch die Betreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Beiträge Dritter sind als solche gekennzeichnet.
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="section">
+        <div class="section-title">Datenschutz</div>
+        <div class="section-content">
+          Personenbezogene Daten (z. B. Name, E-Mail-Adresse) werden nur im technisch notwendigen Umfang verarbeitet. Eine Weitergabe an Dritte erfolgt nicht, sofern keine gesetzliche Verpflichtung besteht. Weitere Informationen entnehmen Sie bitte der Datenschutzerklärung.
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-text">
+      &copy; <%= new Date().getFullYear() %> Sanctum Technologies
+    </div>
+  </div>
+</body>
+</html>

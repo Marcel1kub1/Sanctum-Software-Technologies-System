@@ -1,8 +1,16 @@
 const ms = require('ms');
-const moment = require('moment');
 
 function formatTime(msDuration) {
-  return moment.duration(msDuration).format('d [days] h [hours] m [minutes] s [seconds]');
+  const seconds = Math.floor((msDuration / 1000) % 60);
+  const minutes = Math.floor((msDuration / (1000 * 60)) % 60);
+  const hours = Math.floor((msDuration / (1000 * 60 * 60)) % 24);
+  const days = Math.floor(msDuration / (1000 * 60 * 60 * 24));
+  const parts = [];
+  if (days > 0) parts.push(`${days} days`);
+  if (hours > 0) parts.push(`${hours} hours`);
+  if (minutes > 0) parts.push(`${minutes} minutes`);
+  if (seconds > 0 || parts.length === 0) parts.push(`${seconds} seconds`);
+  return parts.join(' ');
 }
 
 function parseTime(str) {
