@@ -31,27 +31,27 @@
 <div class="stats-grid">
   <div class="stat-card">
     <div class="stat-card-icon">👥</div>
-    <div class="stat-card-value" style="color:var(--accent);"><%= selectedGuild ? selectedGuild.memberCount : 0 %></div>
+    <div class="stat-card-value" style="color:var(--accent);" id="guildMemberCount"><%= selectedGuild ? selectedGuild.memberCount : 0 %></div>
     <div class="stat-card-label">Total Members</div>
-    <div class="stat-card-change up">+2 this week</div>
+    <div class="stat-card-change up" id="guildMemberChange">—</div>
   </div>
   <div class="stat-card">
     <div class="stat-card-icon">🎫</div>
-    <div class="stat-card-value" style="color:var(--green);">0</div>
+    <div class="stat-card-value" style="color:var(--green);" id="openTicketCount">0</div>
     <div class="stat-card-label">Open Tickets</div>
-    <div class="stat-card-change">No active tickets</div>
+    <div class="stat-card-change" id="ticketChange">No active tickets</div>
   </div>
   <div class="stat-card">
     <div class="stat-card-icon">🛡</div>
-    <div class="stat-card-value" style="color:var(--yellow);">0</div>
+    <div class="stat-card-value" style="color:var(--yellow);" id="modActionCount">0</div>
     <div class="stat-card-label">Mod Actions</div>
-    <div class="stat-card-change up">0 this week</div>
+    <div class="stat-card-change up" id="modActionChange">—</div>
   </div>
   <div class="stat-card">
     <div class="stat-card-icon">📈</div>
-    <div class="stat-card-value" style="color:var(--orange);">0</div>
+    <div class="stat-card-value" style="color:var(--orange);" id="leveledUserCount">0</div>
     <div class="stat-card-label">Leveled Users</div>
-    <div class="stat-card-change">0 level-ups this week</div>
+    <div class="stat-card-change" id="levelUpChange">—</div>
   </div>
 </div>
 
@@ -69,22 +69,57 @@
       </div>
     </div>
   </div>
-  <div class="chart-bars">
-    <% const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']; %>
-    <% const modData = [35, 55, 25, 70, 45, 30, 20]; %>
-    <% const ticketData = [12, 8, 15, 10, 20, 5, 0]; %>
-    <% const maxVal = 80; %>
-    <% for (let i = 0; i < 7; i++) { %>
-    <div class="chart-bar-group">
-      <div class="chart-bar-wrapper">
-        <div class="chart-bar blue" style="height:<%= Math.round((modData[i]/maxVal)*140) %>px;"></div>
-        <div class="chart-bar green" style="height:<%= Math.round((ticketData[i]/maxVal)*140) %>px;"></div>
-      </div>
-      <div class="chart-bar-label"><%= days[i] %></div>
+  <div class="chart-bars" id="activityChartBars">
+    <div class="empty-state" style="grid-column:1/-1;padding:20px;">
+      <div class="empty-state-text">Loading activity data...</div>
     </div>
-    <% } %>
   </div>
 </div>
+
+<script>
+async function loadActivityData() {
+  const guildId = '<%= selectedGuild ? selectedGuild.id : '' %>';
+  if (!guildId) return;
+
+  try {
+    const [activityRes, statsRes] = await Promise.all([
+      fetch('/api/activity/' + guildId),
+      fetch('/api/guild/stats/' + guildId)
+    ]);
+
+    const activity = await activityRes.json();
+    const stats = await statsRes.json();
+
+    document.getElementById('guildMemberCount').textContent = stats.memberCount || 0;
+    document.getElementById('openTicketCount').textContent = stats.openTickets || 0;
+    document.getElementById('modActionCount').textContent = stats.modActionsThisWeek || 0;
+    document.getElementById('modActionChange').textContent = (stats.modActionsThisWeek || 0) + ' this week';
+    document.getElementById('ticketChange').textContent = (stats.openTickets || 0) > 0 ? (stats.openTickets + ' open') : 'No active tickets';
+
+    const container = document.getElementById('activityChartBars');
+    const maxVal = Math.max(1, activity.maxVal || 1);
+    const dayOrder = [1,2,3,4,5,6,0];
+    const dayLabels = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+    container.innerHTML = dayOrder.map(i => `
+      <div class="chart-bar-group">
+        <div class="chart-bar-wrapper">
+          <div class="chart-bar blue" style="height:${Math.round((activity.modActions[i]/maxVal)*140)}px;" title="${activity.modActions[i]} mod actions"></div>
+          <div class="chart-bar green" style="height:${Math.round((activity.tickets[i]/maxVal)*140)}px;" title="${activity.tickets[i]} tickets"></div>
+        </div>
+        <div class="chart-bar-label">${dayLabels[i]}</div>
+      </div>
+    `).join('');
+  } catch (e) {
+    console.error('Failed to load activity:', e);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadActivityData();
+  setInterval(loadActivityData, 15000);
+});
+</script>
 
 <div class="modules-section">
   <div class="modules-section-title">🛡️ Moderation Modules</div>

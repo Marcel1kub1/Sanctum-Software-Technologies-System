@@ -2,6 +2,10 @@
 <!-- Usage: <%- include('modules-config', { module: 'tickets', schema, config, selectedGuild }) %>  -->
 
 <% 
+  function fval(key, def) {
+    var v = config && config[key];
+    return (v !== undefined && v !== null && v !== '') ? v : def;
+  }
   const groupedFields = {};
   (schema.fields || []).forEach(field => {
     const group = field.group || 'Other';
@@ -34,7 +38,7 @@
 
           <% if (field.type === 'toggle') { %>
             <label class="toggle">
-              <input type="checkbox" <%= config[field.key] ? 'checked' : '' %> name="<%= field.key %>">
+              <input type="checkbox" <%= fval(field.key, field.default) ? 'checked' : '' %> name="<%= field.key %>">
               <span class="toggle-slider"></span>
             </label>
 
@@ -42,27 +46,27 @@
             <select class="form-select" name="<%= field.key %>" <%= field.required ? 'required' : '' %>>
               <option value="">Select a channel...</option>
               <% (selectedGuild.textChannels || []).forEach(ch => { %>
-                <option value="<%= ch.id %>" <%= config[field.key] === ch.id ? 'selected' : '' %>><%= ch.name %></option>
+                <option value="<%= ch.id %>" <%= (fval(field.key, field.default) || '') === ch.id ? 'selected' : '' %>><%= ch.name %></option>
               <% }) %>
             </select>
 
           <% } else if (field.type === 'roles') { %>
             <select class="form-select" name="<%= field.key %>" multiple>
               <% (selectedGuild.roles || []).forEach(role => { %>
-                <option value="<%= role.id %>" <%= config[field.key] && config[field.key].includes(role.id) ? 'selected' : '' %>><%= role.name %></option>
+                <option value="<%= role.id %>" <%= fval(field.key, field.default) && fval(field.key, field.default).includes ? fval(field.key, field.default).includes(role.id) ? 'selected' : '' : '' %>><%= role.name %></option>
               <% }) %>
             </select>
 
           <% } else if (field.type === 'select') { %>
             <select class="form-select" name="<%= field.key %>">
               <% (field.options || []).forEach(opt => { %>
-                <option value="<%= opt.value %>" <%= config[field.key] === opt.value ? 'selected' : '' %>><%= opt.label %></option>
+                <option value="<%= opt.value %>" <%= (fval(field.key, field.default) || '') === opt.value ? 'selected' : '' %>><%= opt.label %></option>
               <% }) %>
             </select>
 
           <% } else if (field.type === 'number') { %>
             <input class="form-input" type="number" 
-              value="<%= config[field.key] !== undefined ? config[field.key] : field.default %>" 
+              value="<%= fval(field.key, field.default) %>" 
               <%= field.min !== undefined ? `min="${field.min}"` : '' %>
               <%= field.max !== undefined ? `max="${field.max}"` : '' %>
               <%= field.step !== undefined ? `step="${field.step}"` : '' %>
@@ -70,16 +74,16 @@
 
           <% } else if (field.type === 'password') { %>
             <input class="form-input" type="password" 
-              value="<%= config[field.key] || '' %>" 
+              value="<%= fval(field.key, field.default) || '' %>" 
               placeholder="••••••••"
               name="<%= field.key %>">
 
           <% } else if (field.type === 'textarea') { %>
-            <textarea class="form-textarea" rows="3" name="<%= field.key %>"><%= config[field.key] || '' %></textarea>
+            <textarea class="form-textarea" rows="3" name="<%= field.key %>"><%= fval(field.key, field.default) || '' %></textarea>
 
           <% } else { /* text */ %>
             <input class="form-input" type="text" 
-              value="<%= config[field.key] || '' %>" 
+              value="<%= fval(field.key, field.default) || '' %>" 
               placeholder="<%= field.hint || '' %>"
               <%= field.required ? 'required' : '' %>
               name="<%= field.key %>">

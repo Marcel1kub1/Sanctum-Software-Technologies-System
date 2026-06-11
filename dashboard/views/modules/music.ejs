@@ -56,29 +56,29 @@
     <div class="card-header">
       <div>
         <span class="card-title">Lavalink Status</span>
-        <div class="card-desc">Connected Lavalink node information</div>
+        <div class="card-desc">Live Lavalink node information</div>
       </div>
-      <span class="badge badge-green">● Connected</span>
+      <span class="badge" id="lavalinkStatusBadge">● Loading...</span>
     </div>
     <div class="form-group">
       <div class="form-label">Node</div>
-      <div style="font-size:13px;font-weight:600;">Main Node (localhost:2333)</div>
+      <div style="font-size:13px;font-weight:600;" id="lavalinkNodeInfo"><%= botConfig && botConfig.music && botConfig.music.lavalink ? (botConfig.music.lavalink.host + ':' + botConfig.music.lavalink.port) : 'Not configured' %></div>
     </div>
     <div class="form-group">
       <div class="form-label">Players</div>
-      <div style="font-size:13px;font-weight:600;">0 active</div>
+      <div style="font-size:13px;font-weight:600;" id="lavalinkPlayers">—</div>
     </div>
     <div class="form-group">
       <div class="form-label">Uptime</div>
-      <div style="font-size:13px;font-weight:600;">12h 34m</div>
+      <div style="font-size:13px;font-weight:600;" id="lavalinkUptime">—</div>
     </div>
     <div class="form-group">
       <div class="form-label">CPU Load</div>
-      <div style="font-size:13px;font-weight:600;">2.4%</div>
+      <div style="font-size:13px;font-weight:600;" id="lavalinkCpu">—</div>
     </div>
     <div class="form-group">
       <div class="form-label">Memory</div>
-      <div style="font-size:13px;font-weight:600;">128MB / 512MB</div>
+      <div style="font-size:13px;font-weight:600;" id="lavalinkMemory">—</div>
     </div>
   </div>
 </div>
@@ -160,48 +160,37 @@
   <div class="card-header">
     <div>
       <span class="card-title">Now Playing Panel</span>
-      <div class="card-desc">Interactive music control panel shown via /nowplaying</div>
+      <div class="card-desc">Live music status — updates every 5 seconds</div>
     </div>
-    <span class="badge badge-green">Active</span>
+    <span class="badge" id="npStatusBadge">● Waiting for data</span>
   </div>
   <div style="background:var(--bg-input);border-radius:12px;padding:20px;margin-top:8px;">
     <div class="flex items-center gap-4" style="margin-bottom:16px;">
       <div style="width:72px;height:72px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#7c3aed);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;">🎵</div>
       <div style="flex:1;min-width:0;">
-        <div style="font-size:16px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">No music playing</div>
-        <div style="font-size:13px;color:var(--text-secondary);margin-top:2px;">Queue is empty — add songs with /play</div>
+        <div id="npTitle" style="font-size:16px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">No music playing</div>
+        <div id="npSubtitle" style="font-size:13px;color:var(--text-secondary);margin-top:2px;">Queue is empty — add songs with /play</div>
         <div class="flex items-center gap-2" style="margin-top:6px;">
-          <span style="font-size:11px;color:var(--text-muted);">Volume: 50%</span>
+          <span id="npVolume" style="font-size:11px;color:var(--text-muted);">Volume: 50%</span>
           <span style="font-size:11px;color:var(--text-muted);">·</span>
-          <span style="font-size:11px;color:var(--text-muted);">Loop: Off</span>
+          <span id="npLoop" style="font-size:11px;color:var(--text-muted);">Loop: Off</span>
           <span style="font-size:11px;color:var(--text-muted);">·</span>
-          <span style="font-size:11px;color:var(--text-muted);">Shuffle: Off</span>
+          <span id="npShuffle" style="font-size:11px;color:var(--text-muted);">Shuffle: Off</span>
+          <span style="font-size:11px;color:var(--text-muted);">·</span>
+          <span id="npAutoplay" style="font-size:11px;color:var(--text-muted);">Autoplay: Off</span>
         </div>
       </div>
     </div>
-    <div class="flex items-center justify-center gap-2" style="flex-wrap:wrap;">
-      <button class="btn btn-outline btn-sm" style="font-size:16px;padding:8px 12px;" title="Previous">⏮</button>
-      <button class="btn btn-outline btn-sm" style="font-size:16px;padding:8px 12px;" title="Pause">⏸</button>
-      <button class="btn btn-primary btn-sm" style="font-size:16px;padding:8px 12px;" title="Play/Pause">▶</button>
-      <button class="btn btn-outline btn-sm" style="font-size:16px;padding:8px 12px;" title="Stop">⏹</button>
-      <button class="btn btn-outline btn-sm" style="font-size:16px;padding:8px 12px;" title="Skip">⏭</button>
-      <span style="width:1px;height:24px;background:var(--border);margin:0 4px;"></span>
-      <button class="btn btn-outline btn-sm" style="font-size:14px;padding:8px 12px;" title="Shuffle">🔀</button>
-      <button class="btn btn-outline btn-sm" style="font-size:14px;padding:8px 12px;" title="Queue">📋</button>
-      <button class="btn btn-outline btn-sm" style="font-size:14px;padding:8px 12px;" title="Volume">🔊</button>
-      <button class="btn btn-outline btn-sm" style="font-size:14px;padding:8px 12px;" title="Autoplay">↻</button>
-      <button class="btn btn-outline btn-sm" style="font-size:14px;padding:8px 12px;" title="Lyrics">📝</button>
-    </div>
     <div style="margin-top:16px;display:flex;align-items:center;gap:8px;">
-      <span style="font-size:11px;color:var(--text-muted);">0:00</span>
+      <span id="npPosition" style="font-size:11px;color:var(--text-muted);">0:00</span>
       <div style="flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden;">
-        <div style="width:0%;height:100%;background:var(--accent);border-radius:2px;"></div>
+        <div id="npProgress" style="width:0%;height:100%;background:var(--accent);border-radius:2px;"></div>
       </div>
-      <span style="font-size:11px;color:var(--text-muted);">0:00</span>
+      <span id="npDuration" style="font-size:11px;color:var(--text-muted);">0:00</span>
     </div>
     <div style="margin-top:12px;">
-      <div style="font-size:12px;color:var(--text-muted);font-weight:600;margin-bottom:4px;">UP NEXT</div>
-      <div style="font-size:12px;color:var(--text-secondary);">No upcoming tracks</div>
+      <div style="font-size:12px;color:var(--text-muted);font-weight:600;margin-bottom:4px;">QUEUE (<span id="npQueueSize">0</span> tracks)</div>
+      <div id="npUpcoming" style="font-size:12px;color:var(--text-secondary);">No upcoming tracks</div>
     </div>
   </div>
 </div>
@@ -335,10 +324,12 @@
         <span class="card-title">Queue</span>
         <div class="card-desc">Up to 500 tracks, with history and shuffle</div>
       </div>
-      <span class="badge badge-green">0 tracks</span>
+      <span class="badge" id="queueSizeBadge">—</span>
     </div>
-    <div class="empty-state" style="padding:16px;">
-      <div class="empty-state-text" style="font-size:13px;">Queue is empty</div>
+    <div id="queueContent">
+      <div class="empty-state" style="padding:16px;">
+        <div class="empty-state-text" style="font-size:13px;">Loading queue...</div>
+      </div>
     </div>
     <div class="setting-row" style="border-top:1px solid var(--border);margin-top:4px;padding-top:8px;">
       <div><div class="setting-label">Show Queue on Add</div><div class="setting-desc">Auto-display queue after adding a song</div></div>
@@ -391,3 +382,137 @@
 </div>
 
 </form>
+
+<script>
+function formatTime(ms) {
+  if (!ms || ms < 0) return '0:00';
+  const totalSec = Math.floor(ms / 1000);
+  const min = Math.floor(totalSec / 60);
+  const sec = totalSec % 60;
+  return min + ':' + (sec < 10 ? '0' : '') + sec;
+}
+
+function formatUptime(ms) {
+  if (!ms) return '—';
+  const s = Math.floor(ms / 1000);
+  const d = Math.floor(s / 86400);
+  const h = Math.floor((s % 86400) / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  let str = '';
+  if (d > 0) str += d + 'd ';
+  if (h > 0) str += h + 'h ';
+  str += m + 'm';
+  return str;
+}
+
+function formatBytes(n) {
+  if (!n) return '0MB';
+  const mb = n / 1024 / 1024;
+  return mb.toFixed(0) + 'MB';
+}
+
+async function refreshMusicStatus() {
+  const guildId = '<%= selectedGuild ? selectedGuild.id : '' %>';
+  if (!guildId) return;
+
+  try {
+    const res = await fetch('/api/music/status?guild=' + guildId);
+    const data = await res.json();
+
+    // Lavalink Status card
+    const statusBadge = document.getElementById('lavalinkStatusBadge');
+    if (data.node && data.node.connected) {
+      statusBadge.className = 'badge badge-green';
+      statusBadge.textContent = '● Connected';
+    } else {
+      statusBadge.className = 'badge badge-red';
+      statusBadge.textContent = '● Disconnected';
+    }
+
+    const playersEl = document.getElementById('lavalinkPlayers');
+    if (data.node && data.node.connected) {
+      playersEl.textContent = data.node.players + ' total, ' + data.node.playingPlayers + ' playing';
+    } else {
+      playersEl.textContent = '—';
+    }
+
+    const uptimeEl = document.getElementById('lavalinkUptime');
+    uptimeEl.textContent = data.node && data.node.connected ? formatUptime(data.node.uptime) : '—';
+
+    const cpuEl = document.getElementById('lavalinkCpu');
+    cpuEl.textContent = data.node && data.node.connected ? (data.node.cpu * 100).toFixed(1) + '%' : '—';
+
+    const memEl = document.getElementById('lavalinkMemory');
+    if (data.node && data.node.connected) {
+      memEl.textContent = formatBytes(data.node.memory.used) + ' / ' + formatBytes(data.node.memory.reserved);
+    } else {
+      memEl.textContent = '—';
+    }
+
+    // Now Playing panel
+    const npBadge = document.getElementById('npStatusBadge');
+    const npTitle = document.getElementById('npTitle');
+    const npSubtitle = document.getElementById('npSubtitle');
+    const npVolume = document.getElementById('npVolume');
+    const npLoop = document.getElementById('npLoop');
+    const npShuffle = document.getElementById('npShuffle');
+    const npAutoplay = document.getElementById('npAutoplay');
+    const npPosition = document.getElementById('npPosition');
+    const npDuration = document.getElementById('npDuration');
+    const npProgress = document.getElementById('npProgress');
+    const npQueueSize = document.getElementById('npQueueSize');
+    const npUpcoming = document.getElementById('npUpcoming');
+
+    if (data.player && data.player.connected && data.player.current) {
+      const t = data.player.current;
+      npBadge.className = 'badge badge-green';
+      npBadge.textContent = data.player.paused ? '⏸ Paused' : '▶ Playing';
+      npTitle.textContent = t.title;
+      npSubtitle.textContent = t.author + (t.uri ? ' · ' + t.uri : '');
+      npVolume.textContent = 'Volume: ' + data.player.volume + '%';
+      npLoop.textContent = 'Loop: ' + (data.player.loop || 'off');
+      npShuffle.textContent = 'Shuffle: ' + (data.player.shuffled ? 'On' : 'Off');
+      npAutoplay.textContent = 'Autoplay: ' + (data.player.autoplay ? 'On' : 'Off');
+
+      const pos = data.player.position || 0;
+      const dur = t.duration || 1;
+      npPosition.textContent = formatTime(pos);
+      npDuration.textContent = formatTime(dur);
+      npProgress.style.width = Math.min(100, (pos / dur) * 100) + '%';
+
+      npQueueSize.textContent = data.player.queueSize || 0;
+    } else {
+      npBadge.className = 'badge badge-yellow';
+      npBadge.textContent = '● Idle';
+      npTitle.textContent = 'No music playing';
+      npSubtitle.textContent = 'Queue is empty — add songs with /play';
+      npPosition.textContent = '0:00';
+      npDuration.textContent = '0:00';
+      npProgress.style.width = '0%';
+      npQueueSize.textContent = '0';
+    }
+
+    // Queue card
+    const queueSizeBadge = document.getElementById('queueSizeBadge');
+    const queueContent = document.getElementById('queueContent');
+    const queueSize = data.player ? (data.player.queueSize || 0) : 0;
+    if (queueSize > 0) {
+      queueSizeBadge.className = 'badge badge-green';
+      queueSizeBadge.textContent = queueSize + ' tracks';
+      npUpcoming.textContent = queueSize + ' track(s) in queue';
+    } else {
+      queueSizeBadge.className = 'badge badge-yellow';
+      queueSizeBadge.textContent = 'Empty';
+      npUpcoming.textContent = 'No upcoming tracks';
+      queueContent.innerHTML = '<div class="empty-state" style="padding:16px;"><div class="empty-state-text" style="font-size:13px;">Queue is empty</div></div>';
+    }
+  } catch (e) {
+    console.error('Music status poll error:', e);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  refreshMusicStatus();
+  setInterval(refreshMusicStatus, 5000);
+});
+</script>

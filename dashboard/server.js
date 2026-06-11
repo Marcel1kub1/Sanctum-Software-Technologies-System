@@ -151,8 +151,17 @@ module.exports = (client) => {
       ping: client ? client.ws.ping : 0
     };
 
+    const botConfig = {
+      music: config.music,
+      bot: {
+        activity: config.bot.activity,
+        prefix: config.bot.prefix
+      }
+    };
+
     res.render('dashboard', {
       config: config.dashboard,
+      botConfig,
       stats,
       user: req.user,
       guilds,
@@ -304,6 +313,143 @@ module.exports = (client) => {
 
   app.get('/logout', (req, res) => {
     req.logout(() => res.redirect('/'));
+  });
+
+  // Music Status API - Live Lavalink and player data
+  app.get('/api/music/status', (req, res) => {
+    const guildId = req.query.guild;
+    const musicCfg = config.music;
+    let node = null;
+    let shoukakuPlayer = null;
+    let queue = null;
+    let status = null;
+    try {
+      if (client && client.lavalink) {
+        node = client.lavalink.getNode ? client.lavalink.getNode() : null;
+        if (guildId) {
+          shoukakuPlayer = client.lavalink.shoukaku?.players?.get(guildId) || null;
+          queue = client.lavalink.getQueue ? client.lavalink.getQueue(guildId) : null;
+          status = client.lavalink.getStatus ? client.lavalink.getStatus(guildId) : null;
+        }
+      }
+    } catch (e) { /* ignore */ }
+
+    const nodeStats = node ? {
+      connected: true,
+      players: (node.stats && typeof node.stats.players === 'number') ? node.stats.players : 0,
+      playingPlayers: (node.stats && typeof node.stats.playingPlayers === 'number') ? node.stats.playingPlayers : 0,
+      uptime: node.stats?.uptime || 0,
+      cpu: node.stats?.cpu?.systemLoad || 0,
+      memory: {
+        used: node.stats?.memory?.used || 0,
+        reserved: node.stats?.memory?.reserved || 0,
+        free: node.stats?.memory?.free || 0
+      }
+    } : { connected: false };
+
+    const currentTrack = status && status.current ? status.current : null;
+
+    res.json({
+      configured: {
+        host: musicCfg.lavalink?.host || 'localhost',
+        port: musicCfg.lavalink?.port || 2333,
+        ssl: musicCfg.lavalink?.ssl || false,
+        engine: musicCfg.engine || 'lavalink'
+      },
+      node: nodeStats,
+      player: {
+        connected: !!shoukakuPlayer,
+        playing: shoukakuPlayer ? !!shoukakuPlayer.track : false,
+        paused: shoukakuPlayer ? !!shoukakuPlayer.paused : false,
+        position: shoukakuPlayer ? (shoukakuPlayer.position || 0) : 0,
+        ping: shoukakuPlayer ? (shoukakuPlayer.ping || 0) : 0,
+        volume: status ? (status.volume || 50) : 50,
+        current: currentTrack ? {
+          title: currentTrack.info?.title || 'Unknown',
+          author: currentTrack.info?.author || 'Unknown',
+          duration: currentTrack.info?.length || 0,
+          uri: currentTrack.info?.uri || '',
+          identifier: currentTrack.info?.identifier || ''
+        } : null,
+        queueSize: queue ? (queue.tracks?.length || 0) : 0,
+        historySize: queue ? (queue.history?.length || 0) : 0,
+        loop: status ? (status.loop || 'off') : 'off',
+        shuffled: status ? !!status.shuffled : false,
+        autoplay: status ? !!status.autoplay : false
+      }
+    });
+  });
+
+  // Guild Activity API - 7-day chart data
+  app.get('/api/activity/:guildId', async (req, res) => {
+    const guildId = req.params.guildId;
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const modActions = [0, 0, 0, 0, 0, 0, 0];
+    const tickets = [0, 0, 0, 0, 0, 0, 0];
+
+    try {
+      const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+      const logs = await db.query(
+        'SELECT action, created_at FROM audit_logs WHERE guild_id = ? AND created_at >= ?',
+        [guildId, sevenDaysAgo]
+      );
+      for (const log of logs) {
+        const d = new Date(log.created_at);
+        const dayIndex = d.getDay();
+        modActions[dayIndex]++;
+      }
+
+      const ticketRows = await db.query(
+        'SELECT created_at FROM tickets WHERE guild_id = ? AND created_at >= ?',
+        [guildId, sevenDaysAgo]
+      );
+      for (const t of ticketRows) {
+        const d = new Date(t.created_at);
+        const dayIndex = d.getDay();
+        tickets[dayIndex]++;
+      }
+    } catch (e) { /* no audit_logs table or no data */ }
+
+    const labels = days;
+    const maxVal = Math.max(1, ...modActions, ...tickets);
+    res.json({
+      labels,
+      modActions,
+      tickets,
+      maxVal
+    });
+  });
+
+  // Guild-specific stats
+  app.get('/api/guild/stats/:guildId', async (req, res) => {
+    const guildId = req.params.guildId;
+    let openTickets = 0;
+    let modActionsThisWeek = 0;
+    let leveledUsers = 0;
+    let levelUpsThisWeek = 0;
+
+    try {
+      const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+      const ticketCount = await db.query(
+        'SELECT COUNT(*) as c FROM tickets WHERE guild_id = ? AND status = ?',
+        [guildId, 'open']
+      );
+      openTickets = ticketCount[0]?.c || 0;
+
+      const modCount = await db.query(
+        'SELECT COUNT(*) as c FROM audit_logs WHERE guild_id = ? AND created_at >= ?',
+        [guildId, sevenDaysAgo]
+      );
+      modActionsThisWeek = modCount[0]?.c || 0;
+    } catch (e) { /* ignore */ }
+
+    res.json({
+      memberCount: client ? (client.guilds.cache.get(guildId)?.memberCount || 0) : 0,
+      openTickets,
+      modActionsThisWeek,
+      leveledUsers,
+      levelUpsThisWeek
+    });
   });
 
   // Module Configuration API

@@ -424,7 +424,7 @@
       <% } else if (tab === 'games') { %>
         <%- include('modules/games', { config, selectedGuild, guildConfig, gc }) %>
       <% } else if (tab === 'music') { %>
-        <%- include('modules/music', { config, selectedGuild, guildConfig, gc }) %>
+        <%- include('modules/music', { config, botConfig, selectedGuild, guildConfig, gc }) %>
       <% } else if (tab === 'prohibited') { %>
         <%- include('modules/prohibited', { config, selectedGuild, guildConfig, gc }) %>
       <% } else if (tab === 'custom-commands') { %>
@@ -455,6 +455,32 @@
   </div>
 
   <script>
+    // Live polling for header stats
+    async function refreshStats() {
+      try {
+        const res = await fetch('/api/stats');
+        const data = await res.json();
+        const statsEls = document.querySelectorAll('.header-stat');
+        if (statsEls.length >= 4) {
+          const serverVal = statsEls[0].querySelector('.stat-value');
+          if (serverVal) serverVal.textContent = data.guilds || 0;
+          const userVal = statsEls[1].querySelector('.stat-value');
+          if (userVal) userVal.textContent = data.users || 0;
+          const pingVal = statsEls[2].querySelector('.stat-value');
+          if (pingVal) pingVal.textContent = (data.ping || 0) + 'ms';
+          const uptimeVal = statsEls[3].querySelector('.stat-value');
+          if (uptimeVal) uptimeVal.textContent = Math.floor((data.uptime || 0) / 86400) + 'd';
+        }
+      } catch (e) { /* ignore polling errors */ }
+    }
+
+    function livePollStats() {
+      refreshStats();
+      setInterval(refreshStats, 5000);
+    }
+
+    document.addEventListener('DOMContentLoaded', livePollStats);
+
     function toggleSidebar() {
       document.getElementById('sidebar').classList.toggle('open');
     }

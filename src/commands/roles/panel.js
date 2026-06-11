@@ -3,6 +3,21 @@ const Command = require('../../structures/Command');
 const db = require('../../database/connection');
 const { sendPanel } = require('../../handlers/rolePanelHandler');
 
+function parseRoleIdsFromText(text) {
+  const ids = [];
+  const mentionRegex = /<@&(\d+)>/g;
+  let match;
+  while (match = mentionRegex.exec(text)) {
+    ids.push(match[1]);
+  }
+  if (ids.length > 0) return ids;
+  for (const token of text.split(/\s+/)) {
+    const clean = token.replace(/[<@&>]/g, '');
+    if (/^\d{17,19}$/.test(clean)) ids.push(clean);
+  }
+  return ids;
+}
+
 module.exports = class RolePanelCommand extends Command {
   constructor(bot) {
     super(bot);
@@ -23,11 +38,12 @@ module.exports = class RolePanelCommand extends Command {
       )
       .addSubcommand(sub => sub
         .setName('addrole')
-        .setDescription('Add a role to a panel')
+        .setDescription('Add one or more roles to a panel')
         .addIntegerOption(opt => opt.setName('panel').setDescription('Panel ID').setRequired(true))
-        .addRoleOption(opt => opt.setName('role').setDescription('Role to add').setRequired(true))
-        .addStringOption(opt => opt.setName('label').setDescription('Button label').setRequired(false))
-        .addStringOption(opt => opt.setName('emoji').setDescription('Button emoji').setRequired(false))
+        .addRoleOption(opt => opt.setName('role').setDescription('Single role to add').setRequired(false))
+        .addStringOption(opt => opt.setName('roles').setDescription('Multiple role mentions or IDs separated by spaces').setRequired(false))
+        .addStringOption(opt => opt.setName('label').setDescription('Button label for all added roles').setRequired(false))
+        .addStringOption(opt => opt.setName('emoji').setDescription('Button emoji for all added roles').setRequired(false))
       )
       .addSubcommand(sub => sub
         .setName('removerole')
@@ -66,7 +82,7 @@ module.exports = class RolePanelCommand extends Command {
       const title = args.slice(1).join(' ');
       if (!title) return message.reply('Provide a panel title.');
       const result = await db.query('INSERT INTO role_panels (guild_id, title) VALUES (?, ?)', [message.guild.id, title]);
-      await message.reply(`Panel created! ID: ${result.insertId}. Use \`/panel addrole ${result.insertId} @role\` to add roles.`);
+      await message.reply(`Panel created! ID: ${result.insertId}. Use \`!panel addrole ${result.insertId} @role1 @role2\` to add multiple roles.`);
     } else if (sub === 'list') {
       const panels = await db.query('SELECT * FROM role_panels WHERE guild_id = ?', [message.guild.id]);
       if (!panels.length) return message.reply('No role panels configured.');
@@ -76,11 +92,49 @@ module.exports = class RolePanelCommand extends Command {
         .setDescription(panels.map(p => `**ID ${p.id}** — ${p.title} (${p.roles_count || 0} roles)`).join('\n'));
       await message.reply({ embeds: [embed] });
     } else if (sub === 'delete') {
-      const id = parseInt(args[1]);
+      const id = parseInt(args[1], 10);
       if (!id) return message.reply('Provide a panel ID.');
       await db.query('DELETE FROM role_panel_roles WHERE panel_id = ?', [id]);
       await db.query('DELETE FROM role_panels WHERE id = ? AND guild_id = ?', [id, message.guild.id]);
       await message.reply('Panel deleted.');
+    } else if (sub === 'addrole') {
+      const panelId = parseInt(args[1], 10);
+      if (!panelId) return message.reply('Provide a valid panel ID.');
+
+      const panel = (await db.query('SELECT * FROM role_panels WHERE id = ? AND guild_id = ?', [panelId, message.guild.id]))[0];
+      if (!panel) return message.reply('Panel not found.');
+
+      let roles = [...message.mentions.roles.values()];
+      if (roles.length === 0) {
+        const roleIds = args.slice(2)
+          .map(arg => arg.replace(/[<@&>]/g, ''))
+          .filter(id => /^\d{17,19}$/.test(id));
+        roles = roleIds
+          .map(id => message.guild.roles.cache.get(id))
+          .filter(Boolean);
+      }
+
+      if (roles.length === 0) {
+        return message.reply('Provide one or more role mentions or role IDs.');
+      }
+
+      const added = [];
+      let count = (await db.query('SELECT COUNT(*) as c FROM role_panel_roles WHERE panel_id = ?', [panelId]))[0].c;
+      for (const role of roles) {
+        const exists = (await db.query('SELECT 1 FROM role_panel_roles WHERE panel_id = ? AND role_id = ?', [panelId, role.id]))[0];
+        if (exists) continue;
+        await db.query('INSERT INTO role_panel_roles (panel_id, guild_id, role_id, label, emoji, position) VALUES (?, ?, ?, ?, ?, ?)',
+          [panelId, message.guild.id, role.id, role.name, '', count]);
+        added.push(role.name);
+        count += 1;
+      }
+
+      if (added.length === 0) {
+        return message.reply('No new roles were added. They may already exist in this panel.');
+      }
+
+      await sendPanel(bot, message.guild.id, panel);
+      await message.reply(`Added roles to panel #${panelId}: ${added.join(', ')}`);
     } else {
       await message.reply('Usage: !panel create|addrole|removerole|send|list|delete|setmax');
     }
@@ -104,14 +158,39 @@ module.exports = class RolePanelCommand extends Command {
     } else if (sub === 'addrole') {
       const panelId = interaction.options.getInteger('panel');
       const role = interaction.options.getRole('role');
-      const label = interaction.options.getString('label') || role.name;
+      const rolesText = interaction.options.getString('roles') || '';
+      const label = interaction.options.getString('label');
       const emoji = interaction.options.getString('emoji') || '';
       const panel = (await db.query('SELECT * FROM role_panels WHERE id = ? AND guild_id = ?', [panelId, interaction.guild.id]))[0];
       if (!panel) return interaction.reply({ content: 'Panel not found.', ephemeral: true });
-      const count = (await db.query('SELECT COUNT(*) as c FROM role_panel_roles WHERE panel_id = ?', [panelId]))[0].c;
-      await db.query('INSERT INTO role_panel_roles (panel_id, guild_id, role_id, label, emoji, position) VALUES (?, ?, ?, ?, ?, ?)',
-        [panelId, interaction.guild.id, role.id, label, emoji, count]);
-      await interaction.reply({ content: `Added ${role.name} to panel #${panelId}.`, ephemeral: true });
+
+      const ids = new Set();
+      if (role) ids.add(role.id);
+      if (rolesText) {
+        parseRoleIdsFromText(rolesText).forEach(id => ids.add(id));
+      }
+
+      const roles = [...ids].map(id => interaction.guild.roles.cache.get(id)).filter(Boolean);
+      if (!roles.length) {
+        return interaction.reply({ content: 'Provide at least one valid role mention or role ID.', ephemeral: true });
+      }
+
+      let count = (await db.query('SELECT COUNT(*) as c FROM role_panel_roles WHERE panel_id = ?', [panelId]))[0].c;
+      const added = [];
+      for (const roleEntry of roles) {
+        const exists = (await db.query('SELECT 1 FROM role_panel_roles WHERE panel_id = ? AND role_id = ?', [panelId, roleEntry.id]))[0];
+        if (exists) continue;
+        await db.query('INSERT INTO role_panel_roles (panel_id, guild_id, role_id, label, emoji, position) VALUES (?, ?, ?, ?, ?, ?)',
+          [panelId, interaction.guild.id, roleEntry.id, label || roleEntry.name, emoji, count]);
+        added.push(roleEntry.name);
+        count += 1;
+      }
+
+      if (!added.length) {
+        return interaction.reply({ content: 'No new roles were added. They may already exist in this panel.', ephemeral: true });
+      }
+
+      await interaction.reply({ content: `Added roles to panel #${panelId}: ${added.join(', ')}`, ephemeral: true });
       await sendPanel(bot, interaction.guild.id, panel);
     } else if (sub === 'removerole') {
       const panelId = interaction.options.getInteger('panel');
